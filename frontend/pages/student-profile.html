@@ -59,7 +59,34 @@
 
                 <div class="profile-row">
                     <span>Resume</span>
-                    <strong id="resumeUrl">Loading...</strong>
+                    <div>
+                        <strong id="resumeUrl">Loading...</strong>
+                        <button
+                            id="viewResumeButton"
+                            class="btn-primary"
+                            style="display: none; margin-top: 8px;"
+                        >
+                            View Resume
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-row">
+                    <span>Upload Resume</span>
+                    <div>
+                        <input
+                            type="file"
+                            id="resumeFile"
+                            accept=".pdf,application/pdf"
+                        >
+                        <button
+                            id="uploadResumeButton"
+                            class="btn-primary"
+                            style="margin-top: 8px;"
+                        >
+                            Upload Resume
+                        </button>
+                    </div>
                 </div>
 
                 <p id="profileMessage" class="message"></p>
@@ -77,13 +104,18 @@
             window.location.href = "login.html";
         }
 
+        const resumeFile = document.getElementById("resumeFile");
+        const uploadResumeButton = document.getElementById("uploadResumeButton");
+        const viewResumeButton = document.getElementById("viewResumeButton");
+        const profileMessage = document.getElementById("profileMessage");
+
+        let resumeUrl = null;
+
         document.getElementById("backButton").addEventListener("click", function () {
             window.location.href = "student-dashboard.html";
         });
 
         async function loadProfile() {
-            const profileMessage = document.getElementById("profileMessage");
-
             try {
                 const response = await fetch(
                     `${API_BASE_URL}/api/students/profile`,
@@ -121,13 +153,136 @@
                 document.getElementById("phone").textContent =
                     data.phone || "Not available";
 
-                document.getElementById("resumeUrl").textContent =
-                    data.resume_url || "Not uploaded";
+                resumeUrl = data.resume_url;
+
+                if (resumeUrl) {
+                    document.getElementById("resumeUrl").textContent =
+                        "Uploaded";
+
+                    viewResumeButton.style.display = "inline-block";
+                } else {
+                    document.getElementById("resumeUrl").textContent =
+                        "Not uploaded";
+
+                    viewResumeButton.style.display = "none";
+                }
             } catch (error) {
                 profileMessage.textContent =
                     "Unable to connect to CampusPulse backend.";
             }
         }
+
+        uploadResumeButton.addEventListener("click", async function () {
+            profileMessage.textContent = "";
+
+            const file = resumeFile.files[0];
+
+            if (!file) {
+                profileMessage.textContent =
+                    "Please select a PDF resume first.";
+                return;
+            }
+
+            if (file.type !== "application/pdf" &&
+                !file.name.toLowerCase().endsWith(".pdf")) {
+                profileMessage.textContent =
+                    "Only PDF files are allowed.";
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                profileMessage.textContent =
+                    "Resume file must be 5 MB or smaller.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("resume", file);
+
+            uploadResumeButton.disabled = true;
+            uploadResumeButton.textContent = "Uploading...";
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/students/resume`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: formData
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    profileMessage.textContent =
+                        data.error || "Resume upload failed.";
+                    return;
+                }
+
+                profileMessage.textContent =
+                    "Resume uploaded successfully.";
+
+                resumeFile.value = "";
+
+                await loadProfile();
+            } catch (error) {
+                profileMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            } finally {
+                uploadResumeButton.disabled = false;
+                uploadResumeButton.textContent = "Upload Resume";
+            }
+        });
+
+        viewResumeButton.addEventListener("click", async function () {
+            if (!resumeUrl) {
+                return;
+            }
+
+            viewResumeButton.disabled = true;
+            viewResumeButton.textContent = "Opening...";
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}${resumeUrl}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    profileMessage.textContent =
+                        data.error || "Unable to open resume.";
+                    return;
+                }
+
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = blobUrl;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.click();
+
+                setTimeout(function () {
+                    URL.revokeObjectURL(blobUrl);
+                }, 1000);
+            } catch (error) {
+                profileMessage.textContent =
+                    "Unable to open resume.";
+            } finally {
+                viewResumeButton.disabled = false;
+                viewResumeButton.textContent = "View Resume";
+            }
+        });
 
         loadProfile();
     </script>

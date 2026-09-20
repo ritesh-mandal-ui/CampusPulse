@@ -1,6 +1,8 @@
+import os
+import uuid
 from datetime import datetime, timezone
 
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 
 from extensions import db
 from models.student import Student
@@ -10,6 +12,12 @@ from utils.decorators import token_required
 
 
 students_bp = Blueprint("students", __name__, url_prefix="/api/students")
+
+RESUME_FOLDER = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "uploads", "resumes")
+)
+
+MAX_RESUME_SIZE = 5 * 1024 * 1024
 
 
 @students_bp.route("/profile", methods=["GET"])
@@ -80,6 +88,91 @@ def create_profile(payload):
         "message": "Student profile created successfully",
         "student_id": student.student_id
     }, 201
+
+
+@students_bp.route("/resume", methods=["POST"])
+@token_required
+def upload_resume(payload):
+    if payload["role"] != "STUDENT":
+        return {"error": "Only students can upload resumes"}, 403
+
+    student = Student.query.filter_by(
+        user_id=payload["user_id"]
+    ).first()
+
+    if not student:
+        return {"error": "Student profile not found"}, 404
+
+    if "resume" not in request.files:
+        return {"error": "Resume file is required"}, 400
+
+    file = request.files["resume"]
+
+    if not file or not file.filename:
+        return {"error": "Resume file is required"}, 400
+
+    if not file.filename.lower().endswith(".pdf"):
+        return {"error": "Only PDF files are allowed"}, 400
+
+    file.seek(0, os.SEEK_END)
+    file_size = file.tell()
+    file.seek(0)
+
+    if file_size > MAX_RESUME_SIZE:
+        return {"error": "Resume file must be 5 MB or smaller"}, 400
+
+    os.makedirs(RESUME_FOLDER, exist_ok=True)
+
+    filename = f"{uuid.uuid4().hex}.pdf"
+    file_path = os.path.join(RESUME_FOLDER, filename)
+
+    file.save(file_path)
+
+    if student.resume_url:
+        old_filename = os.path.basename(student.resume_url)
+        old_file_path = os.path.join(RESUME_FOLDER, old_filename)
+
+        if os.path.isfile(old_file_path):
+            os.remove(old_file_path)
+
+    student.resume_url = f"/api/students/resume/{filename}"
+    db.session.commit()
+
+    return {
+        "message": "Resume uploaded successfully",
+        "resume_url": student.resume_url
+    }, 200
+
+
+@students_bp.route("/resume/<filename>", methods=["GET"])
+@token_required
+def download_resume(payload, filename):
+    if payload["role"] != "STUDENT":
+        return {"error": "Only students can access resumes"}, 403
+
+    student = Student.query.filter_by(
+        user_id=payload["user_id"]
+    ).first()
+
+    if not student:
+        return {"error": "Student profile not found"}, 404
+
+    expected_filename = os.path.basename(student.resume_url or "")
+
+    if not expected_filename or filename != expected_filename:
+        return {"error": "Resume not found"}, 404
+
+    file_path = os.path.join(RESUME_FOLDER, filename)
+
+    if not os.path.isfile(file_path):
+        return {"error": "Resume file not found"}, 404
+
+    return send_file(
+        file_path,
+        mimetype="application/pdf",
+        as_attachment=False,
+        download_name="resume.pdf"
+    )
 
 
 @students_bp.route("/available-skills", methods=["GET"])

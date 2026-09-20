@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Offers</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>Offer Management</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+
+            <section class="welcome-card">
+                <h2>Offers</h2>
+                <p>Manage student placement offers.</p>
+            </section>
+
+            <section class="dashboard-card">
+                <h3>Create Offer</h3>
+
+                <div class="form-group">
+                    <label for="applicationId">
+                        Selected Application
+                    </label>
+
+                    <select id="applicationId">
+                        <option value="">
+                            Select application
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="salaryLpa">
+                        Salary (LPA)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="salaryLpa"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="Enter salary in LPA"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="offerDate">
+                        Offer Date
+                    </label>
+
+                    <input
+                        type="text"
+                        id="offerDate"
+                        placeholder="DD-MM-YYYY"
+                        maxlength="10"
+                    >
+                </div>
+
+                <p id="offerDatePreview" class="message"></p>
+
+                <div class="form-group">
+                    <label for="offerStatus">
+                        Offer Status
+                    </label>
+
+                    <select id="offerStatus">
+                        <option value="ACTIVE">
+                            Active
+                        </option>
+
+                        <option value="ACCEPTED">
+                            Accepted
+                        </option>
+
+                        <option value="DECLINED">
+                            Declined
+                        </option>
+                    </select>
+                </div>
+
+                <button
+                    id="createOfferButton"
+                    class="btn-primary"
+                >
+                    Create Offer
+                </button>
+
+                <p
+                    id="createOfferMessage"
+                    class="message"
+                ></p>
+            </section>
+
+            <section class="dashboard-card">
+                <h3>Offer List</h3>
+
+                <div id="offersList">
+                    Loading offers...
+                </div>
+
+                <p
+                    id="offersMessage"
+                    class="message"
+                ></p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (
+            !token ||
+            (
+                role !== "TPO" &&
+                role !== "ADMIN" &&
+                role !== "SUPER_ADMIN"
+            )
+        ) {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener(
+            "click",
+            function () {
+                window.location.href = "admin-dashboard.html";
+            }
+        );
+
+        function convertToISODate(dateValue) {
+            if (!dateValue) {
+                return null;
+            }
+
+            const parts = dateValue.split("-");
+
+            if (parts.length !== 3) {
+                throw new Error(
+                    "Date must be in DD-MM-YYYY format."
+                );
+            }
+
+            const day = Number(parts[0]);
+            const month = Number(parts[1]);
+            const year = Number(parts[2]);
+
+            if (
+                !Number.isInteger(day) ||
+                !Number.isInteger(month) ||
+                !Number.isInteger(year) ||
+                day < 1 ||
+                day > 31 ||
+                month < 1 ||
+                month > 12 ||
+                year < 2000 ||
+                year > 2100
+            ) {
+                throw new Error(
+                    "Please enter a valid offer date."
+                );
+            }
+
+            const date = new Date(
+                year,
+                month - 1,
+                day
+            );
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                throw new Error(
+                    "Please enter a valid offer date."
+                );
+            }
+
+            return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        }
+
+        function formatOfferDate(value) {
+            if (!value) {
+                return "Not specified";
+            }
+
+            const date = new Date(value);
+
+            if (isNaN(date.getTime())) {
+                return value;
+            }
+
+            return date.toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+        }
+
+        function formatStatusLabel(status) {
+            if (!status) {
+                return "Not specified";
+            }
+
+            return status
+                .toLowerCase()
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, function (letter) {
+                    return letter.toUpperCase();
+                });
+        }
+
+        function updateOfferDatePreview() {
+            const offerDate =
+                document.getElementById(
+                    "offerDate"
+                ).value.trim();
+
+            const preview =
+                document.getElementById(
+                    "offerDatePreview"
+                );
+
+            if (!offerDate) {
+                preview.textContent = "";
+                return;
+            }
+
+            try {
+                const isoDate =
+                    convertToISODate(offerDate);
+
+                preview.textContent =
+                    `Offer Date: ${formatOfferDate(isoDate)}`;
+            } catch (error) {
+                preview.textContent =
+                    error.message;
+            }
+        }
+
+        document
+            .getElementById("offerDate")
+            .addEventListener(
+                "input",
+                updateOfferDatePreview
+            );
+
+        async function loadApplications() {
+            const applicationSelect =
+                document.getElementById(
+                    "applicationId"
+                );
+
+            try {
+                const [
+                    applicationsResponse,
+                    offersResponse
+                ] = await Promise.all([
+                    fetch(
+                        `${API_BASE_URL}/api/applications`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization": `Bearer ${token}`
+                            }
+                        }
+                    ),
+                    fetch(
+                        `${API_BASE_URL}/api/offers`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization": `Bearer ${token}`
+                            }
+                        }
+                    )
+                ]);
+
+                const applicationsData =
+                    await applicationsResponse.json();
+
+                const offersData =
+                    await offersResponse.json();
+
+                if (
+                    !applicationsResponse.ok ||
+                    !offersResponse.ok
+                ) {
+                    return;
+                }
+
+                applicationSelect.innerHTML = `
+                    <option value="">
+                        Select application
+                    </option>
+                `;
+
+                const existingOfferApplicationIds =
+                    new Set(
+                        (offersData.offers || []).map(
+                            function (offer) {
+                                return Number(
+                                    offer.application_id
+                                );
+                            }
+                        )
+                    );
+
+                const selectedApplications =
+                    applicationsData.applications.filter(
+                        function (application) {
+                            return (
+                                application.status === "SELECTED" &&
+                                !existingOfferApplicationIds.has(
+                                    Number(
+                                        application.application_id
+                                    )
+                                )
+                            );
+                        }
+                    );
+
+                selectedApplications.forEach(
+                    function (application) {
+                        const option =
+                            document.createElement("option");
+
+                        option.value =
+                            application.application_id;
+
+                        option.textContent =
+                            `Application #${application.application_id} - Student ${application.student_id} - Job ${application.job_id}`;
+
+                        applicationSelect.appendChild(
+                            option
+                        );
+                    }
+                );
+
+            } catch (error) {
+                return;
+            }
+        }
+
+        async function loadOffers() {
+            const offersList =
+                document.getElementById("offersList");
+
+            const offersMessage =
+                document.getElementById("offersMessage");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/offers`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    offersList.textContent = "";
+
+                    offersMessage.textContent =
+                        data.error ||
+                        "Unable to load offers.";
+
+                    return;
+                }
+
+                if (
+                    !data.offers ||
+                    data.offers.length === 0
+                ) {
+                    offersList.textContent =
+                        "No offers found.";
+
+                    return;
+                }
+
+                offersList.innerHTML = "";
+
+                data.offers.forEach(
+                    function (offer) {
+                        const offerCard =
+                            document.createElement("div");
+
+                        offerCard.className =
+                            "dashboard-card";
+
+                        offerCard.style.marginBottom =
+                            "20px";
+
+                        offerCard.innerHTML = `
+                            <h3>
+                                Offer #${offer.offer_id}
+                            </h3>
+
+                            <p>
+                                <strong>
+                                    Application ID:
+                                </strong>
+                                ${offer.application_id}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Salary:
+                                </strong>
+                                ${
+                                    offer.salary_lpa != null
+                                        ? offer.salary_lpa + " LPA"
+                                        : "Not specified"
+                                }
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Offer Date:
+                                </strong>
+                                ${formatOfferDate(
+                                    offer.offer_date
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Status:
+                                </strong>
+                                ${formatStatusLabel(
+                                    offer.offer_status
+                                )}
+                            </p>
+                        `;
+
+                        offersList.appendChild(
+                            offerCard
+                        );
+                    }
+                );
+
+            } catch (error) {
+                offersList.textContent = "";
+
+                offersMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        document
+            .getElementById("createOfferButton")
+            .addEventListener(
+                "click",
+                async function () {
+
+                    const applicationId =
+                        document.getElementById(
+                            "applicationId"
+                        ).value;
+
+                    const salaryLpa =
+                        document.getElementById(
+                            "salaryLpa"
+                        ).value;
+
+                    const offerDateValue =
+                        document.getElementById(
+                            "offerDate"
+                        ).value.trim();
+
+                    const offerStatus =
+                        document.getElementById(
+                            "offerStatus"
+                        ).value;
+
+                    const createOfferMessage =
+                        document.getElementById(
+                            "createOfferMessage"
+                        );
+
+                    if (
+                        !applicationId ||
+                        !salaryLpa
+                    ) {
+                        createOfferMessage.textContent =
+                            "Application and salary are required.";
+
+                        return;
+                    }
+
+                    if (Number(salaryLpa) <= 0) {
+                        createOfferMessage.textContent =
+                            "Salary must be greater than 0.";
+
+                        return;
+                    }
+
+                    let offerDate = null;
+
+                    try {
+                        offerDate =
+                            convertToISODate(
+                                offerDateValue
+                            );
+                    } catch (error) {
+                        createOfferMessage.textContent =
+                            error.message;
+
+                        return;
+                    }
+
+                    createOfferMessage.textContent =
+                        "Creating offer...";
+
+                    try {
+                        const response = await fetch(
+                            `${API_BASE_URL}/api/offers`,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type":
+                                        "application/json",
+                                    "Authorization":
+                                        `Bearer ${token}`
+                                },
+                                body: JSON.stringify({
+                                    application_id:
+                                        Number(applicationId),
+                                    salary_lpa:
+                                        Number(salaryLpa),
+                                    offer_date:
+                                        offerDate,
+                                    offer_status:
+                                        offerStatus
+                                })
+                            }
+                        );
+
+                        const data =
+                            await response.json();
+
+                        if (!response.ok) {
+                            createOfferMessage.textContent =
+                                data.error ||
+                                "Unable to create offer.";
+
+                            return;
+                        }
+
+                        createOfferMessage.textContent =
+                            "Offer created successfully.";
+
+                        document.getElementById(
+                            "applicationId"
+                        ).value = "";
+
+                        document.getElementById(
+                            "salaryLpa"
+                        ).value = "";
+
+                        document.getElementById(
+                            "offerDate"
+                        ).value = "";
+
+                        document.getElementById(
+                            "offerDatePreview"
+                        ).textContent = "";
+
+                        document.getElementById(
+                            "offerStatus"
+                        ).value = "ACTIVE";
+
+                        loadApplications();
+                        loadOffers();
+
+                    } catch (error) {
+                        createOfferMessage.textContent =
+                            "Unable to connect to CampusPulse backend.";
+                    }
+                }
+            );
+
+        loadApplications();
+        loadOffers();
+    </script>
+
+</body>
+</html>

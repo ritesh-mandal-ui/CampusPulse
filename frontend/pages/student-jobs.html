@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Jobs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>Available Jobs</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="welcome-card">
+                <h2>Available Jobs</h2>
+                <p>Browse placement opportunities and check your eligibility.</p>
+            </section>
+
+            <section id="jobsList" class="dashboard-grid">
+                Loading jobs...
+            </section>
+
+            <p id="jobsMessage" class="message"></p>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "STUDENT") {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = "student-dashboard.html";
+        });
+
+        async function loadProfile() {
+            const response = await fetch(
+                `${API_BASE_URL}/api/students/profile`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load student profile.");
+            }
+
+            return await response.json();
+        }
+
+        async function loadApplications() {
+            const response = await fetch(
+                `${API_BASE_URL}/api/applications`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load applications.");
+            }
+
+            return await response.json();
+        }
+
+        async function loadJobs() {
+            const jobsList = document.getElementById("jobsList");
+            const jobsMessage = document.getElementById("jobsMessage");
+
+            try {
+                const [jobsResponse, profile, applicationsData] =
+                    await Promise.all([
+                        fetch(
+                            `${API_BASE_URL}/api/jobs`,
+                            {
+                                method: "GET",
+                                headers: {
+                                    "Authorization": `Bearer ${token}`
+                                }
+                            }
+                        ),
+                        loadProfile(),
+                        loadApplications()
+                    ]);
+
+                const jobsData = await jobsResponse.json();
+
+                if (!jobsResponse.ok) {
+                    jobsList.textContent = "";
+                    jobsMessage.textContent =
+                        jobsData.error || "Unable to load jobs.";
+                    return;
+                }
+
+                if (!jobsData.jobs || jobsData.jobs.length === 0) {
+                    jobsList.textContent = "No jobs available.";
+                    return;
+                }
+
+                const applications = applicationsData.applications || [];
+
+                jobsList.innerHTML = "";
+
+                jobsData.jobs.forEach(function (job) {
+                    const jobCard = document.createElement("div");
+
+                    jobCard.className = "dashboard-card";
+
+                    const minimumCgpa = Number(job.minimum_cgpa);
+                    const studentCgpa = Number(profile.cgpa);
+
+                    const eligible =
+                        !isNaN(minimumCgpa) &&
+                        !isNaN(studentCgpa) &&
+                        studentCgpa >= minimumCgpa;
+
+                    const existingApplication = applications.find(
+                        function (application) {
+                            return application.job_id === job.job_id;
+                        }
+                    );
+
+                    let eligibilityText = "";
+                    let buttonHtml = "";
+
+                    if (job.job_status !== "OPEN") {
+                        eligibilityText = "Applications Closed";
+
+                        buttonHtml = `
+                            <button
+                                class="btn-primary"
+                                disabled
+                            >
+                                Applications Closed
+                            </button>
+                        `;
+                    } else if (eligible) {
+                        eligibilityText = "Eligible";
+
+                        if (existingApplication) {
+                            buttonHtml = `
+                                <p>
+                                    <strong>
+                                        Application Status:
+                                    </strong>
+                                    ${existingApplication.status}
+                                </p>
+                            `;
+                        } else {
+                            buttonHtml = `
+                                <button
+                                    class="btn-primary apply-button"
+                                    data-job-id="${job.job_id}"
+                                >
+                                    Apply
+                                </button>
+                            `;
+                        }
+                    } else {
+                        eligibilityText = "Not Eligible";
+
+                        buttonHtml = `
+                            <button
+                                class="btn-primary"
+                                disabled
+                            >
+                                Not Eligible
+                            </button>
+                        `;
+                    }
+
+                    jobCard.innerHTML = `
+                        <h3>${job.job_title}</h3>
+
+                        <p>
+                            <strong>Company:</strong>
+                            ${job.company_name || "Unknown"}
+                        </p>
+
+                        <p>
+                            ${job.job_description ||
+                            "No description available."}
+                        </p>
+
+                        <p>
+                            Minimum CGPA:
+                            ${job.minimum_cgpa ?? "Not specified"}
+                        </p>
+
+                        <p>
+                            Maximum Backlogs:
+                            ${job.maximum_backlogs ?? "Not specified"}
+                        </p>
+
+                        <p>
+                            Salary:
+                            ${job.salary_lpa
+                                ? job.salary_lpa + " LPA"
+                                : "Not specified"}
+                        </p>
+
+                        <p>
+                            Status:
+                            ${job.job_status || "Not specified"}
+                        </p>
+
+                        <p>
+                            Application Deadline:
+                            ${job.application_deadline ||
+                            "Not specified"}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Your CGPA:
+                            </strong>
+                            ${profile.cgpa ?? "Not available"}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Eligibility:
+                            </strong>
+                            ${eligibilityText}
+                        </p>
+
+                        <div>
+                            ${buttonHtml}
+                        </div>
+
+                        <p
+                            id="applyMessage-${job.job_id}"
+                            class="message"
+                        ></p>
+                    `;
+
+                    jobsList.appendChild(jobCard);
+                });
+
+                document
+                    .querySelectorAll(".apply-button")
+                    .forEach(function (button) {
+                        button.addEventListener(
+                            "click",
+                            function () {
+                                const jobId =
+                                    this.getAttribute("data-job-id");
+
+                                applyForJob(jobId);
+                            }
+                        );
+                    });
+
+            } catch (error) {
+                jobsList.textContent = "";
+                jobsMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        async function applyForJob(jobId) {
+            const applyMessage =
+                document.getElementById(
+                    `applyMessage-${jobId}`
+                );
+
+            applyMessage.textContent =
+                "Submitting application...";
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/applications/${jobId}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    applyMessage.textContent =
+                        data.error ||
+                        "Unable to submit application.";
+                    return;
+                }
+
+                applyMessage.textContent =
+                    "Application submitted successfully.";
+
+                loadJobs();
+            } catch (error) {
+                applyMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        loadJobs();
+    </script>
+
+</body>
+</html>

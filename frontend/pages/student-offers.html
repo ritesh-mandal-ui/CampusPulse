@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Offers</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>My Offers</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="welcome-card">
+                <h2>My Offers</h2>
+                <p>View your placement offers.</p>
+            </section>
+
+            <section id="offersList" class="dashboard-grid">
+                Loading offers...
+            </section>
+
+            <p id="offersMessage" class="message"></p>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "STUDENT") {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = "student-dashboard.html";
+        });
+
+        function formatOfferDate(value) {
+            if (!value) {
+                return "Not specified";
+            }
+
+            const date = new Date(value);
+
+            if (isNaN(date.getTime())) {
+                return value;
+            }
+
+            return date.toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+        }
+
+        function formatOfferStatus(status) {
+            if (!status) {
+                return "Not specified";
+            }
+
+            return status
+                .toLowerCase()
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, function (letter) {
+                    return letter.toUpperCase();
+                });
+        }
+
+        async function loadOffers() {
+            const offersList =
+                document.getElementById("offersList");
+
+            const offersMessage =
+                document.getElementById("offersMessage");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/offers`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    offersList.textContent = "";
+                    offersMessage.textContent =
+                        data.error || "Unable to load offers.";
+                    return;
+                }
+
+                if (
+                    !data.offers ||
+                    data.offers.length === 0
+                ) {
+                    offersList.textContent =
+                        "No placement offers found.";
+                    return;
+                }
+
+                offersList.innerHTML = "";
+
+                data.offers.forEach(function (offer) {
+                    const offerCard =
+                        document.createElement("div");
+
+                    offerCard.className = "dashboard-card";
+
+                    offerCard.innerHTML = `
+                        <h3>
+                            Offer #${offer.offer_id}
+                        </h3>
+
+                        <p>
+                            <strong>Application ID:</strong>
+                            ${offer.application_id}
+                        </p>
+
+                        <p>
+                            <strong>Salary:</strong>
+                            ${offer.salary_lpa != null
+                                ? offer.salary_lpa + " LPA"
+                                : "Not specified"}
+                        </p>
+
+                        <p>
+                            <strong>Offer Date:</strong>
+                            ${formatOfferDate(offer.offer_date)}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            ${formatOfferStatus(offer.offer_status)}
+                        </p>
+                    `;
+
+                    offersList.appendChild(offerCard);
+                });
+            } catch (error) {
+                offersList.textContent = "";
+
+                offersMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        loadOffers();
+    </script>
+
+</body>
+</html>

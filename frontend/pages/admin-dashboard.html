@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>Admin / TPO Dashboard</p>
+            </div>
+
+            <button id="logoutButton" class="btn-primary">
+                Logout
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="welcome-card">
+                <h2>Welcome to CampusPulse</h2>
+                <p>Manage placement activities from here.</p>
+            </section>
+
+            <section class="dashboard-grid">
+
+                <div
+                    class="dashboard-card"
+                    id="companiesCard"
+                    style="cursor: pointer;"
+                >
+                    <h3>Companies</h3>
+                    <p>Manage companies participating in placements.</p>
+                </div>
+
+                <div
+                    class="dashboard-card"
+                    id="jobsCard"
+                    style="cursor: pointer;"
+                >
+                    <h3>Jobs</h3>
+                    <p>Create and manage placement opportunities.</p>
+                </div>
+
+                <div
+                    class="dashboard-card"
+                    id="applicationsCard"
+                    style="cursor: pointer;"
+                >
+                    <h3>Applications</h3>
+                    <p>View and manage student applications.</p>
+                </div>
+
+                <div
+                    class="dashboard-card"
+                    id="interviewsCard"
+                    style="cursor: pointer;"
+                >
+                    <h3>Interviews</h3>
+                    <p>Schedule and manage student interviews.</p>
+                </div>
+
+                <div
+                    class="dashboard-card"
+                    id="offersCard"
+                    style="cursor: pointer;"
+                >
+                    <h3>Offers</h3>
+                    <p>Manage student placement offers.</p>
+                </div>
+
+                <div
+                    class="dashboard-card"
+                    id="analyticsCard"
+                    style="cursor: pointer;"
+                >
+                    <h3>Analytics</h3>
+                    <p>View placement analytics and reports.</p>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (
+            !token ||
+            (
+                role !== "TPO" &&
+                role !== "ADMIN" &&
+                role !== "SUPER_ADMIN"
+            )
+        ) {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("logoutButton").addEventListener("click", function () {
+            localStorage.clear();
+            window.location.href = "login.html";
+        });
+
+        document.getElementById("companiesCard").addEventListener("click", function () {
+            window.location.href = "admin-companies.html";
+        });
+
+        document.getElementById("jobsCard").addEventListener("click", function () {
+            window.location.href = "admin-jobs.html";
+        });
+
+        document.getElementById("applicationsCard").addEventListener("click", function () {
+            window.location.href = "admin-applications.html";
+        });
+
+        document.getElementById("interviewsCard").addEventListener("click", function () {
+            window.location.href = "admin-interviews.html";
+        });
+
+        document.getElementById("offersCard").addEventListener("click", function () {
+            window.location.href = "admin-offers.html";
+        });
+
+        document.getElementById("analyticsCard").addEventListener("click", function () {
+            window.location.href = "admin-analytics.html";
+        });
+    </script>
+
+</body>
+</html>

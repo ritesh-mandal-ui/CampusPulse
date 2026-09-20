@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Applications</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>My Applications</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="welcome-card">
+                <h2>My Applications</h2>
+                <p>Track the status of your job applications.</p>
+            </section>
+
+            <section id="applicationsList" class="dashboard-grid">
+                Loading applications...
+            </section>
+
+            <p id="applicationsMessage" class="message"></p>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "STUDENT") {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = "student-dashboard.html";
+        });
+
+        function formatApplicationDateTime(value) {
+            if (!value) {
+                return "Not specified";
+            }
+
+            const date = new Date(value);
+
+            if (isNaN(date.getTime())) {
+                return value;
+            }
+
+            return date.toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true
+            });
+        }
+
+        function formatApplicationStatus(status) {
+            if (!status) {
+                return "Not specified";
+            }
+
+            return status
+                .toLowerCase()
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, function (letter) {
+                    return letter.toUpperCase();
+                });
+        }
+
+        async function loadApplications() {
+            const applicationsList =
+                document.getElementById("applicationsList");
+
+            const applicationsMessage =
+                document.getElementById("applicationsMessage");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/applications`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    applicationsList.textContent = "";
+                    applicationsMessage.textContent =
+                        data.error || "Unable to load applications.";
+                    return;
+                }
+
+                if (
+                    !data.applications ||
+                    data.applications.length === 0
+                ) {
+                    applicationsList.textContent =
+                        "No applications found.";
+                    return;
+                }
+
+                applicationsList.innerHTML = "";
+
+                data.applications.forEach(function (application) {
+                    const applicationCard =
+                        document.createElement("div");
+
+                    applicationCard.className = "dashboard-card";
+
+                    applicationCard.innerHTML = `
+                        <h3>
+                            Application #${application.application_id}
+                        </h3>
+
+                        <p>
+                            <strong>Job:</strong>
+                            ${application.job_title || "Unknown"}
+                        </p>
+
+                        <p>
+                            <strong>Company:</strong>
+                            ${application.company_name || "Unknown"}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            ${formatApplicationStatus(application.status)}
+                        </p>
+
+                        <p>
+                            <strong>Applied At:</strong>
+                            ${formatApplicationDateTime(application.applied_at)}
+                        </p>
+                    `;
+
+                    applicationsList.appendChild(applicationCard);
+                });
+            } catch (error) {
+                applicationsList.textContent = "";
+
+                applicationsMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        loadApplications();
+    </script>
+
+</body>
+</html>

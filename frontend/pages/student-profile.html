@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Student Profile</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>Student Profile</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="welcome-card">
+                <h2>My Profile</h2>
+                <p>View your registered student information.</p>
+            </section>
+
+            <section class="profile-card">
+                <div class="profile-row">
+                    <span>Full Name</span>
+                    <strong id="fullName">Loading...</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Roll Number</span>
+                    <strong id="rollNumber">Loading...</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Department ID</span>
+                    <strong id="departmentId">Loading...</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>CGPA</span>
+                    <strong id="cgpa">Loading...</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Graduation Year</span>
+                    <strong id="graduationYear">Loading...</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Phone</span>
+                    <strong id="phone">Loading...</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Resume</span>
+                    <strong id="resumeUrl">Loading...</strong>
+                </div>
+
+                <p id="profileMessage" class="message"></p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "STUDENT") {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = "student-dashboard.html";
+        });
+
+        async function loadProfile() {
+            const profileMessage = document.getElementById("profileMessage");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/students/profile`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    profileMessage.textContent =
+                        data.error || "Unable to load profile.";
+                    return;
+                }
+
+                document.getElementById("fullName").textContent =
+                    data.full_name || "Not available";
+
+                document.getElementById("rollNumber").textContent =
+                    data.roll_number || "Not available";
+
+                document.getElementById("departmentId").textContent =
+                    data.department_id || "Not available";
+
+                document.getElementById("cgpa").textContent =
+                    data.cgpa ?? "Not available";
+
+                document.getElementById("graduationYear").textContent =
+                    data.graduation_year || "Not available";
+
+                document.getElementById("phone").textContent =
+                    data.phone || "Not available";
+
+                document.getElementById("resumeUrl").textContent =
+                    data.resume_url || "Not uploaded";
+            } catch (error) {
+                profileMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        loadProfile();
+    </script>
+
+</body>
+</html>

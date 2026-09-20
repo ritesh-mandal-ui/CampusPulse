@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Interviews</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>Interview Management</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+
+            <section class="welcome-card">
+                <h2>Interviews</h2>
+                <p>Schedule and manage student placement interviews.</p>
+            </section>
+
+            <section class="dashboard-card">
+                <h3>Schedule Interview</h3>
+
+                <div class="form-group">
+                    <label for="applicationId">
+                        Application
+                    </label>
+
+                    <select id="applicationId">
+                        <option value="">
+                            Select application
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="roundName">
+                        Round Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="roundName"
+                        placeholder="Enter interview round"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduledDate">
+                        Interview Date
+                    </label>
+
+                    <input
+                        type="text"
+                        id="scheduledDate"
+                        placeholder="DD-MM-YYYY"
+                        maxlength="10"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduledTime">
+                        Interview Time
+                    </label>
+
+                    <input
+                        type="text"
+                        id="scheduledTime"
+                        placeholder="HH:MM AM/PM"
+                        maxlength="8"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Scheduled At
+                    </label>
+
+                    <p id="scheduledPreview">
+                        Select date and time
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="mode">
+                        Mode
+                    </label>
+
+                    <select id="mode">
+                        <option value="">
+                            Select mode
+                        </option>
+
+                        <option value="ONLINE">
+                            ONLINE
+                        </option>
+
+                        <option value="OFFLINE">
+                            OFFLINE
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="result">
+                        Result
+                    </label>
+
+                    <select id="result">
+                        <option value="">
+                            Select result
+                        </option>
+
+                        <option value="PENDING">
+                            PENDING
+                        </option>
+
+                        <option value="PASSED">
+                            PASSED
+                        </option>
+
+                        <option value="FAILED">
+                            FAILED
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="remarks">
+                        Remarks
+                    </label>
+
+                    <textarea
+                        id="remarks"
+                        placeholder="Enter remarks"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <button
+                    id="scheduleInterviewButton"
+                    class="btn-primary"
+                >
+                    Schedule Interview
+                </button>
+
+                <p
+                    id="scheduleMessage"
+                    class="message"
+                ></p>
+            </section>
+
+            <section class="dashboard-card">
+                <h3>Interview List</h3>
+
+                <div id="interviewsList">
+                    Loading interviews...
+                </div>
+
+                <p
+                    id="interviewsMessage"
+                    class="message"
+                ></p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (
+            !token ||
+            (
+                role !== "TPO" &&
+                role !== "ADMIN" &&
+                role !== "SUPER_ADMIN"
+            )
+        ) {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener(
+            "click",
+            function () {
+                window.location.href = "admin-dashboard.html";
+            }
+        );
+
+        const scheduledDate =
+            document.getElementById("scheduledDate");
+
+        const scheduledTime =
+            document.getElementById("scheduledTime");
+
+        const scheduledPreview =
+            document.getElementById("scheduledPreview");
+
+        function convertToISODateTime(
+            dateValue,
+            timeValue
+        ) {
+            const dateMatch = dateValue.match(
+                /^(\d{2})-(\d{2})-(\d{4})$/
+            );
+
+            if (!dateMatch) {
+                return null;
+            }
+
+            const day =
+                Number(dateMatch[1]);
+
+            const month =
+                Number(dateMatch[2]);
+
+            const year =
+                Number(dateMatch[3]);
+
+            if (
+                month < 1 ||
+                month > 12 ||
+                day < 1 ||
+                day > 31
+            ) {
+                return null;
+            }
+
+            const timeMatch = timeValue.match(
+                /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+            );
+
+            if (!timeMatch) {
+                return null;
+            }
+
+            let hour =
+                Number(timeMatch[1]);
+
+            const minute =
+                Number(timeMatch[2]);
+
+            const period =
+                timeMatch[3].toUpperCase();
+
+            if (
+                hour < 1 ||
+                hour > 12 ||
+                minute < 0 ||
+                minute > 59
+            ) {
+                return null;
+            }
+
+            if (period === "AM") {
+                if (hour === 12) {
+                    hour = 0;
+                }
+            } else {
+                if (hour !== 12) {
+                    hour += 12;
+                }
+            }
+
+            const date =
+                new Date(
+                    year,
+                    month - 1,
+                    day
+                );
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                return null;
+            }
+
+            return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00`;
+        }
+
+        function updateScheduledPreview() {
+            const dateValue =
+                scheduledDate.value.trim();
+
+            const timeValue =
+                scheduledTime.value.trim();
+
+            if (!dateValue || !timeValue) {
+                scheduledPreview.textContent =
+                    "Select date and time";
+
+                return;
+            }
+
+            const isoDateTime =
+                convertToISODateTime(
+                    dateValue,
+                    timeValue
+                );
+
+            if (!isoDateTime) {
+                scheduledPreview.textContent =
+                    "Use date DD-MM-YYYY and time HH:MM AM/PM";
+
+                return;
+            }
+
+            const match =
+                isoDateTime.match(
+                    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/
+                );
+
+            const year =
+                match[1];
+
+            const month =
+                Number(match[2]);
+
+            const day =
+                match[3];
+
+            const hour24 =
+                Number(match[4]);
+
+            const minute =
+                match[5];
+
+            const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ];
+
+            const period =
+                hour24 >= 12
+                    ? "PM"
+                    : "AM";
+
+            const hour12 =
+                hour24 % 12 === 0
+                    ? 12
+                    : hour24 % 12;
+
+            scheduledPreview.textContent =
+                `${day} ${monthNames[month - 1]} ${year}, ${hour12}:${minute} ${period}`;
+        }
+
+        scheduledDate.addEventListener(
+            "input",
+            updateScheduledPreview
+        );
+
+        scheduledTime.addEventListener(
+            "input",
+            updateScheduledPreview
+        );
+
+        function formatInterviewDateTime(value) {
+            if (!value) {
+                return "Not specified";
+            }
+
+            const match = value.match(
+                /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/
+            );
+
+            if (!match) {
+                return value;
+            }
+
+            const year =
+                match[1];
+
+            const month =
+                Number(match[2]);
+
+            const day =
+                match[3];
+
+            const hour24 =
+                Number(match[4]);
+
+            const minute =
+                match[5];
+
+            const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ];
+
+            const period =
+                hour24 >= 12
+                    ? "PM"
+                    : "AM";
+
+            const hour12 =
+                hour24 % 12 === 0
+                    ? 12
+                    : hour24 % 12;
+
+            return `${day} ${monthNames[month - 1]} ${year}, ${hour12}:${minute} ${period}`;
+        }
+
+        async function loadApplications() {
+            const applicationSelect =
+                document.getElementById("applicationId");
+
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/applications`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (!response.ok) {
+                    return;
+                }
+
+                applicationSelect.innerHTML = `
+                    <option value="">
+                        Select application
+                    </option>
+                `;
+
+                data.applications.forEach(
+                    function (application) {
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value =
+                            application.application_id;
+
+                        option.textContent =
+                            `Application #${application.application_id} - ${application.student_name || "Unknown Student"} - ${application.job_title || "Unknown Job"} - ${application.company_name || "Unknown Company"} - ${application.status}`;
+
+                        applicationSelect.appendChild(
+                            option
+                        );
+                    }
+                );
+
+            } catch (error) {
+                return;
+            }
+        }
+
+        async function loadInterviews() {
+            const interviewsList =
+                document.getElementById(
+                    "interviewsList"
+                );
+
+            const interviewsMessage =
+                document.getElementById(
+                    "interviewsMessage"
+                );
+
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/interviews`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (!response.ok) {
+                    interviewsList.textContent =
+                        "";
+
+                    interviewsMessage.textContent =
+                        data.error ||
+                        "Unable to load interviews.";
+
+                    return;
+                }
+
+                if (
+                    !data.interviews ||
+                    data.interviews.length === 0
+                ) {
+                    interviewsList.textContent =
+                        "No interviews found.";
+
+                    return;
+                }
+
+                interviewsList.innerHTML =
+                    "";
+
+                data.interviews.forEach(
+                    function (interview) {
+                        const interviewCard =
+                            document.createElement(
+                                "div"
+                            );
+
+                        interviewCard.className =
+                            "dashboard-card";
+
+                        interviewCard.style.marginBottom =
+                            "20px";
+
+                        interviewCard.innerHTML = `
+                            <h3>
+                                Interview #${interview.interview_id}
+                            </h3>
+
+                            <p>
+                                <strong>
+                                    Application ID:
+                                </strong>
+                                ${interview.application_id}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Round:
+                                </strong>
+                                ${interview.round_name}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Scheduled At:
+                                </strong>
+                                ${formatInterviewDateTime(
+                                    interview.scheduled_at
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Mode:
+                                </strong>
+                                ${interview.mode}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Result:
+                                </strong>
+                                ${interview.result ||
+                                "Not specified"}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Remarks:
+                                </strong>
+                                ${interview.remarks ||
+                                "No remarks"}
+                            </p>
+                        `;
+
+                        interviewsList.appendChild(
+                            interviewCard
+                        );
+                    }
+                );
+
+            } catch (error) {
+                interviewsList.textContent =
+                    "";
+
+                interviewsMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        document
+            .getElementById(
+                "scheduleInterviewButton"
+            )
+            .addEventListener(
+                "click",
+                async function () {
+
+                    const applicationId =
+                        document.getElementById(
+                            "applicationId"
+                        ).value;
+
+                    const roundName =
+                        document.getElementById(
+                            "roundName"
+                        ).value.trim();
+
+                    const dateValue =
+                        scheduledDate.value.trim();
+
+                    const timeValue =
+                        scheduledTime.value.trim();
+
+                    const mode =
+                        document.getElementById(
+                            "mode"
+                        ).value;
+
+                    const result =
+                        document.getElementById(
+                            "result"
+                        ).value;
+
+                    const remarks =
+                        document.getElementById(
+                            "remarks"
+                        ).value.trim();
+
+                    const scheduleMessage =
+                        document.getElementById(
+                            "scheduleMessage"
+                        );
+
+                    if (
+                        !applicationId ||
+                        !roundName ||
+                        !dateValue ||
+                        !timeValue ||
+                        !mode
+                    ) {
+                        scheduleMessage.textContent =
+                            "Application, round name, date, time and mode are required.";
+
+                        return;
+                    }
+
+                    const scheduledAt =
+                        convertToISODateTime(
+                            dateValue,
+                            timeValue
+                        );
+
+                    if (!scheduledAt) {
+                        scheduleMessage.textContent =
+                            "Enter date as DD-MM-YYYY and time as HH:MM AM/PM.";
+
+                        return;
+                    }
+
+                    scheduleMessage.textContent =
+                        "Scheduling interview...";
+
+                    try {
+                        const response =
+                            await fetch(
+                                `${API_BASE_URL}/api/interviews`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+                                        "Authorization":
+                                            `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        application_id:
+                                            Number(
+                                                applicationId
+                                            ),
+                                        round_name:
+                                            roundName,
+                                        scheduled_at:
+                                            scheduledAt,
+                                        mode:
+                                            mode,
+                                        result:
+                                            result || null,
+                                        remarks:
+                                            remarks || null
+                                    })
+                                }
+                            );
+
+                        const data =
+                            await response.json();
+
+                        if (!response.ok) {
+                            scheduleMessage.textContent =
+                                data.error ||
+                                "Unable to schedule interview.";
+
+                            return;
+                        }
+
+                        scheduleMessage.textContent =
+                            "Interview scheduled successfully.";
+
+                        document.getElementById(
+                            "applicationId"
+                        ).value = "";
+
+                        document.getElementById(
+                            "roundName"
+                        ).value = "";
+
+                        scheduledDate.value =
+                            "";
+
+                        scheduledTime.value =
+                            "";
+
+                        scheduledPreview.textContent =
+                            "Select date and time";
+
+                        document.getElementById(
+                            "mode"
+                        ).value = "";
+
+                        document.getElementById(
+                            "result"
+                        ).value = "";
+
+                        document.getElementById(
+                            "remarks"
+                        ).value = "";
+
+                        loadApplications();
+                        loadInterviews();
+
+                    } catch (error) {
+                        scheduleMessage.textContent =
+                            "Unable to connect to CampusPulse backend.";
+                    }
+                }
+            );
+
+        loadApplications();
+        loadInterviews();
+    </script>
+
+</body>
+</html>

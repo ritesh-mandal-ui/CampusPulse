@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Interviews</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>My Interviews</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+
+            <section class="welcome-card">
+                <h2>My Interviews</h2>
+                <p>View your scheduled placement interviews.</p>
+            </section>
+
+            <section id="interviewsList" class="dashboard-grid">
+                Loading interviews...
+            </section>
+
+            <p id="interviewsMessage" class="message"></p>
+
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "STUDENT") {
+            window.location.href = "login.html";
+        }
+
+        document
+            .getElementById("backButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-dashboard.html";
+                }
+            );
+
+        function formatInterviewDateTime(value) {
+            if (!value) {
+                return "Not specified";
+            }
+
+            const match = value.match(
+                /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/
+            );
+
+            if (!match) {
+                return value;
+            }
+
+            const year =
+                match[1];
+
+            const month =
+                Number(match[2]);
+
+            const day =
+                match[3];
+
+            const hour24 =
+                Number(match[4]);
+
+            const minute =
+                match[5];
+
+            const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ];
+
+            const period =
+                hour24 >= 12
+                    ? "PM"
+                    : "AM";
+
+            const hour12 =
+                hour24 % 12 === 0
+                    ? 12
+                    : hour24 % 12;
+
+            return `${day} ${monthNames[month - 1]} ${year}, ${hour12}:${minute} ${period}`;
+        }
+
+        async function loadInterviews() {
+            const interviewsList =
+                document.getElementById(
+                    "interviewsList"
+                );
+
+            const interviewsMessage =
+                document.getElementById(
+                    "interviewsMessage"
+                );
+
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/interviews`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (!response.ok) {
+                    interviewsList.textContent =
+                        "";
+
+                    interviewsMessage.textContent =
+                        data.error ||
+                        "Unable to load interviews.";
+
+                    return;
+                }
+
+                if (
+                    !data.interviews ||
+                    data.interviews.length === 0
+                ) {
+                    interviewsList.textContent =
+                        "No interviews scheduled.";
+
+                    return;
+                }
+
+                interviewsList.innerHTML =
+                    "";
+
+                data.interviews.forEach(
+                    function (interview) {
+                        const interviewCard =
+                            document.createElement(
+                                "div"
+                            );
+
+                        interviewCard.className =
+                            "dashboard-card";
+
+                        interviewCard.style.marginBottom =
+                            "20px";
+
+                        interviewCard.innerHTML = `
+                            <h3>
+                                Interview #${interview.interview_id}
+                            </h3>
+
+                            <p>
+                                <strong>
+                                    Application ID:
+                                </strong>
+                                ${interview.application_id}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Round:
+                                </strong>
+                                ${interview.round_name ||
+                                "Not specified"}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Scheduled At:
+                                </strong>
+                                ${formatInterviewDateTime(
+                                    interview.scheduled_at
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Mode:
+                                </strong>
+                                ${interview.mode ||
+                                "Not specified"}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Result:
+                                </strong>
+                                ${interview.result ||
+                                "Not specified"}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Remarks:
+                                </strong>
+                                ${interview.remarks ||
+                                "No remarks"}
+                            </p>
+                        `;
+
+                        interviewsList.appendChild(
+                            interviewCard
+                        );
+                    }
+                );
+
+            } catch (error) {
+                interviewsList.textContent =
+                    "";
+
+                interviewsMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        loadInterviews();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Student Skills</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div>
+                <h1>CampusPulse</h1>
+                <p>Student Skills</p>
+            </div>
+
+            <button id="backButton" class="btn-primary">
+                Back to Dashboard
+            </button>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="welcome-card">
+                <h2>My Skills</h2>
+                <p>View and manage your technical and professional skills.</p>
+            </section>
+
+            <section class="dashboard-card">
+                <h3>Add Skill</h3>
+
+                <div class="form-group">
+                    <label for="skillId">Skill</label>
+                    <select id="skillId">
+                        <option value="">Loading skills...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="proficiency">Proficiency</label>
+                    <select id="proficiency">
+                        <option value="">Select proficiency</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <button id="addSkillButton" class="btn-primary">
+                    Add Skill
+                </button>
+
+                <p id="addSkillMessage" class="message"></p>
+            </section>
+
+            <section class="dashboard-card">
+                <h3>My Skills</h3>
+
+                <div id="skillsList">
+                    Loading skills...
+                </div>
+
+                <p id="skillsMessage" class="message"></p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "STUDENT") {
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = "student-dashboard.html";
+        });
+
+        async function loadAvailableSkills() {
+            const skillSelect = document.getElementById("skillId");
+            const addSkillMessage =
+                document.getElementById("addSkillMessage");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/students/available-skills`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    skillSelect.innerHTML =
+                        '<option value="">Unable to load skills</option>';
+
+                    addSkillMessage.textContent =
+                        data.error || "Unable to load available skills.";
+
+                    return;
+                }
+
+                skillSelect.innerHTML =
+                    '<option value="">Select a skill</option>';
+
+                if (!data.skills || data.skills.length === 0) {
+                    skillSelect.innerHTML =
+                        '<option value="">No skills available</option>';
+
+                    return;
+                }
+
+                data.skills.forEach(function (skill) {
+                    const option = document.createElement("option");
+
+                    option.value = skill.skill_id;
+                    option.textContent = skill.skill_name;
+
+                    skillSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                skillSelect.innerHTML =
+                    '<option value="">Unable to load skills</option>';
+
+                addSkillMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        async function loadSkills() {
+            const skillsList = document.getElementById("skillsList");
+            const skillsMessage = document.getElementById("skillsMessage");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/students/skills`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    skillsMessage.textContent =
+                        data.error || "Unable to load skills.";
+                    return;
+                }
+
+                if (!data.skills || data.skills.length === 0) {
+                    skillsList.textContent = "No skills added yet.";
+                    return;
+                }
+
+                skillsList.innerHTML = "";
+
+                data.skills.forEach(function (skill) {
+                    const skillItem = document.createElement("div");
+
+                    skillItem.style.marginBottom = "15px";
+
+                    skillItem.innerHTML = `
+                        <strong>${skill.skill_name}</strong>
+                        <span> - ${skill.proficiency || "Not specified"}</span>
+                    `;
+
+                    skillsList.appendChild(skillItem);
+                });
+
+            } catch (error) {
+                skillsMessage.textContent =
+                    "Unable to connect to CampusPulse backend.";
+            }
+        }
+
+        document.getElementById("addSkillButton").addEventListener(
+            "click",
+            async function () {
+                const skillId =
+                    document.getElementById("skillId").value;
+
+                const proficiency =
+                    document.getElementById("proficiency").value;
+
+                const addSkillMessage =
+                    document.getElementById("addSkillMessage");
+
+                if (!skillId || !proficiency) {
+                    addSkillMessage.textContent =
+                        "Please select a skill and proficiency.";
+                    return;
+                }
+
+                addSkillMessage.textContent = "Adding skill...";
+
+                try {
+                    const response = await fetch(
+                        `${API_BASE_URL}/api/students/skills`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                skill_id: Number(skillId),
+                                proficiency: proficiency
+                            })
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        addSkillMessage.textContent =
+                            data.error || "Unable to add skill.";
+                        return;
+                    }
+
+                    addSkillMessage.textContent =
+                        "Skill added successfully.";
+
+                    document.getElementById("skillId").value = "";
+                    document.getElementById("proficiency").value = "";
+
+                    loadSkills();
+
+                } catch (error) {
+                    addSkillMessage.textContent =
+                        "Unable to connect to CampusPulse backend.";
+                }
+            }
+        );
+
+        loadAvailableSkills();
+        loadSkills();
+    </script>
+
+</body>
+</html>

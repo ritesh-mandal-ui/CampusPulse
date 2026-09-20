@@ -23,6 +23,7 @@ from routes.applications import applications_bp
 from routes.interviews import interviews_bp
 from routes.offers import offers_bp
 from routes.analytics import analytics_bp
+from routes.public import public_bp
 
 
 def create_app():
@@ -41,6 +42,7 @@ def create_app():
     app.register_blueprint(interviews_bp)
     app.register_blueprint(offers_bp)
     app.register_blueprint(analytics_bp)
+    app.register_blueprint(public_bp)
 
     @app.route("/")
     def home():

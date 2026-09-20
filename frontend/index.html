@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CampusPulse - Smart campus placement management platform">
+    <title>CampusPulse - Smart Campus Placement Management</title>
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+    <header class="landing-header">
+        <nav class="navbar">
+            <a href="index.html" class="brand">
+                <span class="brand-mark">CP</span>
+                <span>CampusPulse</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#workflow">How It Works</a>
+                <a href="#analytics">Analytics</a>
+                <a href="#about">About</a>
+            </div>
+
+            <a href="pages/login.html" class="nav-login">Login</a>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Smart Campus Placement Platform
+                </div>
+
+                <h1>
+                    Smarter Placements.
+                    <span>Better Careers.</span>
+                </h1>
+
+                <p class="hero-description">
+                    CampusPulse brings students, recruiters, applications,
+                    interviews, offers, and placement analytics together
+                    in one intelligent platform.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="pages/login.html" class="btn btn-primary">
+                        Get Started
+                        <span>→</span>
+                    </a>
+
+                    <a href="#features" class="btn btn-secondary">
+                        Explore Platform
+                    </a>
+                </div>
+
+                <div class="hero-note">
+                    <span>✓</span>
+                    Built for modern campus placement management
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="dashboard-preview">
+                    <div class="preview-header">
+                        <div>
+                            <span class="preview-label">Placement Overview</span>
+                            <strong>CampusPulse Analytics</strong>
+                        </div>
+
+                        <div class="preview-status">
+                            <span></span>
+                            Live
+                        </div>
+                    </div>
+
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <span>Students</span>
+                            <strong id="previewStudents">—</strong>
+                        </div>
+
+                        <div class="preview-stat">
+                            <span>Companies</span>
+                            <strong id="previewCompanies">—</strong>
+                        </div>
+
+                        <div class="preview-stat">
+                            <span>Jobs</span>
+                            <strong id="previewJobs">—</strong>
+                        </div>
+
+                        <div class="preview-stat">
+                            <span>Offers</span>
+                            <strong id="previewOffers">—</strong>
+                        </div>
+                    </div>
+
+                    <div class="preview-chart">
+                        <div class="chart-title">
+                            <span>Placement Activity</span>
+                            <span>Live Data</span>
+                        </div>
+
+                        <div class="chart-bars">
+                            <div class="chart-bar bar-one"></div>
+                            <div class="chart-bar bar-two"></div>
+                            <div class="chart-bar bar-three"></div>
+                            <div class="chart-bar bar-four"></div>
+                            <div class="chart-bar bar-five"></div>
+                            <div class="chart-bar bar-six"></div>
+                            <div class="chart-bar bar-seven"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section" id="stats">
+            <div class="stats-container">
+
+                <div class="stat-card">
+                    <div class="stat-icon">S</div>
+                    <div>
+                        <strong id="totalStudents">—</strong>
+                        <span>Students</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">C</div>
+                    <div>
+                        <strong id="totalCompanies">—</strong>
+                        <span>Companies</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">J</div>
+                    <div>
+                        <strong id="totalJobs">—</strong>
+                        <span>Active Opportunities</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">A</div>
+                    <div>
+                        <strong id="totalApplications">—</strong>
+                        <span>Applications</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">O</div>
+                    <div>
+                        <strong id="totalOffers">—</strong>
+                        <span>Offers</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="section features-section" id="features">
+            <div class="section-heading">
+                <span class="section-tag">PLATFORM FEATURES</span>
+                <h2>Everything needed to manage placements</h2>
+                <p>
+                    A unified platform designed to simplify every stage
+                    of the campus placement journey.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+
+                <article class="feature-card">
+                    <div class="feature-icon">01</div>
+                    <h3>Student Management</h3>
+                    <p>
+                        Manage student profiles, academic information,
+                        resumes, and skills from one centralized platform.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">02</div>
+                    <h3>Job Management</h3>
+                    <p>
+                        Create and manage company opportunities with
+                        eligibility requirements, deadlines, and packages.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">03</div>
+                    <h3>Applications</h3>
+                    <p>
+                        Track student applications and monitor their
+                        progress through the placement process.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">04</div>
+                    <h3>Interviews</h3>
+                    <p>
+                        Schedule interview rounds, manage modes and results,
+                        and keep interview information organized.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">05</div>
+                    <h3>Offers</h3>
+                    <p>
+                        Manage selected candidates, offer details,
+                        packages, and offer status in one place.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">06</div>
+                    <h3>Placement Analytics</h3>
+                    <p>
+                        Understand placement performance using web analytics
+                        and interactive Power BI dashboards.
+                    </p>
+                </article>
+
+            </div>
+        </section>
+
+        <section class="workflow-section" id="workflow">
+            <div class="section-heading">
+                <span class="section-tag">HOW IT WORKS</span>
+                <h2>A connected placement journey</h2>
+                <p>
+                    CampusPulse connects every major stage of the placement
+                    lifecycle into one simple workflow.
+                </p>
+            </div>
+
+            <div class="workflow">
+
+                <div class="workflow-step">
+                    <div class="workflow-number">01</div>
+                    <h3>Discover</h3>
+                    <p>Students explore eligible job opportunities.</p>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="workflow-number">02</div>
+                    <h3>Apply</h3>
+                    <p>Students submit applications to suitable jobs.</p>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="workflow-number">03</div>
+                    <h3>Interview</h3>
+                    <p>Placement teams schedule and manage interview rounds.</p>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="workflow-number">04</div>
+                    <h3>Offer</h3>
+                    <p>Selected students receive and track their offers.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="analytics-section" id="analytics">
+            <div class="analytics-content">
+                <span class="section-tag">DATA-DRIVEN INSIGHTS</span>
+
+                <h2>
+                    Turn placement data into
+                    <span>meaningful insights.</span>
+                </h2>
+
+                <p>
+                    CampusPulse provides a dedicated analytics experience
+                    for placement teams, helping them understand application
+                    activity, placement outcomes, company performance,
+                    and package trends.
+                </p>
+
+                <div class="analytics-points">
+                    <div>
+                        <span>✓</span>
+                        Application status analysis
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Company-wise placement analysis
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Placement performance reporting
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Interactive Power BI dashboard
+                    </div>
+                </div>
+
+                <a href="pages/login.html" class="btn btn-primary">
+                    Explore CampusPulse
+                    <span>→</span>
+                </a>
+            </div>
+
+            <div class="analytics-visual">
+                <div class="analytics-card">
+                    <div class="analytics-card-header">
+                        <div>
+                            <span>Placement Analytics</span>
+                            <strong>CampusPulse</strong>
+                        </div>
+
+                        <div class="analytics-menu">•••</div>
+                    </div>
+
+                    <div class="analytics-metric">
+                        <span>Total Applications</span>
+                        <strong id="analyticsApplications">—</strong>
+                    </div>
+
+                    <div class="analytics-progress">
+                        <div class="progress-label">
+                            <span>Platform Activity</span>
+                            <span>Live</span>
+                        </div>
+
+                        <div class="progress-track">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-mini-grid">
+                        <div>
+                            <span>Students</span>
+                            <strong id="analyticsStudents">—</strong>
+                        </div>
+
+                        <div>
+                            <span>Companies</span>
+                            <strong id="analyticsCompanies">—</strong>
+                        </div>
+
+                        <div>
+                            <span>Jobs</span>
+                            <strong id="analyticsJobs">—</strong>
+                        </div>
+
+                        <div>
+                            <span>Offers</span>
+                            <strong id="analyticsOffers">—</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" id="about">
+            <div class="about-card">
+                <div>
+                    <span class="section-tag">ABOUT CAMPUSPULSE</span>
+                    <h2>One platform for the complete placement lifecycle.</h2>
+                </div>
+
+                <p>
+                    CampusPulse is a placement management platform designed
+                    to bring students, companies, placement teams, and
+                    analytics together through a structured digital workflow.
+                </p>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-content">
+                <span class="section-tag">GET STARTED</span>
+
+                <h2>Ready to simplify campus placements?</h2>
+
+                <p>
+                    Manage the complete placement journey with CampusPulse.
+                </p>
+
+                <a href="pages/login.html" class="btn btn-light">
+                    Login to CampusPulse
+                    <span>→</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="landing-footer">
+        <div class="footer-content">
+
+            <div class="footer-brand">
+                <a href="index.html" class="brand">
+                    <span class="brand-mark">CP</span>
+                    <span>CampusPulse</span>
+                </a>
+
+                <p>
+                    Smart campus placement management platform.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#workflow">How It Works</a>
+                <a href="#analytics">Analytics</a>
+                <a href="pages/login.html">Login</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 CampusPulse. All rights reserved.</span>
+            <span>Built for modern campus placements.</span>
+        </div>
+    </footer>
+
+    <script src="js/landing.js"></script>
+</body>
+</html>

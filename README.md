@@ -8,7 +8,7 @@ The system provides a centralized platform for managing student profiles, skills
 
 Traditional placement management often involves maintaining student information, job applications, interview schedules, and placement records across multiple systems or spreadsheets.
 
-CampusPulse aims to bring these activities together into a single web-based system.
+CampusPulse brings these activities together into a single web-based system.
 
 The application provides separate functionality for students and placement administrators, along with role-based authentication and access control.
 
@@ -20,6 +20,7 @@ The application provides separate functionality for students and placement admin
 * Student profile creation and management
 * Department information
 * Skill management
+* Resume upload and management
 * View available job opportunities
 * Apply for eligible jobs
 * Track submitted applications
@@ -126,6 +127,7 @@ The analytics system provides information such as:
 
 * Microsoft Power BI
 * CampusPulse Web Analytics
+* Chart.js
 
 ## Authentication and Authorization
 
@@ -148,6 +150,7 @@ The system uses role-based access control for different types of users.
 Students can:
 
 * Manage their profile
+* Upload and manage their resume
 * Manage their skills
 * Browse available jobs
 * Apply for jobs
@@ -180,60 +183,60 @@ The backend is organized into separate route modules.
 
 ### Authentication
 
-/api/auth
+`/api/auth`
 
 Available operations:
 
-POST /api/auth/register
-POST /api/auth/login
-GET /api/auth/me
+* POST `/api/auth/register`
+* POST `/api/auth/login`
+* GET `/api/auth/me`
 
 ### Students
 
-/api/students
+`/api/students`
 
-Handles student profiles and student-related information.
+Handles student profiles, resume management, and student-related information.
 
 ### Jobs
 
-/api/jobs
+`/api/jobs`
 
 Handles job opportunities and job-related operations.
 
 ### Applications
 
-/api/applications
+`/api/applications`
 
 Handles job applications and application status management.
 
 ### Companies
 
-/api/companies
+`/api/companies`
 
 Handles company information.
 
 ### Interviews
 
-/api/interviews
+`/api/interviews`
 
 Handles interview information and interview results.
 
 ### Offers
 
-/api/offers
+`/api/offers`
 
 Handles placement offers.
 
 ### Analytics
 
-/api/analytics
+`/api/analytics`
 
 Provides placement summaries, application-status information, and company placement information.
 
 ## Project Structure
 
+```text
 CampusPulse/
-│
 ├── backend/
 │   ├── app.py
 │   ├── config.py
@@ -269,6 +272,9 @@ CampusPulse/
 │   ├── seed.sql
 │   └── queries.sql
 │
+├── docs/
+│   └── screenshots/
+│
 ├── frontend/
 │   ├── css/
 │   │   └── style.css
@@ -294,245 +300,11 @@ CampusPulse/
 │       ├── admin-offers.html
 │       └── admin-analytics.html
 │
+├── powerbi/
+│
+├── tests/
+│
 ├── CampusPulse_Analytics.pbix
 ├── requirements.txt
-├── .env
 ├── .gitignore
 └── README.md
-
-## Database Design
-
-CampusPulse uses PostgreSQL as its primary database.
-
-The database is organized around the following major entities:
-
-### Users
-
-Stores authentication information and user roles.
-
-### Students
-
-Stores student profile information and academic details.
-
-### Departments
-
-Stores department information associated with students.
-
-### Skills
-
-Stores available student skills.
-
-### Student Skills
-
-Associates students with their skills and proficiency levels.
-
-### Companies
-
-Stores company information.
-
-### Jobs
-
-Stores job opportunities and eligibility requirements.
-
-### Applications
-
-Stores student applications for available jobs.
-
-### Interviews
-
-Stores interview information related to applications.
-
-### Offers
-
-Stores placement offers associated with selected applications.
-
-The database schema is available in:
-
-database/schema.sql
-
-Initial/demo database records are available in:
-
-database/seed.sql
-
-The seed file represents the initial sample dataset and is not intended to be a live snapshot of the current development database.
-
-Useful SQL queries are available in:
-
-database/queries.sql
-
-## Setup and Installation
-
-### 1. Clone the Repository
-
-git clone <repository-url>
-cd CampusPulse
-
-Replace <repository-url> with the actual repository URL when the project repository is finalized.
-
-### 2. Create a Virtual Environment
-
-On Windows:
-
-python -m venv venv
-
-Activate the virtual environment:
-
-venv\Scripts\activate
-
-### 3. Install Dependencies
-
-pip install -r requirements.txt
-
-### 4. Configure Environment Variables
-
-Create a .env file in the project root.
-
-Example:
-
-DATABASE_URL=your_database_url
-SECRET_KEY=your_secret_key
-
-DATABASE_URL should contain the PostgreSQL database connection string.
-
-SECRET_KEY should contain a strong secret value used for application authentication.
-
-Do not commit the .env file to Git.
-
-### 5. Configure the Database
-
-Create a PostgreSQL database and execute:
-
-database/schema.sql
-
-If the initial sample data is required, execute:
-
-database/seed.sql
-
-### 6. Start the Backend
-
-From the project root:
-
-python backend/app.py
-
-For local development, the Flask backend is available at:
-
-http://127.0.0.1:5000
-
-### 7. Start the Frontend
-
-Open a separate terminal from the project root and run:
-
-python -m http.server 5500 --directory frontend
-
-The frontend is then available at:
-
-http://127.0.0.1:5500
-
-The login page is:
-
-http://127.0.0.1:5500/pages/login.html
-
-## Environment Variables
-
-The application uses environment variables for configuration.
-
-DATABASE_URL
-PostgreSQL database connection URL.
-
-SECRET_KEY
-Secret key used for authentication.
-
-Sensitive configuration values should never be committed to the repository.
-
-## Power BI Analytics
-
-CampusPulse includes a dedicated Microsoft Power BI dashboard for advanced placement analytics.
-
-The Power BI project file is:
-
-CampusPulse_Analytics.pbix
-
-The project contains two analytics layers.
-
-### CampusPulse Web Analytics
-
-The web application provides placement analytics through:
-
-frontend/pages/admin-analytics.html
-
-This dashboard provides information such as:
-
-* Total students
-* Total companies
-* Total jobs
-* Total applications
-* Selected students
-* Total offers
-* Placement rate
-* Average package
-* Highest package
-* Application status distribution
-* Company-wise placements
-
-### Microsoft Power BI Dashboard
-
-The Power BI dashboard provides a separate business-intelligence and reporting layer for placement data.
-
-It can be used for:
-
-* Placement overview
-* Application analysis
-* Application status distribution
-* Company-wise placement analysis
-* Placement-related visual reporting
-* Interactive data exploration
-
-The Power BI dashboard is maintained separately from the CampusPulse web interface through the .pbix project file.
-
-## Security
-
-CampusPulse includes several basic security mechanisms:
-
-* Password hashing using bcrypt
-* JWT-based authentication
-* Bearer-token authentication for protected APIs
-* Role-based authorization
-* Environment variables for sensitive configuration
-* .env excluded from version control
-* Validation of authenticated users on protected endpoints
-
-## Development Workflow
-
-A typical development workflow is:
-
-1. Start the PostgreSQL database.
-2. Activate the Python virtual environment.
-3. Configure the .env file.
-4. Install project dependencies.
-5. Start the Flask backend.
-6. Start the frontend HTTP server.
-7. Open the login page.
-8. Test authentication.
-9. Test student functionality.
-10. Test administrative functionality.
-11. Verify application, interview, and offer workflows.
-12. Verify placement analytics.
-13. Verify the Power BI dashboard.
-
-## Future Enhancements
-
-Possible future improvements include:
-
-* Email notifications for application and interview updates
-* Automated eligibility checking
-* Resume upload and management
-* Advanced student-job matching
-* Automated placement reports
-* Additional Power BI dashboards
-* More detailed administrative permissions
-* Application history and activity tracking
-* Improved deployment and production configuration
-
-## License
-
-This project is developed for educational and academic purposes.

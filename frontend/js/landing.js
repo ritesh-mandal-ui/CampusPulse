@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadPlatformStats() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:5000/api/public/summary"
+            "https://campuspulse-backend-uzum.onrender.com/api/public/summary"
         );
 
         if (!response.ok) {
@@ -66,7 +66,7 @@ function setFallbackValue(id) {
     const element = document.getElementById(id);
 
     if (element) {
-        element.textContent = "—";
+        element.textContent = "â€”";
     }
 }
 

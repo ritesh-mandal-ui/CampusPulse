@@ -7,3 +7,4 @@ __pycache__/
 *.log
 backend/uploads/
 campuspulse_local_backup.dump
+README_backup.md

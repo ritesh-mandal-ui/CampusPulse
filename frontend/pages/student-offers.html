@@ -1,14 +1,333 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Offers</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 32px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+        }
+
+        .dashboard-header p {
+            margin: 5px 0 0;
+            opacity: 0.75;
+        }
+
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 24px 50px;
+        }
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            padding: 34px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.14);
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-eyebrow {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 8px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .page-hero h2 {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .page-hero p {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0;
+            line-height: 1.6;
+            opacity: 0.82;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border: 1px solid #e7eaf0;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+        }
+
+        .stat-label {
+            margin: 0 0 8px;
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            margin: 0;
+            color: #111827;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .offers-section {
+            padding: 26px;
+            border: 1px solid #e7eaf0;
+            border-radius: 18px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            color: #111827;
+            font-size: 20px;
+        }
+
+        .refresh-button {
+            padding: 9px 14px;
+            border: 1px solid #d9dee7;
+            border-radius: 9px;
+            background: white;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .refresh-button:hover {
+            background: #f8fafc;
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .offer-card {
+            padding: 21px;
+            border: 1px solid #e7eaf0;
+            border-radius: 15px;
+            background: white;
+            transition: 0.2s ease;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .offer-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .offer-title {
+            margin: 0 0 5px;
+            color: #111827;
+            font-size: 17px;
+        }
+
+        .offer-subtitle {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .status-accepted {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-pending {
+            background: #fffbeb;
+            color: #b45309;
+        }
+
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 11px;
+            border-radius: 9px;
+            background: #f8fafc;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            min-width: 95px;
+            color: #4b5563;
+            font-weight: 700;
+        }
+
+        .detail-value {
+            color: #374151;
+            word-break: break-word;
+        }
+
+        .salary-value {
+            color: #047857;
+            font-weight: 800;
+        }
+
+        .empty-state,
+        .loading-state {
+            padding: 50px 20px;
+            text-align: center;
+            border: 1px dashed #d8dde7;
+            border-radius: 14px;
+            background: #fafbfc;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            margin-bottom: 10px;
+            font-size: 38px;
+        }
+
+        .empty-state strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-size: 16px;
+        }
+
+        .error-message {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .dashboard-header {
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #backButton {
+                width: 100%;
+            }
+
+            .dashboard-content {
+                padding: 10px 16px 35px;
+            }
+
+            .page-hero {
+                padding: 25px 22px;
+                border-radius: 16px;
+            }
+
+            .page-hero h2 {
+                font-size: 26px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .offers-section {
+                padding: 20px;
+            }
+
+            .section-header {
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
             <div>
                 <h1>CampusPulse</h1>
@@ -21,17 +340,60 @@
         </header>
 
         <main class="dashboard-content">
-            <section class="welcome-card">
+
+            <section class="page-hero">
+                <p class="hero-eyebrow">Student Placement Portal</p>
                 <h2>My Offers</h2>
-                <p>View your placement offers.</p>
+                <p>
+                    View your placement offers, salary details,
+                    offer dates, and current offer status.
+                </p>
             </section>
 
-            <section id="offersList" class="dashboard-grid">
-                Loading offers...
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <p class="stat-label">Total Offers</p>
+                    <p id="totalOffers" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="stat-label">Accepted</p>
+                    <p id="acceptedOffers" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="stat-label">Pending</p>
+                    <p id="pendingOffers" class="stat-value">0</p>
+                </div>
+
             </section>
 
-            <p id="offersMessage" class="message"></p>
+            <section class="offers-section">
+
+                <div class="section-header">
+                    <h3>Placement Offers</h3>
+
+                    <button
+                        id="refreshButton"
+                        class="refresh-button"
+                    >
+                        Refresh
+                    </button>
+                </div>
+
+                <div id="offersList">
+                    <div class="loading-state">
+                        Loading offers...
+                    </div>
+                </div>
+
+                <p id="offersMessage" class="message"></p>
+
+            </section>
+
         </main>
+
     </div>
 
     <script>
@@ -44,9 +406,18 @@
             window.location.href = "login.html";
         }
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "student-dashboard.html";
-        });
+        document
+            .getElementById("backButton")
+            .addEventListener("click", function () {
+                window.location.href =
+                    "student-dashboard.html";
+            });
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener("click", function () {
+                loadOffers();
+            });
 
         function formatOfferDate(value) {
             if (!value) {
@@ -68,7 +439,7 @@
 
         function formatOfferStatus(status) {
             if (!status) {
-                return "Not specified";
+                return "Pending";
             }
 
             return status
@@ -79,82 +450,228 @@
                 });
         }
 
+        function getStatusClass(status) {
+            const normalized =
+                (status || "").toLowerCase();
+
+            if (normalized.includes("accept")) {
+                return "status-accepted";
+            }
+
+            if (normalized.includes("pending")) {
+                return "status-pending";
+            }
+
+            return "";
+        }
+
+        function createOfferCard(offer) {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "offer-card";
+
+            const status =
+                formatOfferStatus(offer.offer_status);
+
+            const statusClass =
+                getStatusClass(offer.offer_status);
+
+            const salary =
+                offer.salary_lpa != null
+                    ? `${offer.salary_lpa} LPA`
+                    : "Not specified";
+
+            card.innerHTML = `
+                <div class="offer-top">
+
+                    <div>
+                        <h4 class="offer-title">
+                            Offer #${offer.offer_id}
+                        </h4>
+
+                        <p class="offer-subtitle">
+                            Application #${offer.application_id}
+                        </p>
+                    </div>
+
+                    <span class="status-badge ${statusClass}">
+                        ${status}
+                    </span>
+
+                </div>
+
+                <div class="detail-list">
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Salary
+                        </span>
+
+                        <span class="detail-value salary-value">
+                            ${salary}
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Offer Date
+                        </span>
+
+                        <span class="detail-value">
+                            ${formatOfferDate(
+                                offer.offer_date
+                            )}
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Status
+                        </span>
+
+                        <span class="detail-value">
+                            ${status}
+                        </span>
+                    </div>
+
+                </div>
+            `;
+
+            return card;
+        }
+
         async function loadOffers() {
+
             const offersList =
                 document.getElementById("offersList");
 
             const offersMessage =
                 document.getElementById("offersMessage");
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/offers`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
-                );
+            offersMessage.textContent = "";
 
-                const data = await response.json();
+            offersList.innerHTML = `
+                <div class="loading-state">
+                    Loading offers...
+                </div>
+            `;
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/offers`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
 
                 if (!response.ok) {
-                    offersList.textContent = "";
-                    offersMessage.textContent =
-                        data.error || "Unable to load offers.";
-                    return;
-                }
 
-                if (
-                    !data.offers ||
-                    data.offers.length === 0
-                ) {
-                    offersList.textContent =
-                        "No placement offers found.";
-                    return;
-                }
-
-                offersList.innerHTML = "";
-
-                data.offers.forEach(function (offer) {
-                    const offerCard =
-                        document.createElement("div");
-
-                    offerCard.className = "dashboard-card";
-
-                    offerCard.innerHTML = `
-                        <h3>
-                            Offer #${offer.offer_id}
-                        </h3>
-
-                        <p>
-                            <strong>Application ID:</strong>
-                            ${offer.application_id}
-                        </p>
-
-                        <p>
-                            <strong>Salary:</strong>
-                            ${offer.salary_lpa != null
-                                ? offer.salary_lpa + " LPA"
-                                : "Not specified"}
-                        </p>
-
-                        <p>
-                            <strong>Offer Date:</strong>
-                            ${formatOfferDate(offer.offer_date)}
-                        </p>
-
-                        <p>
-                            <strong>Status:</strong>
-                            ${formatOfferStatus(offer.offer_status)}
-                        </p>
+                    offersList.innerHTML = `
+                        <div class="empty-state error-message">
+                            Unable to load offers.
+                        </div>
                     `;
 
-                    offersList.appendChild(offerCard);
+                    offersMessage.textContent =
+                        data.error ||
+                        "Unable to load offers.";
+
+                    return;
+                }
+
+                const offers =
+                    data.offers || [];
+
+                document.getElementById(
+                    "totalOffers"
+                ).textContent =
+                    offers.length;
+
+                const accepted =
+                    offers.filter(function (offer) {
+                        return (
+                            offer.offer_status || ""
+                        )
+                            .toLowerCase()
+                            .includes("accept");
+                    }).length;
+
+                const pending =
+                    offers.filter(function (offer) {
+                        const status =
+                            (
+                                offer.offer_status || ""
+                            ).toLowerCase();
+
+                        return (
+                            status.includes("pending") ||
+                            !status
+                        );
+                    }).length;
+
+                document.getElementById(
+                    "acceptedOffers"
+                ).textContent =
+                    accepted;
+
+                document.getElementById(
+                    "pendingOffers"
+                ).textContent =
+                    pending;
+
+                if (offers.length === 0) {
+
+                    offersList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">??</div>
+
+                            <strong>
+                                No Placement Offers Yet
+                            </strong>
+
+                            <p>
+                                You currently have no
+                                placement offers.
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                const grid =
+                    document.createElement("div");
+
+                grid.className =
+                    "offers-grid";
+
+                offers.forEach(function (offer) {
+                    grid.appendChild(
+                        createOfferCard(offer)
+                    );
                 });
+
+                offersList.innerHTML = "";
+                offersList.appendChild(grid);
+
             } catch (error) {
-                offersList.textContent = "";
+
+                offersList.innerHTML = `
+                    <div class="empty-state error-message">
+                        Unable to connect to CampusPulse backend.
+                    </div>
+                `;
 
                 offersMessage.textContent =
                     "Unable to connect to CampusPulse backend.";

@@ -8,6 +8,7 @@ from extensions import db
 from models.student import Student
 from models.skill import Skill
 from models.student_skill import StudentSkill
+from models.department import Department
 from utils.decorators import token_required
 
 
@@ -69,6 +70,11 @@ def create_profile(payload):
         if not data.get(field):
             return {"error": f"{field} is required"}, 400
 
+    department = Department.query.get(data["department_id"])
+
+    if not department:
+        return {"error": "Invalid department"}, 400
+
     student = Student(
         user_id=payload["user_id"],
         roll_number=data["roll_number"],
@@ -88,6 +94,112 @@ def create_profile(payload):
         "message": "Student profile created successfully",
         "student_id": student.student_id
     }, 201
+
+
+@students_bp.route("/profile", methods=["PUT"])
+@token_required
+def update_profile(payload):
+    if payload["role"] != "STUDENT":
+        return {"error": "Only students can update a student profile"}, 403
+
+    student = Student.query.filter_by(
+        user_id=payload["user_id"]
+    ).first()
+
+    if not student:
+        return {"error": "Student profile not found"}, 404
+
+    data = request.get_json(silent=True)
+
+    if not data:
+        return {"error": "Request body is required"}, 400
+
+    roll_number = data.get("roll_number")
+    full_name = data.get("full_name")
+    department_id = data.get("department_id")
+    cgpa = data.get("cgpa")
+    graduation_year = data.get("graduation_year")
+    phone = data.get("phone")
+
+    if not roll_number:
+        return {"error": "Roll number is required"}, 400
+
+    if not full_name:
+        return {"error": "Full name is required"}, 400
+
+    if not department_id:
+        return {"error": "Department is required"}, 400
+
+    department = Department.query.get(department_id)
+
+    if not department:
+        return {"error": "Invalid department"}, 400
+
+    existing_roll_number = Student.query.filter(
+        Student.roll_number == roll_number,
+        Student.student_id != student.student_id
+    ).first()
+
+    if existing_roll_number:
+        return {"error": "Roll number is already registered"}, 409
+
+    if cgpa is not None:
+        try:
+            cgpa = float(cgpa)
+        except (TypeError, ValueError):
+            return {"error": "CGPA must be a valid number"}, 400
+
+        if cgpa < 0 or cgpa > 10:
+            return {"error": "CGPA must be between 0 and 10"}, 400
+
+    if graduation_year is not None:
+        try:
+            graduation_year = int(graduation_year)
+        except (TypeError, ValueError):
+            return {"error": "Graduation year must be a valid year"}, 400
+
+        if graduation_year < 2000 or graduation_year > 2100:
+            return {"error": "Please enter a valid graduation year"}, 400
+
+    if phone:
+        phone = str(phone).strip()
+
+        if not phone.isdigit() or len(phone) != 10:
+            return {
+                "error": "Phone number must contain exactly 10 digits"
+            }, 400
+
+    student.roll_number = str(roll_number).strip()
+    student.full_name = str(full_name).strip()
+    student.department_id = department_id
+    student.cgpa = cgpa
+    student.graduation_year = graduation_year
+    student.phone = phone if phone else None
+
+    db.session.commit()
+
+    return {
+        "message": "Student profile updated successfully"
+    }, 200
+
+
+@students_bp.route("/departments", methods=["GET"])
+@token_required
+def get_departments(payload):
+    departments = Department.query.order_by(
+        Department.department_name
+    ).all()
+
+    return {
+        "departments": [
+            {
+                "department_id": department.department_id,
+                "department_name": department.department_name,
+                "department_code": department.department_code
+            }
+            for department in departments
+        ]
+    }
 
 
 @students_bp.route("/resume", methods=["POST"])

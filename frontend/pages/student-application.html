@@ -1,14 +1,242 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusPulse - Applications</title>
+
+    <title>CampusPulse - My Applications</title>
+
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .applications-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding: 28px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            border: 1px solid #e5e7eb;
+        }
+
+        .applications-hero h2 {
+            margin: 0 0 8px;
+        }
+
+        .applications-hero p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .applications-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+        }
+
+        .summary-label {
+            margin: 0 0 8px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .summary-value {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .application-card {
+            padding: 24px;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .application-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.09);
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .application-title {
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
+
+        .application-company {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-applied {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-shortlisted {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-interview {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .status-selected {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-withdrawn {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .application-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .detail-item {
+            padding: 14px;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .detail-value {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px dashed #d1d5db;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            margin: 0 0 18px;
+            color: #6b7280;
+        }
+
+        .loading-state {
+            padding: 40px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        @media (max-width: 900px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .applications-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .applications-hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .applications-actions {
+                width: 100%;
+            }
+
+            .applications-actions button {
+                flex: 1;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .application-header {
+                flex-direction: column;
+            }
+
+            .application-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
             <div>
                 <h1>CampusPulse</h1>
@@ -21,32 +249,130 @@
         </header>
 
         <main class="dashboard-content">
-            <section class="welcome-card">
-                <h2>My Applications</h2>
-                <p>Track the status of your job applications.</p>
+
+            <section class="applications-hero">
+                <div>
+                    <h2>My Applications</h2>
+                    <p>
+                        Track the status of your job applications.
+                    </p>
+                </div>
+
+                <div class="applications-actions">
+                    <button
+                        id="refreshButton"
+                        class="btn-primary"
+                    >
+                        Refresh
+                    </button>
+                </div>
             </section>
 
-            <section id="applicationsList" class="dashboard-grid">
-                Loading applications...
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <p class="summary-label">
+                        Total Applications
+                    </p>
+
+                    <h3
+                        id="totalApplications"
+                        class="summary-value"
+                    >
+                        0
+                    </h3>
+                </div>
+
+                <div class="summary-card">
+                    <p class="summary-label">
+                        Applied
+                    </p>
+
+                    <h3
+                        id="appliedApplications"
+                        class="summary-value"
+                    >
+                        0
+                    </h3>
+                </div>
+
+                <div class="summary-card">
+                    <p class="summary-label">
+                        Shortlisted
+                    </p>
+
+                    <h3
+                        id="shortlistedApplications"
+                        class="summary-value"
+                    >
+                        0
+                    </h3>
+                </div>
+
+                <div class="summary-card">
+                    <p class="summary-label">
+                        Selected
+                    </p>
+
+                    <h3
+                        id="selectedApplications"
+                        class="summary-value"
+                    >
+                        0
+                    </h3>
+                </div>
+
             </section>
 
-            <p id="applicationsMessage" class="message"></p>
+            <section
+                id="applicationsList"
+                class="applications-grid"
+            >
+                <div class="loading-state">
+                    Loading applications...
+                </div>
+            </section>
+
+            <p
+                id="applicationsMessage"
+                class="message"
+            ></p>
+
         </main>
     </div>
 
     <script>
-        const API_BASE_URL = "https://campuspulse-backend-uzum.onrender.com";
+        const API_BASE_URL =
+            "https://campuspulse-backend-uzum.onrender.com";
 
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+        const token =
+            localStorage.getItem("token");
+
+        const role =
+            localStorage.getItem("role");
 
         if (!token || role !== "STUDENT") {
             window.location.href = "login.html";
         }
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "student-dashboard.html";
-        });
+        document
+            .getElementById("backButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-dashboard.html";
+                }
+            );
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener(
+                "click",
+                function () {
+                    loadApplications();
+                }
+            );
 
         function formatApplicationDateTime(value) {
             if (!value) {
@@ -59,14 +385,17 @@
                 return value;
             }
 
-            return date.toLocaleString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true
-            });
+            return date.toLocaleString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true
+                }
+            );
         }
 
         function formatApplicationStatus(status) {
@@ -77,88 +406,329 @@
             return status
                 .toLowerCase()
                 .replace(/_/g, " ")
-                .replace(/\b\w/g, function (letter) {
-                    return letter.toUpperCase();
-                });
+                .replace(
+                    /\b\w/g,
+                    function (letter) {
+                        return letter.toUpperCase();
+                    }
+                );
+        }
+
+        function getStatusClass(status) {
+            if (!status) {
+                return "";
+            }
+
+            const normalizedStatus =
+                status.toLowerCase();
+
+            if (
+                normalizedStatus === "applied"
+            ) {
+                return "status-applied";
+            }
+
+            if (
+                normalizedStatus === "shortlisted"
+            ) {
+                return "status-shortlisted";
+            }
+
+            if (
+                normalizedStatus === "interview"
+            ) {
+                return "status-interview";
+            }
+
+            if (
+                normalizedStatus === "selected"
+            ) {
+                return "status-selected";
+            }
+
+            if (
+                normalizedStatus === "rejected"
+            ) {
+                return "status-rejected";
+            }
+
+            if (
+                normalizedStatus === "withdrawn"
+            ) {
+                return "status-withdrawn";
+            }
+
+            return "";
+        }
+
+        function updateSummary(applications) {
+            const total =
+                applications.length;
+
+            const applied =
+                applications.filter(
+                    function (application) {
+                        return (
+                            application.status &&
+                            application.status.toLowerCase() ===
+                            "applied"
+                        );
+                    }
+                ).length;
+
+            const shortlisted =
+                applications.filter(
+                    function (application) {
+                        return (
+                            application.status &&
+                            application.status.toLowerCase() ===
+                            "shortlisted"
+                        );
+                    }
+                ).length;
+
+            const selected =
+                applications.filter(
+                    function (application) {
+                        return (
+                            application.status &&
+                            application.status.toLowerCase() ===
+                            "selected"
+                        );
+                    }
+                ).length;
+
+            document.getElementById(
+                "totalApplications"
+            ).textContent = total;
+
+            document.getElementById(
+                "appliedApplications"
+            ).textContent = applied;
+
+            document.getElementById(
+                "shortlistedApplications"
+            ).textContent = shortlisted;
+
+            document.getElementById(
+                "selectedApplications"
+            ).textContent = selected;
         }
 
         async function loadApplications() {
             const applicationsList =
-                document.getElementById("applicationsList");
-
-            const applicationsMessage =
-                document.getElementById("applicationsMessage");
-
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/applications`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
+                document.getElementById(
+                    "applicationsList"
                 );
 
-                const data = await response.json();
+            const applicationsMessage =
+                document.getElementById(
+                    "applicationsMessage"
+                );
+
+            applicationsMessage.textContent = "";
+
+            applicationsList.innerHTML = `
+                <div class="loading-state">
+                    Loading applications...
+                </div>
+            `;
+
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/applications`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
 
                 if (!response.ok) {
-                    applicationsList.textContent = "";
-                    applicationsMessage.textContent =
-                        data.error || "Unable to load applications.";
+                    applicationsList.innerHTML = `
+                        <div class="empty-state">
+                            <h3>
+                                Unable to load applications
+                            </h3>
+
+                            <p>
+                                ${data.error ||
+                                "Please try again."}
+                            </p>
+                        </div>
+                    `;
+
                     return;
                 }
 
-                if (
-                    !data.applications ||
-                    data.applications.length === 0
-                ) {
-                    applicationsList.textContent =
-                        "No applications found.";
+                const applications =
+                    data.applications || [];
+
+                updateSummary(applications);
+
+                if (applications.length === 0) {
+                    applicationsList.innerHTML = `
+                        <div class="empty-state">
+                            <h3>
+                                No Applications Yet
+                            </h3>
+
+                            <p>
+                                You have not applied
+                                to any jobs yet.
+                            </p>
+
+                            <button
+                                id="browseJobsButton"
+                                class="btn-primary"
+                            >
+                                Browse Jobs
+                            </button>
+                        </div>
+                    `;
+
+                    document
+                        .getElementById(
+                            "browseJobsButton"
+                        )
+                        .addEventListener(
+                            "click",
+                            function () {
+                                window.location.href =
+                                    "student-jobs.html";
+                            }
+                        );
+
                     return;
                 }
 
                 applicationsList.innerHTML = "";
 
-                data.applications.forEach(function (application) {
-                    const applicationCard =
-                        document.createElement("div");
+                applications.forEach(
+                    function (application) {
 
-                    applicationCard.className = "dashboard-card";
+                        const applicationCard =
+                            document.createElement(
+                                "article"
+                            );
 
-                    applicationCard.innerHTML = `
+                        applicationCard.className =
+                            "application-card";
+
+                        const statusText =
+                            formatApplicationStatus(
+                                application.status
+                            );
+
+                        const statusClass =
+                            getStatusClass(
+                                application.status
+                            );
+
+                        applicationCard.innerHTML = `
+                            <div class="application-header">
+
+                                <div>
+                                    <h3
+                                        class="application-title"
+                                    >
+                                        ${application.job_title ||
+                                        "Unknown Job"}
+                                    </h3>
+
+                                    <p
+                                        class="application-company"
+                                    >
+                                        ${application.company_name ||
+                                        "Unknown Company"}
+                                    </p>
+                                </div>
+
+                                <span
+                                    class="status-badge ${statusClass}"
+                                >
+                                    ${statusText}
+                                </span>
+
+                            </div>
+
+                            <div class="application-details">
+
+                                <div class="detail-item">
+                                    <span
+                                        class="detail-label"
+                                    >
+                                        Application ID
+                                    </span>
+
+                                    <span
+                                        class="detail-value"
+                                    >
+                                        #${application.application_id}
+                                    </span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <span
+                                        class="detail-label"
+                                    >
+                                        Applied At
+                                    </span>
+
+                                    <span
+                                        class="detail-value"
+                                    >
+                                        ${formatApplicationDateTime(
+                                            application.applied_at
+                                        )}
+                                    </span>
+                                </div>
+
+                            </div>
+                        `;
+
+                        applicationsList.appendChild(
+                            applicationCard
+                        );
+                    }
+                );
+
+            } catch (error) {
+
+                applicationsList.innerHTML = `
+                    <div class="empty-state">
                         <h3>
-                            Application #${application.application_id}
+                            Backend Connection Error
                         </h3>
 
                         <p>
-                            <strong>Job:</strong>
-                            ${application.job_title || "Unknown"}
+                            Unable to connect to
+                            CampusPulse backend.
                         </p>
 
-                        <p>
-                            <strong>Company:</strong>
-                            ${application.company_name || "Unknown"}
-                        </p>
+                        <button
+                            id="retryButton"
+                            class="btn-primary"
+                        >
+                            Try Again
+                        </button>
+                    </div>
+                `;
 
-                        <p>
-                            <strong>Status:</strong>
-                            ${formatApplicationStatus(application.status)}
-                        </p>
-
-                        <p>
-                            <strong>Applied At:</strong>
-                            ${formatApplicationDateTime(application.applied_at)}
-                        </p>
-                    `;
-
-                    applicationsList.appendChild(applicationCard);
-                });
-            } catch (error) {
-                applicationsList.textContent = "";
-
-                applicationsMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
+                document
+                    .getElementById("retryButton")
+                    .addEventListener(
+                        "click",
+                        function () {
+                            loadApplications();
+                        }
+                    );
             }
         }
 

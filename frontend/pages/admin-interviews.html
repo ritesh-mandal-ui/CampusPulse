@@ -1,168 +1,581 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Interviews</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .interviews-hero {
+            margin-bottom: 24px;
+        }
+
+        .interviews-hero h2 {
+            margin-bottom: 8px;
+        }
+
+        .interviews-hero p {
+            margin: 0;
+        }
+
+        .interview-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .interview-stat {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .interview-stat-label {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .interview-stat-value {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .schedule-card {
+            margin-bottom: 24px;
+        }
+
+        .schedule-card-header {
+            margin-bottom: 24px;
+        }
+
+        .schedule-card-header h3 {
+            margin-bottom: 6px;
+        }
+
+        .schedule-card-header p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .interview-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .interview-form-full {
+            grid-column: 1 / -1;
+        }
+
+        .interview-date-time {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .scheduled-preview-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 13px 15px;
+            min-height: 18px;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .interview-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .interview-list-header-left h3 {
+            margin-bottom: 6px;
+        }
+
+        .interview-list-header-left p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .interview-list-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .interview-count {
+            color: #64748b;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .interview-search {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+            background: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .interview-search:focus {
+            border-color: #2563eb;
+        }
+
+        .interviews-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .interview-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .interview-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .interview-card-header h3 {
+            margin: 0 0 6px;
+            color: #0f172a;
+            font-size: 20px;
+        }
+
+        .interview-id {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .interview-result-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .result-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .result-passed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .result-failed {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .result-unspecified {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .interview-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .interview-detail {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .interview-detail-label {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .interview-detail-value {
+            display: block;
+            color: #0f172a;
+            font-size: 14px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .interview-remarks {
+            grid-column: 1 / -1;
+        }
+
+        .interviews-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+        }
+
+        .interviews-empty h3 {
+            margin: 0 0 8px;
+            color: #0f172a;
+        }
+
+        .interviews-empty p {
+            margin: 0;
+        }
+
+        .interviews-error {
+            color: #dc2626;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .refresh-button {
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+            .interview-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .interview-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interview-form-full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .interview-date-time,
+            .interview-details {
+                grid-template-columns: 1fr;
+            }
+
+            .interview-card-header {
+                flex-direction: column;
+            }
+
+            .interview-remarks {
+                grid-column: auto;
+            }
+
+            .interview-list-header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .interview-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .interview-card {
+                padding: 17px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
             <div>
                 <h1>CampusPulse</h1>
                 <p>Interview Management</p>
             </div>
 
-            <button id="backButton" class="btn-primary">
+            <button
+                id="backButton"
+                class="btn-primary"
+            >
                 Back to Dashboard
             </button>
         </header>
 
         <main class="dashboard-content">
 
-            <section class="welcome-card">
-                <h2>Interviews</h2>
-                <p>Schedule and manage student placement interviews.</p>
+            <section class="welcome-card interviews-hero">
+                <h2>Interview Management</h2>
+                <p>
+                    Schedule, track, and manage student placement
+                    interviews from one central workspace.
+                </p>
             </section>
 
-            <section class="dashboard-card">
-                <h3>Schedule Interview</h3>
+            <section class="interview-stats">
 
-                <div class="form-group">
-                    <label for="applicationId">
-                        Application
-                    </label>
+                <div class="interview-stat">
+                    <div class="interview-stat-label">
+                        Total Interviews
+                    </div>
 
-                    <select id="applicationId">
-                        <option value="">
-                            Select application
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="roundName">
-                        Round Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="roundName"
-                        placeholder="Enter interview round"
+                    <div
+                        id="totalInterviews"
+                        class="interview-stat-value"
                     >
+                        0
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="scheduledDate">
-                        Interview Date
-                    </label>
+                <div class="interview-stat">
+                    <div class="interview-stat-label">
+                        Pending
+                    </div>
 
-                    <input
-                        type="text"
-                        id="scheduledDate"
-                        placeholder="DD-MM-YYYY"
-                        maxlength="10"
+                    <div
+                        id="pendingInterviews"
+                        class="interview-stat-value"
                     >
+                        0
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="scheduledTime">
-                        Interview Time
-                    </label>
+                <div class="interview-stat">
+                    <div class="interview-stat-label">
+                        Passed
+                    </div>
 
-                    <input
-                        type="text"
-                        id="scheduledTime"
-                        placeholder="HH:MM AM/PM"
-                        maxlength="8"
+                    <div
+                        id="passedInterviews"
+                        class="interview-stat-value"
                     >
+                        0
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>
-                        Scheduled At
-                    </label>
+                <div class="interview-stat">
+                    <div class="interview-stat-label">
+                        Failed
+                    </div>
 
-                    <p id="scheduledPreview">
-                        Select date and time
+                    <div
+                        id="failedInterviews"
+                        class="interview-stat-value"
+                    >
+                        0
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="dashboard-card schedule-card">
+
+                <div class="schedule-card-header">
+                    <h3>Schedule Interview</h3>
+
+                    <p>
+                        Add a new interview for a student application.
                     </p>
                 </div>
 
-                <div class="form-group">
-                    <label for="mode">
-                        Mode
-                    </label>
+                <div class="interview-form-grid">
 
-                    <select id="mode">
-                        <option value="">
-                            Select mode
-                        </option>
+                    <div class="form-group interview-form-full">
+                        <label for="applicationId">
+                            Application
+                        </label>
 
-                        <option value="ONLINE">
-                            ONLINE
-                        </option>
+                        <select id="applicationId">
+                            <option value="">
+                                Select application
+                            </option>
+                        </select>
+                    </div>
 
-                        <option value="OFFLINE">
-                            OFFLINE
-                        </option>
-                    </select>
+                    <div class="form-group">
+                        <label for="roundName">
+                            Round Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="roundName"
+                            placeholder="Enter interview round"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Scheduled At
+                        </label>
+
+                        <div class="scheduled-preview-box">
+                            <span id="scheduledPreview">
+                                Select date and time
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduledDate">
+                            Interview Date
+                        </label>
+
+                        <input
+                            type="text"
+                            id="scheduledDate"
+                            placeholder="DD-MM-YYYY"
+                            maxlength="10"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduledTime">
+                            Interview Time
+                        </label>
+
+                        <input
+                            type="text"
+                            id="scheduledTime"
+                            placeholder="HH:MM AM/PM"
+                            maxlength="8"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mode">
+                            Mode
+                        </label>
+
+                        <select id="mode">
+                            <option value="">
+                                Select mode
+                            </option>
+
+                            <option value="ONLINE">
+                                ONLINE
+                            </option>
+
+                            <option value="OFFLINE">
+                                OFFLINE
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="result">
+                            Result
+                        </label>
+
+                        <select id="result">
+                            <option value="">
+                                Select result
+                            </option>
+
+                            <option value="PENDING">
+                                PENDING
+                            </option>
+
+                            <option value="PASSED">
+                                PASSED
+                            </option>
+
+                            <option value="FAILED">
+                                FAILED
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group interview-form-full">
+                        <label for="remarks">
+                            Remarks
+                        </label>
+
+                        <textarea
+                            id="remarks"
+                            placeholder="Enter remarks"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <div class="interview-form-full">
+                        <button
+                            id="scheduleInterviewButton"
+                            class="btn-primary"
+                        >
+                            Schedule Interview
+                        </button>
+
+                        <p
+                            id="scheduleMessage"
+                            class="message"
+                        ></p>
+                    </div>
+
                 </div>
 
-                <div class="form-group">
-                    <label for="result">
-                        Result
-                    </label>
-
-                    <select id="result">
-                        <option value="">
-                            Select result
-                        </option>
-
-                        <option value="PENDING">
-                            PENDING
-                        </option>
-
-                        <option value="PASSED">
-                            PASSED
-                        </option>
-
-                        <option value="FAILED">
-                            FAILED
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="remarks">
-                        Remarks
-                    </label>
-
-                    <textarea
-                        id="remarks"
-                        placeholder="Enter remarks"
-                        rows="4"
-                    ></textarea>
-                </div>
-
-                <button
-                    id="scheduleInterviewButton"
-                    class="btn-primary"
-                >
-                    Schedule Interview
-                </button>
-
-                <p
-                    id="scheduleMessage"
-                    class="message"
-                ></p>
             </section>
 
             <section class="dashboard-card">
-                <h3>Interview List</h3>
 
-                <div id="interviewsList">
+                <div class="interview-list-header">
+
+                    <div class="interview-list-header-left">
+                        <h3>Interview List</h3>
+
+                        <p>
+                            View scheduled and completed interviews.
+                        </p>
+                    </div>
+
+                    <div class="interview-list-header-right">
+
+                        <span
+                            id="interviewCount"
+                            class="interview-count"
+                        >
+                            0 interviews
+                        </span>
+
+                        <button
+                            id="refreshButton"
+                            class="btn-primary refresh-button"
+                        >
+                            Refresh
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <input
+                    type="search"
+                    id="interviewSearch"
+                    class="interview-search"
+                    placeholder="Search by application, round, mode, or result..."
+                >
+
+                <div
+                    id="interviewsList"
+                    class="interviews-list"
+                >
                     Loading interviews...
                 </div>
 
@@ -170,9 +583,11 @@
                     id="interviewsMessage"
                     class="message"
                 ></p>
+
             </section>
 
         </main>
+
     </div>
 
     <script>
@@ -192,29 +607,60 @@
             window.location.href = "login.html";
         }
 
-        document.getElementById("backButton").addEventListener(
-            "click",
-            function () {
-                window.location.href = "admin-dashboard.html";
-            }
-        );
+        let allInterviews = [];
+
+        document
+            .getElementById("backButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "admin-dashboard.html";
+                }
+            );
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener(
+                "click",
+                function () {
+                    loadApplications();
+                    loadInterviews();
+                }
+            );
+
+        document
+            .getElementById("interviewSearch")
+            .addEventListener(
+                "input",
+                function () {
+                    renderInterviews(this.value);
+                }
+            );
 
         const scheduledDate =
-            document.getElementById("scheduledDate");
+            document.getElementById(
+                "scheduledDate"
+            );
 
         const scheduledTime =
-            document.getElementById("scheduledTime");
+            document.getElementById(
+                "scheduledTime"
+            );
 
         const scheduledPreview =
-            document.getElementById("scheduledPreview");
+            document.getElementById(
+                "scheduledPreview"
+            );
 
         function convertToISODateTime(
             dateValue,
             timeValue
         ) {
-            const dateMatch = dateValue.match(
-                /^(\d{2})-(\d{2})-(\d{4})$/
-            );
+            const dateMatch =
+                dateValue.match(
+                    /^(\d{2})-(\d{2})-(\d{4})$/
+                );
 
             if (!dateMatch) {
                 return null;
@@ -238,9 +684,10 @@
                 return null;
             }
 
-            const timeMatch = timeValue.match(
-                /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
-            );
+            const timeMatch =
+                timeValue.match(
+                    /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+                );
 
             if (!timeMatch) {
                 return null;
@@ -383,9 +830,10 @@
                 return "Not specified";
             }
 
-            const match = value.match(
-                /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/
-            );
+            const match =
+                value.match(
+                    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/
+                );
 
             if (!match) {
                 return value;
@@ -434,9 +882,322 @@
             return `${day} ${monthNames[month - 1]} ${year}, ${hour12}:${minute} ${period}`;
         }
 
+        function formatResultLabel(result) {
+            if (!result) {
+                return "Not specified";
+            }
+
+            return result
+                .toLowerCase()
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, function (letter) {
+                    return letter.toUpperCase();
+                });
+        }
+
+        function getResultClass(result) {
+            if (!result) {
+                return "result-unspecified";
+            }
+
+            if (result === "PENDING") {
+                return "result-pending";
+            }
+
+            if (result === "PASSED") {
+                return "result-passed";
+            }
+
+            if (result === "FAILED") {
+                return "result-failed";
+            }
+
+            return "result-unspecified";
+        }
+
+        function escapeHtml(value) {
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function updateInterviewStats(interviews) {
+            document.getElementById(
+                "totalInterviews"
+            ).textContent =
+                interviews.length;
+
+            document.getElementById(
+                "pendingInterviews"
+            ).textContent =
+                interviews.filter(
+                    function (interview) {
+                        return interview.result === "PENDING";
+                    }
+                ).length;
+
+            document.getElementById(
+                "passedInterviews"
+            ).textContent =
+                interviews.filter(
+                    function (interview) {
+                        return interview.result === "PASSED";
+                    }
+                ).length;
+
+            document.getElementById(
+                "failedInterviews"
+            ).textContent =
+                interviews.filter(
+                    function (interview) {
+                        return interview.result === "FAILED";
+                    }
+                ).length;
+        }
+
+        function renderInterviews(searchTerm) {
+            const interviewsList =
+                document.getElementById(
+                    "interviewsList"
+                );
+
+            const interviewCount =
+                document.getElementById(
+                    "interviewCount"
+                );
+
+            const normalizedSearch =
+                (searchTerm || "")
+                    .trim()
+                    .toLowerCase();
+
+            const filteredInterviews =
+                allInterviews.filter(
+                    function (interview) {
+
+                        const applicationId =
+                            String(
+                                interview.application_id ||
+                                ""
+                            ).toLowerCase();
+
+                        const roundName =
+                            String(
+                                interview.round_name ||
+                                ""
+                            ).toLowerCase();
+
+                        const mode =
+                            String(
+                                interview.mode ||
+                                ""
+                            ).toLowerCase();
+
+                        const result =
+                            String(
+                                interview.result ||
+                                ""
+                            ).toLowerCase();
+
+                        const remarks =
+                            String(
+                                interview.remarks ||
+                                ""
+                            ).toLowerCase();
+
+                        return (
+                            applicationId.includes(
+                                normalizedSearch
+                            ) ||
+                            roundName.includes(
+                                normalizedSearch
+                            ) ||
+                            mode.includes(
+                                normalizedSearch
+                            ) ||
+                            result.includes(
+                                normalizedSearch
+                            ) ||
+                            remarks.includes(
+                                normalizedSearch
+                            )
+                        );
+                    }
+                );
+
+            interviewCount.textContent =
+                filteredInterviews.length +
+                (
+                    filteredInterviews.length === 1
+                        ? " interview"
+                        : " interviews"
+                );
+
+            if (filteredInterviews.length === 0) {
+                interviewsList.innerHTML = `
+                    <div class="interviews-empty">
+                        <h3>
+                            ${
+                                normalizedSearch
+                                    ? "No Matching Interviews"
+                                    : "No Interviews Yet"
+                            }
+                        </h3>
+
+                        <p>
+                            ${
+                                normalizedSearch
+                                    ? "Try a different application, round, mode, or result."
+                                    : "There are currently no interviews to display."
+                            }
+                        </p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            interviewsList.innerHTML = "";
+
+            filteredInterviews.forEach(
+                function (interview) {
+
+                    const interviewCard =
+                        document.createElement(
+                            "div"
+                        );
+
+                    interviewCard.className =
+                        "interview-card";
+
+                    const result =
+                        interview.result || "";
+
+                    interviewCard.innerHTML = `
+                        <div class="interview-card-header">
+
+                            <div>
+                                <h3>
+                                    Interview #${escapeHtml(
+                                        interview.interview_id
+                                    )}
+                                </h3>
+
+                                <span class="interview-id">
+                                    Application #${escapeHtml(
+                                        interview.application_id
+                                    )}
+                                </span>
+                            </div>
+
+                            <span
+                                class="interview-result-badge ${getResultClass(
+                                    result
+                                )}"
+                            >
+                                ${escapeHtml(
+                                    formatResultLabel(
+                                        result
+                                    )
+                                )}
+                            </span>
+
+                        </div>
+
+                        <div class="interview-details">
+
+                            <div class="interview-detail">
+                                <span class="interview-detail-label">
+                                    Round
+                                </span>
+
+                                <span class="interview-detail-value">
+                                    ${escapeHtml(
+                                        interview.round_name ||
+                                        "Not specified"
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="interview-detail">
+                                <span class="interview-detail-label">
+                                    Scheduled At
+                                </span>
+
+                                <span class="interview-detail-value">
+                                    ${escapeHtml(
+                                        formatInterviewDateTime(
+                                            interview.scheduled_at
+                                        )
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="interview-detail">
+                                <span class="interview-detail-label">
+                                    Mode
+                                </span>
+
+                                <span class="interview-detail-value">
+                                    ${escapeHtml(
+                                        interview.mode ||
+                                        "Not specified"
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="interview-detail">
+                                <span class="interview-detail-label">
+                                    Result
+                                </span>
+
+                                <span class="interview-detail-value">
+                                    ${escapeHtml(
+                                        formatResultLabel(
+                                            result
+                                        )
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="interview-detail interview-remarks">
+                                <span class="interview-detail-label">
+                                    Remarks
+                                </span>
+
+                                <span class="interview-detail-value">
+                                    ${escapeHtml(
+                                        interview.remarks ||
+                                        "No remarks"
+                                    )}
+                                </span>
+                            </div>
+
+                        </div>
+                    `;
+
+                    interviewsList.appendChild(
+                        interviewCard
+                    );
+                }
+            );
+        }
+
         async function loadApplications() {
             const applicationSelect =
-                document.getElementById("applicationId");
+                document.getElementById(
+                    "applicationId"
+                );
 
             try {
                 const response =
@@ -464,24 +1225,26 @@
                     </option>
                 `;
 
-                data.applications.forEach(
-                    function (application) {
-                        const option =
-                            document.createElement(
-                                "option"
+                (data.applications || [])
+                    .forEach(
+                        function (application) {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value =
+                                application.application_id;
+
+                            option.textContent =
+                                `Application #${application.application_id} - ${application.student_name || "Unknown Student"} - ${application.job_title || "Unknown Job"} - ${application.company_name || "Unknown Company"} - ${application.status}`;
+
+                            applicationSelect.appendChild(
+                                option
                             );
-
-                        option.value =
-                            application.application_id;
-
-                        option.textContent =
-                            `Application #${application.application_id} - ${application.student_name || "Unknown Student"} - ${application.job_title || "Unknown Job"} - ${application.company_name || "Unknown Company"} - ${application.status}`;
-
-                        applicationSelect.appendChild(
-                            option
-                        );
-                    }
-                );
+                        }
+                    );
 
             } catch (error) {
                 return;
@@ -498,6 +1261,11 @@
                 document.getElementById(
                     "interviewsMessage"
                 );
+
+            interviewsMessage.textContent = "";
+
+            interviewsList.innerHTML =
+                "Loading interviews...";
 
             try {
                 const response =
@@ -516,8 +1284,7 @@
                     await response.json();
 
                 if (!response.ok) {
-                    interviewsList.textContent =
-                        "";
+                    interviewsList.innerHTML = "";
 
                     interviewsMessage.textContent =
                         data.error ||
@@ -526,96 +1293,27 @@
                     return;
                 }
 
-                if (
-                    !data.interviews ||
-                    data.interviews.length === 0
-                ) {
-                    interviewsList.textContent =
-                        "No interviews found.";
+                allInterviews =
+                    data.interviews || [];
 
-                    return;
-                }
+                updateInterviewStats(
+                    allInterviews
+                );
 
-                interviewsList.innerHTML =
-                    "";
-
-                data.interviews.forEach(
-                    function (interview) {
-                        const interviewCard =
-                            document.createElement(
-                                "div"
-                            );
-
-                        interviewCard.className =
-                            "dashboard-card";
-
-                        interviewCard.style.marginBottom =
-                            "20px";
-
-                        interviewCard.innerHTML = `
-                            <h3>
-                                Interview #${interview.interview_id}
-                            </h3>
-
-                            <p>
-                                <strong>
-                                    Application ID:
-                                </strong>
-                                ${interview.application_id}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Round:
-                                </strong>
-                                ${interview.round_name}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Scheduled At:
-                                </strong>
-                                ${formatInterviewDateTime(
-                                    interview.scheduled_at
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Mode:
-                                </strong>
-                                ${interview.mode}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Result:
-                                </strong>
-                                ${interview.result ||
-                                "Not specified"}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Remarks:
-                                </strong>
-                                ${interview.remarks ||
-                                "No remarks"}
-                            </p>
-                        `;
-
-                        interviewsList.appendChild(
-                            interviewCard
-                        );
-                    }
+                renderInterviews(
+                    document.getElementById(
+                        "interviewSearch"
+                    ).value
                 );
 
             } catch (error) {
-                interviewsList.textContent =
-                    "";
+                interviewsList.innerHTML = `
+                    <div class="interviews-error">
+                        Unable to connect to CampusPulse backend.
+                    </div>
+                `;
 
-                interviewsMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
+                interviewsMessage.textContent = "";
             }
         }
 
@@ -745,11 +1443,8 @@
                             "roundName"
                         ).value = "";
 
-                        scheduledDate.value =
-                            "";
-
-                        scheduledTime.value =
-                            "";
+                        scheduledDate.value = "";
+                        scheduledTime.value = "";
 
                         scheduledPreview.textContent =
                             "Select date and time";
@@ -766,8 +1461,8 @@
                             "remarks"
                         ).value = "";
 
-                        loadApplications();
-                        loadInterviews();
+                        await loadApplications();
+                        await loadInterviews();
 
                     } catch (error) {
                         scheduleMessage.textContent =

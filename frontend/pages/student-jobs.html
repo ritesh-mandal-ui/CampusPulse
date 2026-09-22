@@ -1,325 +1,1162 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Jobs</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .jobs-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .jobs-hero-content h2 {
+            margin-bottom: 8px;
+        }
+
+        .jobs-hero-content p {
+            margin: 0;
+        }
+
+        .jobs-count {
+            min-width: 100px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .jobs-count strong {
+            display: block;
+            font-size: 28px;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .jobs-count span {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .jobs-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .jobs-search {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .jobs-search input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            border-radius: 10px;
+            font-size: 14px;
+            background: transparent;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .job-card {
+            padding: 22px;
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 16px;
+            background: rgba(128, 128, 128, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .job-header {
+            margin-bottom: 16px;
+        }
+
+        .job-header h3 {
+            margin-bottom: 6px;
+        }
+
+        .company-name {
+            font-size: 14px;
+            opacity: 0.75;
+        }
+
+        .job-description {
+            line-height: 1.6;
+            opacity: 0.85;
+            margin-bottom: 18px;
+        }
+
+        .job-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .job-detail {
+            padding: 11px;
+            border-radius: 10px;
+            background: rgba(128, 128, 128, 0.07);
+        }
+
+        .job-detail-label {
+            display: block;
+            font-size: 11px;
+            opacity: 0.65;
+            margin-bottom: 4px;
+        }
+
+        .job-detail-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .eligibility-box {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .eligibility-box.eligible {
+            background: rgba(34, 197, 94, 0.12);
+        }
+
+        .eligibility-box.not-eligible {
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .eligibility-box.closed {
+            background: rgba(128, 128, 128, 0.12);
+        }
+
+        .application-status {
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.12);
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+        .job-actions {
+            margin-top: 5px;
+        }
+
+        .job-actions button {
+            width: 100%;
+        }
+
+        .job-message {
+            min-height: 20px;
+            margin-top: 10px;
+        }
+
+        .empty-jobs {
+            padding: 45px 20px;
+            text-align: center;
+            border: 1px dashed rgba(128, 128, 128, 0.35);
+            border-radius: 16px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-jobs-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .empty-jobs strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .empty-jobs p {
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.7;
+            grid-column: 1 / -1;
+        }
+
+        .jobs-status {
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .job-details {
+                grid-template-columns: 1fr;
+            }
+
+            .jobs-count {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div>
-                <h1>CampusPulse</h1>
-                <p>Available Jobs</p>
+<div class="dashboard-container">
+
+    <header class="dashboard-header">
+        <div>
+            <h1>CampusPulse</h1>
+            <p>Available Jobs</p>
+        </div>
+
+        <button
+            id="backButton"
+            class="btn-primary"
+        >
+            Back to Dashboard
+        </button>
+    </header>
+
+    <main class="dashboard-content">
+
+        <section class="welcome-card">
+
+            <div class="jobs-hero">
+
+                <div class="jobs-hero-content">
+                    <h2>Available Jobs</h2>
+
+                    <p>
+                        Browse placement opportunities and check your eligibility.
+                    </p>
+                </div>
+
+                <div class="jobs-count">
+                    <strong id="jobsCount">0</strong>
+                    <span>Jobs Available</span>
+                </div>
+
             </div>
 
-            <button id="backButton" class="btn-primary">
-                Back to Dashboard
-            </button>
-        </header>
+        </section>
 
-        <main class="dashboard-content">
-            <section class="welcome-card">
-                <h2>Available Jobs</h2>
-                <p>Browse placement opportunities and check your eligibility.</p>
-            </section>
+        <section class="dashboard-card">
 
-            <section id="jobsList" class="dashboard-grid">
-                Loading jobs...
-            </section>
+            <div class="jobs-toolbar">
 
-            <p id="jobsMessage" class="message"></p>
-        </main>
-    </div>
+                <div class="jobs-search">
+                    <input
+                        type="text"
+                        id="jobSearch"
+                        placeholder="Search by job title or company..."
+                    >
+                </div>
 
-    <script>
-        const API_BASE_URL = "https://campuspulse-backend-uzum.onrender.com";
+                <button
+                    type="button"
+                    id="refreshJobsButton"
+                    class="btn-primary"
+                >
+                    Refresh
+                </button>
 
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+            </div>
 
-        if (!token || role !== "STUDENT") {
-            window.location.href = "login.html";
-        }
+            <div
+                id="jobsList"
+                class="jobs-grid"
+            >
+                <div class="loading-state">
+                    Loading jobs...
+                </div>
+            </div>
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "student-dashboard.html";
-        });
+            <p
+                id="jobsMessage"
+                class="message jobs-status"
+            ></p>
 
-        async function loadProfile() {
-            const response = await fetch(
-                `${API_BASE_URL}/api/students/profile`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+const API_BASE_URL =
+    "https://campuspulse-backend-uzum.onrender.com";
+
+const token =
+    localStorage.getItem("token");
+
+const role =
+    localStorage.getItem("role");
+
+
+if (!token || role !== "STUDENT") {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+const backButton =
+    document.getElementById(
+        "backButton"
+    );
+
+const jobsList =
+    document.getElementById(
+        "jobsList"
+    );
+
+const jobsMessage =
+    document.getElementById(
+        "jobsMessage"
+    );
+
+const jobsCount =
+    document.getElementById(
+        "jobsCount"
+    );
+
+const jobSearch =
+    document.getElementById(
+        "jobSearch"
+    );
+
+const refreshJobsButton =
+    document.getElementById(
+        "refreshJobsButton"
+    );
+
+
+let allJobs = [];
+let currentProfile = null;
+let currentApplications = [];
+
+
+backButton.addEventListener(
+    "click",
+    function () {
+
+        window.location.href =
+            "student-dashboard.html";
+
+    }
+);
+
+
+async function loadProfile() {
+
+    const response =
+        await fetch(
+            `${API_BASE_URL}/api/students/profile`,
+            {
+                method: "GET",
+
+                headers: {
+                    "Authorization":
+                        `Bearer ${token}`
                 }
-            );
-
-            if (!response.ok) {
-                throw new Error("Unable to load student profile.");
             }
+        );
 
-            return await response.json();
-        }
+    const data =
+        await response.json();
 
-        async function loadApplications() {
-            const response = await fetch(
-                `${API_BASE_URL}/api/applications`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
+    if (!response.ok) {
+
+        throw new Error(
+            data.error ||
+            "Unable to load student profile."
+        );
+
+    }
+
+    return data;
+
+}
+
+
+async function loadApplications() {
+
+    const response =
+        await fetch(
+            `${API_BASE_URL}/api/applications`,
+            {
+                method: "GET",
+
+                headers: {
+                    "Authorization":
+                        `Bearer ${token}`
                 }
-            );
-
-            if (!response.ok) {
-                throw new Error("Unable to load applications.");
             }
+        );
 
-            return await response.json();
+    const data =
+        await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.error ||
+            "Unable to load applications."
+        );
+
+    }
+
+    return data;
+
+}
+
+
+function formatDeadline(
+    deadline
+) {
+
+    if (!deadline) {
+        return "Not specified";
+    }
+
+    const date =
+        new Date(deadline);
+
+    if (isNaN(date.getTime())) {
+        return deadline;
+    }
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
         }
+    );
 
-        async function loadJobs() {
-            const jobsList = document.getElementById("jobsList");
-            const jobsMessage = document.getElementById("jobsMessage");
+}
 
-            try {
-                const [jobsResponse, profile, applicationsData] =
-                    await Promise.all([
-                        fetch(
-                            `${API_BASE_URL}/api/jobs`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "Authorization": `Bearer ${token}`
-                                }
-                            }
-                        ),
-                        loadProfile(),
-                        loadApplications()
-                    ]);
 
-                const jobsData = await jobsResponse.json();
+function getEligibility(
+    job,
+    profile
+) {
 
-                if (!jobsResponse.ok) {
-                    jobsList.textContent = "";
-                    jobsMessage.textContent =
-                        jobsData.error || "Unable to load jobs.";
-                    return;
-                }
+    if (job.job_status !== "OPEN") {
 
-                if (!jobsData.jobs || jobsData.jobs.length === 0) {
-                    jobsList.textContent = "No jobs available.";
-                    return;
-                }
+        return {
+            type: "closed",
+            text: "Applications Closed"
+        };
 
-                const applications = applicationsData.applications || [];
+    }
 
-                jobsList.innerHTML = "";
+    const minimumCgpa =
+        Number(job.minimum_cgpa);
 
-                jobsData.jobs.forEach(function (job) {
-                    const jobCard = document.createElement("div");
+    const studentCgpa =
+        Number(profile.cgpa);
 
-                    jobCard.className = "dashboard-card";
+    if (
+        isNaN(minimumCgpa) ||
+        isNaN(studentCgpa)
+    ) {
 
-                    const minimumCgpa = Number(job.minimum_cgpa);
-                    const studentCgpa = Number(profile.cgpa);
+        return {
+            type: "not-eligible",
+            text: "Eligibility cannot be determined"
+        };
 
-                    const eligible =
-                        !isNaN(minimumCgpa) &&
-                        !isNaN(studentCgpa) &&
-                        studentCgpa >= minimumCgpa;
+    }
 
-                    const existingApplication = applications.find(
-                        function (application) {
-                            return application.job_id === job.job_id;
-                        }
-                    );
+    if (
+        studentCgpa >= minimumCgpa
+    ) {
 
-                    let eligibilityText = "";
-                    let buttonHtml = "";
+        return {
+            type: "eligible",
+            text: "You are eligible for this job"
+        };
 
-                    if (job.job_status !== "OPEN") {
-                        eligibilityText = "Applications Closed";
+    }
 
-                        buttonHtml = `
-                            <button
-                                class="btn-primary"
-                                disabled
-                            >
-                                Applications Closed
-                            </button>
-                        `;
-                    } else if (eligible) {
-                        eligibilityText = "Eligible";
+    return {
+        type: "not-eligible",
+        text: "You are not eligible for this job"
+    };
 
-                        if (existingApplication) {
-                            buttonHtml = `
-                                <p>
-                                    <strong>
-                                        Application Status:
-                                    </strong>
-                                    ${existingApplication.status}
-                                </p>
-                            `;
-                        } else {
-                            buttonHtml = `
-                                <button
-                                    class="btn-primary apply-button"
-                                    data-job-id="${job.job_id}"
-                                >
-                                    Apply
-                                </button>
-                            `;
-                        }
-                    } else {
-                        eligibilityText = "Not Eligible";
+}
 
-                        buttonHtml = `
-                            <button
-                                class="btn-primary"
-                                disabled
-                            >
-                                Not Eligible
-                            </button>
-                        `;
-                    }
 
-                    jobCard.innerHTML = `
-                        <h3>${job.job_title}</h3>
+function createJobCard(
+    job,
+    profile,
+    applications
+) {
 
-                        <p>
-                            <strong>Company:</strong>
-                            ${job.company_name || "Unknown"}
-                        </p>
+    const jobCard =
+        document.createElement(
+            "div"
+        );
 
-                        <p>
-                            ${job.job_description ||
-                            "No description available."}
-                        </p>
+    jobCard.className =
+        "job-card";
 
-                        <p>
-                            Minimum CGPA:
-                            ${job.minimum_cgpa ?? "Not specified"}
-                        </p>
+    const eligibility =
+        getEligibility(
+            job,
+            profile
+        );
 
-                        <p>
-                            Maximum Backlogs:
-                            ${job.maximum_backlogs ?? "Not specified"}
-                        </p>
+    const existingApplication =
+        applications.find(
+            function (application) {
 
-                        <p>
-                            Salary:
-                            ${job.salary_lpa
-                                ? job.salary_lpa + " LPA"
-                                : "Not specified"}
-                        </p>
-
-                        <p>
-                            Status:
-                            ${job.job_status || "Not specified"}
-                        </p>
-
-                        <p>
-                            Application Deadline:
-                            ${job.application_deadline ||
-                            "Not specified"}
-                        </p>
-
-                        <p>
-                            <strong>
-                                Your CGPA:
-                            </strong>
-                            ${profile.cgpa ?? "Not available"}
-                        </p>
-
-                        <p>
-                            <strong>
-                                Eligibility:
-                            </strong>
-                            ${eligibilityText}
-                        </p>
-
-                        <div>
-                            ${buttonHtml}
-                        </div>
-
-                        <p
-                            id="applyMessage-${job.job_id}"
-                            class="message"
-                        ></p>
-                    `;
-
-                    jobsList.appendChild(jobCard);
-                });
-
-                document
-                    .querySelectorAll(".apply-button")
-                    .forEach(function (button) {
-                        button.addEventListener(
-                            "click",
-                            function () {
-                                const jobId =
-                                    this.getAttribute("data-job-id");
-
-                                applyForJob(jobId);
-                            }
-                        );
-                    });
-
-            } catch (error) {
-                jobsList.textContent = "";
-                jobsMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
-            }
-        }
-
-        async function applyForJob(jobId) {
-            const applyMessage =
-                document.getElementById(
-                    `applyMessage-${jobId}`
+                return Number(
+                    application.job_id
+                ) === Number(
+                    job.job_id
                 );
+
+            }
+        );
+
+
+    let applicationSection = "";
+
+
+    if (existingApplication) {
+
+        applicationSection = `
+
+            <div class="application-status">
+
+                <strong>
+                    Application Status:
+                </strong>
+
+                ${existingApplication.status}
+
+            </div>
+
+        `;
+
+    }
+
+
+    let actionSection = "";
+
+
+    if (existingApplication) {
+
+        actionSection = `
+            <button
+                class="btn-primary"
+                disabled
+            >
+                Already Applied
+            </button>
+        `;
+
+    } else if (
+        eligibility.type === "eligible"
+    ) {
+
+        actionSection = `
+
+            <button
+                class="btn-primary apply-button"
+                data-job-id="${job.job_id}"
+            >
+                Apply Now
+            </button>
+
+        `;
+
+    } else if (
+        eligibility.type === "closed"
+    ) {
+
+        actionSection = `
+
+            <button
+                class="btn-primary"
+                disabled
+            >
+                Applications Closed
+            </button>
+
+        `;
+
+    } else {
+
+        actionSection = `
+
+            <button
+                class="btn-primary"
+                disabled
+            >
+                Not Eligible
+            </button>
+
+        `;
+
+    }
+
+
+    jobCard.innerHTML = `
+
+        <div class="job-header">
+
+            <h3>
+                ${job.job_title}
+            </h3>
+
+            <div class="company-name">
+                ${job.company_name || "Unknown Company"}
+            </div>
+
+        </div>
+
+        <div class="job-description">
+
+            ${
+                job.job_description ||
+                "No job description available."
+            }
+
+        </div>
+
+        <div class="job-details">
+
+            <div class="job-detail">
+
+                <span class="job-detail-label">
+                    Minimum CGPA
+                </span>
+
+                <span class="job-detail-value">
+                    ${job.minimum_cgpa ?? "Not specified"}
+                </span>
+
+            </div>
+
+            <div class="job-detail">
+
+                <span class="job-detail-label">
+                    Your CGPA
+                </span>
+
+                <span class="job-detail-value">
+                    ${profile.cgpa ?? "Not available"}
+                </span>
+
+            </div>
+
+            <div class="job-detail">
+
+                <span class="job-detail-label">
+                    Salary
+                </span>
+
+                <span class="job-detail-value">
+                    ${
+                        job.salary_lpa
+                            ? job.salary_lpa + " LPA"
+                            : "Not specified"
+                    }
+                </span>
+
+            </div>
+
+            <div class="job-detail">
+
+                <span class="job-detail-label">
+                    Maximum Backlogs
+                </span>
+
+                <span class="job-detail-value">
+                    ${job.maximum_backlogs ?? "Not specified"}
+                </span>
+
+            </div>
+
+            <div class="job-detail">
+
+                <span class="job-detail-label">
+                    Deadline
+                </span>
+
+                <span class="job-detail-value">
+                    ${formatDeadline(
+                        job.application_deadline
+                    )}
+                </span>
+
+            </div>
+
+            <div class="job-detail">
+
+                <span class="job-detail-label">
+                    Status
+                </span>
+
+                <span class="job-detail-value">
+                    ${job.job_status || "Not specified"}
+                </span>
+
+            </div>
+
+        </div>
+
+        <div
+            class="eligibility-box ${eligibility.type}"
+        >
+
+            <strong>
+                Eligibility:
+            </strong>
+
+            ${eligibility.text}
+
+        </div>
+
+        ${applicationSection}
+
+        <div class="job-actions">
+
+            ${actionSection}
+
+        </div>
+
+        <p
+            id="applyMessage-${job.job_id}"
+            class="message job-message"
+        ></p>
+
+    `;
+
+    return jobCard;
+
+}
+
+
+function renderJobs(
+    jobs
+) {
+
+    jobsList.innerHTML = "";
+
+    if (
+        !jobs ||
+        jobs.length === 0
+    ) {
+
+        jobsList.innerHTML = `
+
+            <div class="empty-jobs">
+
+                <div class="empty-jobs-icon">
+                    ??
+                </div>
+
+                <strong>
+                    No jobs found
+                </strong>
+
+                <p>
+                    Try another search or check back later for new opportunities.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const grid =
+        document.createElement(
+            "div"
+        );
+
+    grid.className =
+        "jobs-grid";
+
+    jobs.forEach(
+        function (job) {
+
+            grid.appendChild(
+                createJobCard(
+                    job,
+                    currentProfile,
+                    currentApplications
+                )
+            );
+
+        }
+    );
+
+
+    jobsList.innerHTML = "";
+
+    jobs.forEach(
+        function (job) {
+
+            jobsList.appendChild(
+                createJobCard(
+                    job,
+                    currentProfile,
+                    currentApplications
+                )
+            );
+
+        }
+    );
+
+
+    document
+        .querySelectorAll(
+            ".apply-button"
+        )
+        .forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const jobId =
+                            this.getAttribute(
+                                "data-job-id"
+                            );
+
+                        applyForJob(
+                            jobId
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+async function loadJobs() {
+
+    jobsMessage.textContent = "";
+
+    jobsList.innerHTML = `
+
+        <div class="loading-state">
+            Loading jobs...
+        </div>
+
+    `;
+
+
+    try {
+
+        const [
+            jobsResponse,
+            profile,
+            applicationsData
+        ] = await Promise.all([
+
+            fetch(
+                `${API_BASE_URL}/api/jobs`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            ),
+
+            loadProfile(),
+
+            loadApplications()
+
+        ]);
+
+
+        const jobsData =
+            await jobsResponse.json();
+
+
+        if (!jobsResponse.ok) {
+
+            throw new Error(
+                jobsData.error ||
+                "Unable to load jobs."
+            );
+
+        }
+
+
+        currentProfile =
+            profile;
+
+        currentApplications =
+            applicationsData.applications || [];
+
+        allJobs =
+            jobsData.jobs || [];
+
+
+        jobsCount.textContent =
+            allJobs.length;
+
+
+        renderJobs(
+            allJobs
+        );
+
+
+    }
+    catch (error) {
+
+        jobsList.innerHTML = "";
+
+        jobsCount.textContent =
+            "0";
+
+        jobsMessage.textContent =
+            error.message ||
+            "Unable to connect to CampusPulse backend.";
+
+    }
+
+}
+
+
+async function applyForJob(
+    jobId
+) {
+
+    const applyButton =
+        document.querySelector(
+            `.apply-button[data-job-id="${jobId}"]`
+        );
+
+    const applyMessage =
+        document.getElementById(
+            `applyMessage-${jobId}`
+        );
+
+
+    if (applyButton) {
+
+        applyButton.disabled =
+            true;
+
+        applyButton.textContent =
+            "Submitting...";
+
+    }
+
+
+    if (applyMessage) {
+
+        applyMessage.textContent =
+            "Submitting application...";
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/applications/${jobId}`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            if (applyMessage) {
+
+                applyMessage.textContent =
+                    data.error ||
+                    "Unable to submit application.";
+
+            }
+
+            if (applyButton) {
+
+                applyButton.disabled =
+                    false;
+
+                applyButton.textContent =
+                    "Apply Now";
+
+            }
+
+            return;
+
+        }
+
+
+        if (applyMessage) {
 
             applyMessage.textContent =
-                "Submitting application...";
+                "Application submitted successfully.";
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/applications/${jobId}`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
-                );
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    applyMessage.textContent =
-                        data.error ||
-                        "Unable to submit application.";
-                    return;
-                }
-
-                applyMessage.textContent =
-                    "Application submitted successfully.";
-
-                loadJobs();
-            } catch (error) {
-                applyMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
-            }
         }
 
-        loadJobs();
-    </script>
+
+        await loadJobs();
+
+
+    }
+    catch (error) {
+
+        if (applyMessage) {
+
+            applyMessage.textContent =
+                "Unable to connect to CampusPulse backend.";
+
+        }
+
+        if (applyButton) {
+
+            applyButton.disabled =
+                false;
+
+            applyButton.textContent =
+                "Apply Now";
+
+        }
+
+    }
+
+}
+
+
+jobSearch.addEventListener(
+    "input",
+    function () {
+
+        const searchTerm =
+            this.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!searchTerm) {
+
+            renderJobs(
+                allJobs
+            );
+
+            return;
+
+        }
+
+
+        const filteredJobs =
+            allJobs.filter(
+                function (job) {
+
+                    const title =
+                        (
+                            job.job_title ||
+                            ""
+                        ).toLowerCase();
+
+                    const company =
+                        (
+                            job.company_name ||
+                            ""
+                        ).toLowerCase();
+
+                    return (
+                        title.includes(
+                            searchTerm
+                        ) ||
+                        company.includes(
+                            searchTerm
+                        )
+                    );
+
+                }
+            );
+
+
+        renderJobs(
+            filteredJobs
+        );
+
+    }
+);
+
+
+refreshJobsButton.addEventListener(
+    "click",
+    async function () {
+
+        refreshJobsButton.disabled =
+            true;
+
+        refreshJobsButton.textContent =
+            "Refreshing...";
+
+        await loadJobs();
+
+        refreshJobsButton.disabled =
+            false;
+
+        refreshJobsButton.textContent =
+            "Refresh";
+
+    }
+);
+
+
+loadJobs();
+
+</script>
 
 </body>
 </html>

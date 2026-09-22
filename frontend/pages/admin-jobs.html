@@ -1,153 +1,809 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>CampusPulse - Jobs</title>
+
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .jobs-page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-brand h1 {
+            margin-bottom: 4px;
+        }
+
+        .header-brand p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            padding: 32px;
+            border-radius: 22px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 0%,
+                    #f8fafc 55%,
+                    #eef2ff 100%
+                );
+            border: 1px solid #e5e7eb;
+            box-shadow:
+                0 8px 30px
+                rgba(15, 23, 42, 0.06);
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            right: -75px;
+            top: -75px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            margin: 0 0 8px;
+            color: #6366f1;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            margin: 0 0 8px;
+            font-size: 30px;
+            line-height: 1.2;
+        }
+
+        .hero-description {
+            max-width: 680px;
+            margin: 0;
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .section-card {
+            margin-bottom: 24px;
+            padding: 26px;
+            border-radius: 20px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow:
+                0 5px 18px
+                rgba(15, 23, 42, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .section-header h2 {
+            margin: 0 0 5px;
+            font-size: 21px;
+        }
+
+        .section-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 11px;
+            background: #ffffff;
+            color: #111827;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 105px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #818cf8;
+            box-shadow:
+                0 0 0 3px
+                rgba(99, 102, 241, 0.12);
+        }
+
+        .deadline-group {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .deadline-preview {
+            min-height: 20px;
+            margin: 8px 0 0;
+            color: #6366f1;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .create-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .create-actions button {
+            min-width: 145px;
+        }
+
+        .message {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .create-message {
+            margin-top: 0;
+        }
+
+        .jobs-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .jobs-count {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .jobs-count strong {
+            color: #111827;
+        }
+
+        .jobs-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            width: 260px;
+            padding: 11px 13px;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #818cf8;
+            box-shadow:
+                0 0 0 3px
+                rgba(99, 102, 241, 0.12);
+        }
+
+        .refresh-button {
+            padding: 11px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #374151;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .refresh-button:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .job-card {
+            position: relative;
+            padding: 22px;
+            border: 1px solid #e5e7eb;
+            border-radius: 17px;
+            background: #ffffff;
+            box-shadow:
+                0 4px 15px
+                rgba(15, 23, 42, 0.04);
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            border-color: #c7d2fe;
+            box-shadow:
+                0 10px 24px
+                rgba(15, 23, 42, 0.08);
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .job-card h3 {
+            margin: 0 0 5px;
+            color: #111827;
+            font-size: 18px;
+            line-height: 1.35;
+        }
+
+        .company-name {
+            margin: 0;
+            color: #6366f1;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        .status-open {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-closed {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .status-cancelled {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .job-description {
+            margin: 0 0 17px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .job-info-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 17px;
+        }
+
+        .job-info-item {
+            padding: 11px 12px;
+            border-radius: 11px;
+            background: #f8fafc;
+            border: 1px solid #eef2f7;
+        }
+
+        .job-info-label {
+            display: block;
+            margin-bottom: 4px;
+            color: #9ca3af;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .job-info-value {
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .job-deadline {
+            padding-top: 14px;
+            border-top: 1px solid #eef2f7;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .job-deadline strong {
+            color: #374151;
+        }
+
+        .empty-state {
+            padding: 45px 20px;
+            border: 1px dashed #d1d5db;
+            border-radius: 15px;
+            text-align: center;
+            background: #f9fafb;
+        }
+
+        .empty-icon {
+            margin-bottom: 10px;
+            font-size: 30px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 6px;
+            color: #374151;
+            font-size: 17px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .dashboard-footer-note {
+            margin-top: 28px;
+            padding: 18px 20px;
+            border-radius: 15px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: auto;
+            }
+
+            .jobs-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .jobs-actions {
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-header {
+                align-items: flex-start;
+            }
+
+            .page-hero {
+                padding: 26px 22px;
+            }
+
+            .hero-title {
+                font-size: 25px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .section-card {
+                padding: 20px 17px;
+            }
+
+            .section-header {
+                flex-direction: column;
+            }
+
+            .deadline-group {
+                grid-template-columns: 1fr;
+            }
+
+            .job-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .job-card-header {
+                flex-direction: column;
+            }
+
+            .create-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .create-actions button {
+                width: 100%;
+            }
+
+            .jobs-actions {
+                flex-direction: column;
+            }
+
+            .refresh-button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
-            <div>
+
+            <div class="header-brand">
                 <h1>CampusPulse</h1>
                 <p>Job Management</p>
             </div>
 
-            <button id="backButton" class="btn-primary">
+            <button
+                id="backButton"
+                class="btn-primary"
+            >
                 Back to Dashboard
             </button>
+
         </header>
 
-        <main class="dashboard-content">
+        <main class="dashboard-content jobs-page">
 
-            <section class="welcome-card">
-                <h2>Jobs</h2>
-                <p>Create and manage placement opportunities.</p>
+            <section class="page-hero">
+
+                <div class="hero-content">
+
+                    <p class="hero-eyebrow">
+                        Placement Management
+                    </p>
+
+                    <h2 class="hero-title">
+                        Jobs
+                    </h2>
+
+                    <p class="hero-description">
+                        Create, publish, and manage placement
+                        opportunities for students.
+                    </p>
+
+                </div>
+
             </section>
 
-            <section class="dashboard-card">
-                <h3>Create Job</h3>
+            <section class="section-card">
 
-                <div class="form-group">
-                    <label for="companyId">Company</label>
-                    <select id="companyId">
-                        <option value="">Select company</option>
-                    </select>
+                <div class="section-header">
+                    <div>
+                        <h2>
+                            Create Job
+                        </h2>
+
+                        <p>
+                            Add a new placement opportunity
+                            to CampusPulse.
+                        </p>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="jobTitle">Job Title</label>
-                    <input
-                        type="text"
-                        id="jobTitle"
-                        placeholder="Enter job title"
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="companyId">
+                            Company
+                        </label>
+
+                        <select id="companyId">
+                            <option value="">
+                                Select company
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobTitle">
+                            Job Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="jobTitle"
+                            placeholder="Enter job title"
+                        >
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="jobDescription">
+                            Job Description
+                        </label>
+
+                        <textarea
+                            id="jobDescription"
+                            placeholder="Enter job description"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minimumCgpa">
+                            Minimum CGPA
+                        </label>
+
+                        <input
+                            type="number"
+                            id="minimumCgpa"
+                            step="0.01"
+                            min="0"
+                            max="10"
+                            placeholder="0.00 - 10.00"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maximumBacklogs">
+                            Maximum Backlogs
+                        </label>
+
+                        <input
+                            type="number"
+                            id="maximumBacklogs"
+                            min="0"
+                            placeholder="Enter maximum backlogs"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salaryLpa">
+                            Salary (LPA)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="salaryLpa"
+                            step="0.01"
+                            min="0"
+                            placeholder="Enter salary in LPA"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobStatus">
+                            Job Status
+                        </label>
+
+                        <select id="jobStatus">
+                            <option value="OPEN">
+                                Open
+                            </option>
+
+                            <option value="CLOSED">
+                                Closed
+                            </option>
+
+                            <option value="CANCELLED">
+                                Cancelled
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+
+                        <label>
+                            Application Deadline
+                        </label>
+
+                        <div class="deadline-group">
+
+                            <input
+                                type="text"
+                                id="applicationDeadlineDate"
+                                placeholder="DD-MM-YYYY"
+                                maxlength="10"
+                            >
+
+                            <input
+                                type="text"
+                                id="applicationDeadlineTime"
+                                placeholder="HH:MM AM/PM"
+                                maxlength="8"
+                            >
+
+                        </div>
+
+                        <p
+                            id="deadlinePreview"
+                            class="deadline-preview"
+                        ></p>
+
+                    </div>
+
+                </div>
+
+                <div class="create-actions">
+
+                    <button
+                        id="createJobButton"
+                        class="btn-primary"
                     >
+                        Create Job
+                    </button>
+
+                    <p
+                        id="createJobMessage"
+                        class="message create-message"
+                    ></p>
+
                 </div>
 
-                <div class="form-group">
-                    <label for="jobDescription">Job Description</label>
-                    <textarea
-                        id="jobDescription"
-                        placeholder="Enter job description"
-                        rows="4"
-                    ></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="minimumCgpa">Minimum CGPA</label>
-                    <input
-                        type="number"
-                        id="minimumCgpa"
-                        step="0.01"
-                        min="0"
-                        max="10"
-                        placeholder="Enter minimum CGPA"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="maximumBacklogs">Maximum Backlogs</label>
-                    <input
-                        type="number"
-                        id="maximumBacklogs"
-                        min="0"
-                        placeholder="Enter maximum backlogs"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="salaryLpa">Salary (LPA)</label>
-                    <input
-                        type="number"
-                        id="salaryLpa"
-                        step="0.01"
-                        min="0"
-                        placeholder="Enter salary in LPA"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="applicationDeadlineDate">
-                        Application Deadline Date
-                    </label>
-                    <input
-                        type="text"
-                        id="applicationDeadlineDate"
-                        placeholder="DD-MM-YYYY"
-                        maxlength="10"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="applicationDeadlineTime">
-                        Application Deadline Time
-                    </label>
-                    <input
-                        type="text"
-                        id="applicationDeadlineTime"
-                        placeholder="HH:MM AM/PM"
-                        maxlength="8"
-                    >
-                </div>
-
-                <p id="deadlinePreview" class="message"></p>
-
-                <div class="form-group">
-                    <label for="jobStatus">Job Status</label>
-                    <select id="jobStatus">
-                        <option value="OPEN">Open</option>
-                        <option value="CLOSED">Closed</option>
-                        <option value="CANCELLED">Cancelled</option>
-                    </select>
-                </div>
-
-                <button id="createJobButton" class="btn-primary">
-                    Create Job
-                </button>
-
-                <p id="createJobMessage" class="message"></p>
             </section>
 
-            <section class="dashboard-card">
-                <h3>Job List</h3>
+            <section class="section-card">
+
+                <div class="section-header">
+                    <div>
+                        <h2>
+                            Job List
+                        </h2>
+
+                        <p>
+                            View and manage available
+                            placement opportunities.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="jobs-toolbar">
+
+                    <div
+                        id="jobsCount"
+                        class="jobs-count"
+                    >
+                        Loading jobs...
+                    </div>
+
+                    <div class="jobs-actions">
+
+                        <input
+                            type="search"
+                            id="jobSearch"
+                            class="search-input"
+                            placeholder="Search jobs or companies..."
+                        >
+
+                        <button
+                            id="refreshJobsButton"
+                            class="refresh-button"
+                        >
+                            Refresh
+                        </button>
+
+                    </div>
+
+                </div>
 
                 <div id="jobsList">
                     Loading jobs...
                 </div>
 
-                <p id="jobsMessage" class="message"></p>
+                <p
+                    id="jobsMessage"
+                    class="message"
+                ></p>
+
             </section>
 
+            <div class="dashboard-footer-note">
+                Keep job details, eligibility criteria,
+                and deadlines accurate for students.
+            </div>
+
         </main>
+
     </div>
 
     <script>
-        const API_BASE_URL = "https://campuspulse-backend-uzum.onrender.com";
+        const API_BASE_URL =
+            "https://campuspulse-backend-uzum.onrender.com";
 
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+        const token =
+            localStorage.getItem("token");
+
+        const role =
+            localStorage.getItem("role");
 
         if (
             !token ||
@@ -157,14 +813,26 @@
                 role !== "SUPER_ADMIN"
             )
         ) {
-            window.location.href = "login.html";
+            window.location.href =
+                "login.html";
         }
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "admin-dashboard.html";
-        });
+        document
+            .getElementById("backButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "admin-dashboard.html";
+                }
+            );
 
-        function convertToISODateTime(dateValue, timeValue) {
+        let allJobs = [];
+
+        function convertToISODateTime(
+            dateValue,
+            timeValue
+        ) {
             if (!dateValue && !timeValue) {
                 return null;
             }
@@ -175,7 +843,8 @@
                 );
             }
 
-            const dateParts = dateValue.split("-");
+            const dateParts =
+                dateValue.split("-");
 
             if (dateParts.length !== 3) {
                 throw new Error(
@@ -183,9 +852,14 @@
                 );
             }
 
-            const day = Number(dateParts[0]);
-            const month = Number(dateParts[1]);
-            const year = Number(dateParts[2]);
+            const day =
+                Number(dateParts[0]);
+
+            const month =
+                Number(dateParts[1]);
+
+            const year =
+                Number(dateParts[2]);
 
             if (
                 !Number.isInteger(day) ||
@@ -203,9 +877,10 @@
                 );
             }
 
-            const timeMatch = timeValue.match(
-                /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
-            );
+            const timeMatch =
+                timeValue.match(
+                    /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+                );
 
             if (!timeMatch) {
                 throw new Error(
@@ -213,9 +888,14 @@
                 );
             }
 
-            let hour = Number(timeMatch[1]);
-            const minute = Number(timeMatch[2]);
-            const period = timeMatch[3].toUpperCase();
+            let hour =
+                Number(timeMatch[1]);
+
+            const minute =
+                Number(timeMatch[2]);
+
+            const period =
+                timeMatch[3].toUpperCase();
 
             if (
                 hour < 1 ||
@@ -228,21 +908,28 @@
                 );
             }
 
-            if (period === "AM" && hour === 12) {
+            if (
+                period === "AM" &&
+                hour === 12
+            ) {
                 hour = 0;
             }
 
-            if (period === "PM" && hour !== 12) {
+            if (
+                period === "PM" &&
+                hour !== 12
+            ) {
                 hour += 12;
             }
 
-            const date = new Date(
-                year,
-                month - 1,
-                day,
-                hour,
-                minute
-            );
+            const date =
+                new Date(
+                    year,
+                    month - 1,
+                    day,
+                    hour,
+                    minute
+                );
 
             if (
                 date.getFullYear() !== year ||
@@ -266,7 +953,10 @@
             const formattedMinute =
                 String(minute).padStart(2, "0");
 
-            return `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:${formattedMinute}:00`;
+            return (
+                `${year}-${formattedMonth}-${formattedDay}` +
+                `T${formattedHour}:${formattedMinute}:00`
+            );
         }
 
         function formatJobDateTime(value) {
@@ -274,20 +964,26 @@
                 return "Not specified";
             }
 
-            const date = new Date(value);
+            const date =
+                new Date(value);
 
-            if (isNaN(date.getTime())) {
+            if (
+                isNaN(date.getTime())
+            ) {
                 return value;
             }
 
-            return date.toLocaleString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true
-            });
+            return date.toLocaleString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true
+                }
+            );
         }
 
         function formatStatusLabel(status) {
@@ -297,28 +993,69 @@
 
             return status
                 .toLowerCase()
-                .replace(/_/g, " ")
-                .replace(/\b\w/g, function (letter) {
-                    return letter.toUpperCase();
-                });
+                .replace(
+                    /_/g,
+                    " "
+                )
+                .replace(
+                    /\b\w/g,
+                    function (letter) {
+                        return letter.toUpperCase();
+                    }
+                );
+        }
+
+        function getStatusClass(status) {
+            const normalized =
+                String(status || "")
+                    .toUpperCase();
+
+            if (normalized === "OPEN") {
+                return "status-open";
+            }
+
+            if (normalized === "CLOSED") {
+                return "status-closed";
+            }
+
+            if (
+                normalized === "CANCELLED"
+            ) {
+                return "status-cancelled";
+            }
+
+            return "";
         }
 
         function updateDeadlinePreview() {
             const dateValue =
-                document.getElementById(
-                    "applicationDeadlineDate"
-                ).value.trim();
+                document
+                    .getElementById(
+                        "applicationDeadlineDate"
+                    )
+                    .value
+                    .trim();
 
             const timeValue =
-                document.getElementById(
-                    "applicationDeadlineTime"
-                ).value.trim();
+                document
+                    .getElementById(
+                        "applicationDeadlineTime"
+                    )
+                    .value
+                    .trim();
 
             const deadlinePreview =
-                document.getElementById("deadlinePreview");
+                document.getElementById(
+                    "deadlinePreview"
+                );
 
-            if (!dateValue && !timeValue) {
-                deadlinePreview.textContent = "";
+            if (
+                !dateValue &&
+                !timeValue
+            ) {
+                deadlinePreview.textContent =
+                    "";
+
                 return;
             }
 
@@ -331,6 +1068,7 @@
 
                 deadlinePreview.textContent =
                     `Deadline: ${formatJobDateTime(isoValue)}`;
+
             } catch (error) {
                 deadlinePreview.textContent =
                     error.message;
@@ -338,14 +1076,18 @@
         }
 
         document
-            .getElementById("applicationDeadlineDate")
+            .getElementById(
+                "applicationDeadlineDate"
+            )
             .addEventListener(
                 "input",
                 updateDeadlinePreview
             );
 
         document
-            .getElementById("applicationDeadlineTime")
+            .getElementById(
+                "applicationDeadlineTime"
+            )
             .addEventListener(
                 "input",
                 updateDeadlinePreview
@@ -353,344 +1095,626 @@
 
         async function loadCompanies() {
             const companySelect =
-                document.getElementById("companyId");
-
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/companies`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
+                document.getElementById(
+                    "companyId"
                 );
 
-                const data = await response.json();
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/companies`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
 
                 if (!response.ok) {
                     return;
                 }
 
-                data.companies.forEach(function (company) {
-                    const option =
-                        document.createElement("option");
+                companySelect.innerHTML =
+                    '<option value="">Select company</option>';
 
-                    option.value = company.company_id;
-                    option.textContent =
-                        company.company_name;
+                data.companies.forEach(
+                    function (company) {
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
 
-                    companySelect.appendChild(option);
-                });
+                        option.value =
+                            company.company_id;
+
+                        option.textContent =
+                            company.company_name;
+
+                        companySelect.appendChild(
+                            option
+                        );
+                    }
+                );
 
             } catch (error) {
                 return;
             }
         }
 
-        async function loadJobs() {
+        function renderJobs(jobs) {
             const jobsList =
-                document.getElementById("jobsList");
-
-            const jobsMessage =
-                document.getElementById("jobsMessage");
-
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/jobs`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
+                document.getElementById(
+                    "jobsList"
                 );
 
-                const data = await response.json();
+            const jobsCount =
+                document.getElementById(
+                    "jobsCount"
+                );
 
-                if (!response.ok) {
-                    jobsList.textContent = "";
-                    jobsMessage.textContent =
-                        data.error || "Unable to load jobs.";
-                    return;
-                }
+            if (
+                !jobs ||
+                jobs.length === 0
+            ) {
+                jobsCount.innerHTML =
+                    "<strong>0</strong> jobs";
 
-                if (
-                    !data.jobs ||
-                    data.jobs.length === 0
-                ) {
-                    jobsList.textContent =
-                        "No jobs found.";
-                    return;
-                }
+                jobsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            ??
+                        </div>
 
-                jobsList.innerHTML = "";
+                        <h3>
+                            No Jobs Found
+                        </h3>
 
-                data.jobs.forEach(function (job) {
+                        <p>
+                            Create a job opportunity
+                            or try a different search.
+                        </p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            jobsCount.innerHTML =
+                `<strong>${jobs.length}</strong> ${
+                    jobs.length === 1
+                        ? "job"
+                        : "jobs"
+                }`;
+
+            jobsList.innerHTML = "";
+
+            const jobsGrid =
+                document.createElement(
+                    "div"
+                );
+
+            jobsGrid.className =
+                "jobs-grid";
+
+            jobs.forEach(
+                function (job) {
                     const jobCard =
-                        document.createElement("div");
+                        document.createElement(
+                            "article"
+                        );
 
-                    jobCard.className = "dashboard-card";
-                    jobCard.style.marginBottom = "25px";
+                    jobCard.className =
+                        "job-card";
+
+                    const statusClass =
+                        getStatusClass(
+                            job.job_status
+                        );
+
+                    const description =
+                        job.job_description ||
+                        "No description provided.";
 
                     jobCard.innerHTML = `
-                        <h3>${job.job_title}</h3>
+                        <div class="job-card-header">
+                            <div>
+                                <h3>
+                                    ${job.job_title}
+                                </h3>
 
-                        <p>
-                            <strong>Company:</strong>
-                            ${job.company_name || "Unknown"}
+                                <p class="company-name">
+                                    ${job.company_name ||
+                                    "Unknown Company"}
+                                </p>
+                            </div>
+
+                            <span
+                                class="status-badge ${statusClass}"
+                            >
+                                ${formatStatusLabel(
+                                    job.job_status
+                                )}
+                            </span>
+                        </div>
+
+                        <p class="job-description">
+                            ${description}
                         </p>
 
-                        <p>
-                            <strong>Description:</strong>
-                            ${job.job_description ||
-                            "Not specified"}
-                        </p>
+                        <div class="job-info-grid">
 
-                        <p>
-                            <strong>Minimum CGPA:</strong>
-                            ${job.minimum_cgpa ??
-                            "Not specified"}
-                        </p>
+                            <div class="job-info-item">
+                                <span
+                                    class="job-info-label"
+                                >
+                                    Minimum CGPA
+                                </span>
 
-                        <p>
-                            <strong>Maximum Backlogs:</strong>
-                            ${job.maximum_backlogs ??
-                            "Not specified"}
-                        </p>
+                                <span
+                                    class="job-info-value"
+                                >
+                                    ${
+                                        job.minimum_cgpa ??
+                                        "Not specified"
+                                    }
+                                </span>
+                            </div>
 
-                        <p>
-                            <strong>Salary:</strong>
-                            ${
-                                job.salary_lpa !== null &&
-                                job.salary_lpa !== undefined
-                                    ? job.salary_lpa + " LPA"
-                                    : "Not specified"
-                            }
-                        </p>
+                            <div class="job-info-item">
+                                <span
+                                    class="job-info-label"
+                                >
+                                    Max Backlogs
+                                </span>
 
-                        <p>
-                            <strong>Application Deadline:</strong>
+                                <span
+                                    class="job-info-value"
+                                >
+                                    ${
+                                        job.maximum_backlogs ??
+                                        "Not specified"
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="job-info-item">
+                                <span
+                                    class="job-info-label"
+                                >
+                                    Salary
+                                </span>
+
+                                <span
+                                    class="job-info-value"
+                                >
+                                    ${
+                                        job.salary_lpa !== null &&
+                                        job.salary_lpa !== undefined
+                                            ? job.salary_lpa +
+                                              " LPA"
+                                            : "Not specified"
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="job-info-item">
+                                <span
+                                    class="job-info-label"
+                                >
+                                    Job Status
+                                </span>
+
+                                <span
+                                    class="job-info-value"
+                                >
+                                    ${formatStatusLabel(
+                                        job.job_status
+                                    )}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="job-deadline">
+                            <strong>
+                                Application Deadline:
+                            </strong>
                             ${formatJobDateTime(
                                 job.application_deadline
                             )}
-                        </p>
-
-                        <p>
-                            <strong>Status:</strong>
-                            ${formatStatusLabel(
-                                job.job_status
-                            )}
-                        </p>
+                        </div>
                     `;
 
-                    jobsList.appendChild(jobCard);
-                });
+                    jobsGrid.appendChild(
+                        jobCard
+                    );
+                }
+            );
+
+            jobsList.appendChild(
+                jobsGrid
+            );
+        }
+
+        function filterJobs() {
+            const searchValue =
+                document
+                    .getElementById(
+                        "jobSearch"
+                    )
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            if (!searchValue) {
+                renderJobs(allJobs);
+                return;
+            }
+
+            const filteredJobs =
+                allJobs.filter(
+                    function (job) {
+                        const title =
+                            String(
+                                job.job_title ||
+                                ""
+                            ).toLowerCase();
+
+                        const company =
+                            String(
+                                job.company_name ||
+                                ""
+                            ).toLowerCase();
+
+                        return (
+                            title.includes(
+                                searchValue
+                            ) ||
+                            company.includes(
+                                searchValue
+                            )
+                        );
+                    }
+                );
+
+            renderJobs(filteredJobs);
+        }
+
+        async function loadJobs() {
+            const jobsList =
+                document.getElementById(
+                    "jobsList"
+                );
+
+            const jobsMessage =
+                document.getElementById(
+                    "jobsMessage"
+                );
+
+            const jobsCount =
+                document.getElementById(
+                    "jobsCount"
+                );
+
+            jobsMessage.textContent =
+                "";
+
+            jobsCount.textContent =
+                "Loading jobs...";
+
+            jobsList.innerHTML =
+                "Loading jobs...";
+
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/jobs`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (!response.ok) {
+                    jobsList.textContent =
+                        "";
+
+                    jobsCount.textContent =
+                        "Unable to load jobs.";
+
+                    jobsMessage.textContent =
+                        data.error ||
+                        "Unable to load jobs.";
+
+                    return;
+                }
+
+                allJobs =
+                    data.jobs || [];
+
+                filterJobs();
 
             } catch (error) {
-                jobsList.textContent = "";
+                jobsList.textContent =
+                    "";
+
+                jobsCount.textContent =
+                    "Unable to load jobs.";
 
                 jobsMessage.textContent =
                     "Unable to connect to CampusPulse backend.";
             }
         }
 
-        document.getElementById("createJobButton").addEventListener(
-            "click",
-            async function () {
+        document
+            .getElementById(
+                "jobSearch"
+            )
+            .addEventListener(
+                "input",
+                filterJobs
+            );
 
-                const companyId =
-                    document.getElementById("companyId").value;
+        document
+            .getElementById(
+                "refreshJobsButton"
+            )
+            .addEventListener(
+                "click",
+                loadJobs
+            );
 
-                const jobTitle =
-                    document.getElementById("jobTitle").value.trim();
+        document
+            .getElementById(
+                "createJobButton"
+            )
+            .addEventListener(
+                "click",
+                async function () {
 
-                const jobDescription =
-                    document.getElementById("jobDescription").value.trim();
+                    const companyId =
+                        document.getElementById(
+                            "companyId"
+                        ).value;
 
-                const minimumCgpa =
-                    document.getElementById("minimumCgpa").value;
+                    const jobTitle =
+                        document.getElementById(
+                            "jobTitle"
+                        ).value.trim();
 
-                const maximumBacklogs =
-                    document.getElementById("maximumBacklogs").value;
+                    const jobDescription =
+                        document.getElementById(
+                            "jobDescription"
+                        ).value.trim();
 
-                const salaryLpa =
-                    document.getElementById("salaryLpa").value;
+                    const minimumCgpa =
+                        document.getElementById(
+                            "minimumCgpa"
+                        ).value;
 
-                const applicationDeadlineDate =
-                    document
-                        .getElementById(
-                            "applicationDeadlineDate"
-                        )
-                        .value.trim();
+                    const maximumBacklogs =
+                        document.getElementById(
+                            "maximumBacklogs"
+                        ).value;
 
-                const applicationDeadlineTime =
-                    document
-                        .getElementById(
-                            "applicationDeadlineTime"
-                        )
-                        .value.trim();
+                    const salaryLpa =
+                        document.getElementById(
+                            "salaryLpa"
+                        ).value;
 
-                const jobStatus =
-                    document.getElementById("jobStatus").value;
+                    const applicationDeadlineDate =
+                        document
+                            .getElementById(
+                                "applicationDeadlineDate"
+                            )
+                            .value
+                            .trim();
 
-                const createJobMessage =
-                    document.getElementById(
-                        "createJobMessage"
-                    );
+                    const applicationDeadlineTime =
+                        document
+                            .getElementById(
+                                "applicationDeadlineTime"
+                            )
+                            .value
+                            .trim();
 
-                if (!companyId || !jobTitle) {
-                    createJobMessage.textContent =
-                        "Company and job title are required.";
-                    return;
-                }
+                    const jobStatus =
+                        document.getElementById(
+                            "jobStatus"
+                        ).value;
 
-                if (
-                    minimumCgpa &&
-                    (
-                        Number(minimumCgpa) < 0 ||
-                        Number(minimumCgpa) > 10
-                    )
-                ) {
-                    createJobMessage.textContent =
-                        "Minimum CGPA must be between 0 and 10.";
-                    return;
-                }
-
-                if (
-                    maximumBacklogs &&
-                    Number(maximumBacklogs) < 0
-                ) {
-                    createJobMessage.textContent =
-                        "Maximum backlogs cannot be negative.";
-                    return;
-                }
-
-                if (
-                    salaryLpa &&
-                    Number(salaryLpa) <= 0
-                ) {
-                    createJobMessage.textContent =
-                        "Salary must be greater than 0.";
-                    return;
-                }
-
-                let applicationDeadline = null;
-
-                try {
-                    applicationDeadline =
-                        convertToISODateTime(
-                            applicationDeadlineDate,
-                            applicationDeadlineTime
+                    const createJobMessage =
+                        document.getElementById(
+                            "createJobMessage"
                         );
-                } catch (error) {
+
                     createJobMessage.textContent =
-                        error.message;
-                    return;
-                }
+                        "";
 
-                createJobMessage.textContent =
-                    "Creating job...";
-
-                try {
-                    const response = await fetch(
-                        `${API_BASE_URL}/api/jobs`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
-                                "Authorization":
-                                    `Bearer ${token}`
-                            },
-                            body: JSON.stringify({
-                                company_id:
-                                    Number(companyId),
-                                job_title:
-                                    jobTitle,
-                                job_description:
-                                    jobDescription || null,
-                                minimum_cgpa:
-                                    minimumCgpa
-                                        ? Number(minimumCgpa)
-                                        : null,
-                                maximum_backlogs:
-                                    maximumBacklogs
-                                        ? Number(maximumBacklogs)
-                                        : 0,
-                                salary_lpa:
-                                    salaryLpa
-                                        ? Number(salaryLpa)
-                                        : null,
-                                application_deadline:
-                                    applicationDeadline,
-                                job_status:
-                                    jobStatus
-                            })
-                        }
-                    );
-
-                    const data =
-                        await response.json();
-
-                    if (!response.ok) {
+                    if (
+                        !companyId ||
+                        !jobTitle
+                    ) {
                         createJobMessage.textContent =
-                            data.error ||
-                            "Unable to create job.";
+                            "Company and job title are required.";
+
+                        return;
+                    }
+
+                    if (
+                        minimumCgpa &&
+                        (
+                            Number(minimumCgpa) < 0 ||
+                            Number(minimumCgpa) > 10
+                        )
+                    ) {
+                        createJobMessage.textContent =
+                            "Minimum CGPA must be between 0 and 10.";
+
+                        return;
+                    }
+
+                    if (
+                        maximumBacklogs &&
+                        Number(maximumBacklogs) < 0
+                    ) {
+                        createJobMessage.textContent =
+                            "Maximum backlogs cannot be negative.";
+
+                        return;
+                    }
+
+                    if (
+                        salaryLpa &&
+                        Number(salaryLpa) <= 0
+                    ) {
+                        createJobMessage.textContent =
+                            "Salary must be greater than 0.";
+
+                        return;
+                    }
+
+                    let applicationDeadline =
+                        null;
+
+                    try {
+                        applicationDeadline =
+                            convertToISODateTime(
+                                applicationDeadlineDate,
+                                applicationDeadlineTime
+                            );
+
+                    } catch (error) {
+                        createJobMessage.textContent =
+                            error.message;
+
                         return;
                     }
 
                     createJobMessage.textContent =
-                        "Job created successfully.";
+                        "Creating job...";
 
-                    document.getElementById(
-                        "companyId"
-                    ).value = "";
+                    try {
+                        const response =
+                            await fetch(
+                                `${API_BASE_URL}/api/jobs`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+                                        "Authorization":
+                                            `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        company_id:
+                                            Number(
+                                                companyId
+                                            ),
+                                        job_title:
+                                            jobTitle,
+                                        job_description:
+                                            jobDescription ||
+                                            null,
+                                        minimum_cgpa:
+                                            minimumCgpa
+                                                ? Number(
+                                                    minimumCgpa
+                                                )
+                                                : null,
+                                        maximum_backlogs:
+                                            maximumBacklogs
+                                                ? Number(
+                                                    maximumBacklogs
+                                                )
+                                                : 0,
+                                        salary_lpa:
+                                            salaryLpa
+                                                ? Number(
+                                                    salaryLpa
+                                                )
+                                                : null,
+                                        application_deadline:
+                                            applicationDeadline,
+                                        job_status:
+                                            jobStatus
+                                    })
+                                }
+                            );
 
-                    document.getElementById(
-                        "jobTitle"
-                    ).value = "";
+                        const data =
+                            await response.json();
 
-                    document.getElementById(
-                        "jobDescription"
-                    ).value = "";
+                        if (!response.ok) {
+                            createJobMessage.textContent =
+                                data.error ||
+                                "Unable to create job.";
 
-                    document.getElementById(
-                        "minimumCgpa"
-                    ).value = "";
+                            return;
+                        }
 
-                    document.getElementById(
-                        "maximumBacklogs"
-                    ).value = "";
+                        createJobMessage.textContent =
+                            "Job created successfully.";
 
-                    document.getElementById(
-                        "salaryLpa"
-                    ).value = "";
+                        document.getElementById(
+                            "companyId"
+                        ).value = "";
 
-                    document.getElementById(
-                        "applicationDeadlineDate"
-                    ).value = "";
+                        document.getElementById(
+                            "jobTitle"
+                        ).value = "";
 
-                    document.getElementById(
-                        "applicationDeadlineTime"
-                    ).value = "";
+                        document.getElementById(
+                            "jobDescription"
+                        ).value = "";
 
-                    document.getElementById(
-                        "deadlinePreview"
-                    ).textContent = "";
+                        document.getElementById(
+                            "minimumCgpa"
+                        ).value = "";
 
-                    document.getElementById(
-                        "jobStatus"
-                    ).value = "OPEN";
+                        document.getElementById(
+                            "maximumBacklogs"
+                        ).value = "";
 
-                    loadJobs();
+                        document.getElementById(
+                            "salaryLpa"
+                        ).value = "";
 
-                } catch (error) {
-                    createJobMessage.textContent =
-                        "Unable to connect to CampusPulse backend.";
+                        document.getElementById(
+                            "applicationDeadlineDate"
+                        ).value = "";
+
+                        document.getElementById(
+                            "applicationDeadlineTime"
+                        ).value = "";
+
+                        document.getElementById(
+                            "deadlinePreview"
+                        ).textContent = "";
+
+                        document.getElementById(
+                            "jobStatus"
+                        ).value = "OPEN";
+
+                        loadJobs();
+
+                    } catch (error) {
+                        createJobMessage.textContent =
+                            "Unable to connect to CampusPulse backend.";
+                    }
                 }
-            }
-        );
+            );
 
         loadCompanies();
         loadJobs();

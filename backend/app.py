@@ -6,6 +6,7 @@ from extensions import db
 
 from models.user import User
 from models.student import Student
+from models.password_reset_token import PasswordResetToken
 from models.department import Department
 from models.skill import Skill
 from models.student_skill import StudentSkill

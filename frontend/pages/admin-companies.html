@@ -1,89 +1,505 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Companies</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+        }
+
+        .companies-page {
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 32px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+        }
+
+        .dashboard-header p {
+            margin: 5px 0 0;
+            opacity: 0.75;
+        }
+
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 24px 50px;
+        }
+
+        .company-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 34px;
+            margin-bottom: 24px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.14);
+        }
+
+        .company-hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-eyebrow {
+            margin: 0 0 8px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .company-hero h2 {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .company-hero p {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0;
+            line-height: 1.6;
+            opacity: 0.82;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .dashboard-card {
+            border-radius: 18px;
+            padding: 26px;
+            background: white;
+            border: 1px solid #e8ebf0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .dashboard-card h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .card-subtitle {
+            margin: 7px 0 22px;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d9dee7;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            background: #fff;
+            transition: 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .add-company-button {
+            width: 100%;
+            margin-top: 4px;
+            padding: 13px 18px;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            background: #4f46e5;
+            transition: 0.2s ease;
+        }
+
+        .add-company-button:hover {
+            transform: translateY(-1px);
+            background: #4338ca;
+        }
+
+        .add-company-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            min-height: 20px;
+            margin: 14px 0 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .company-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 32px;
+            padding: 0 10px;
+            border-radius: 20px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .company-card {
+            padding: 20px;
+            border: 1px solid #e7eaf0;
+            border-radius: 15px;
+            background: #fff;
+            transition: 0.2s ease;
+        }
+
+        .company-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(15, 23, 42, 0.08);
+            border-color: #d8dcff;
+        }
+
+        .company-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            margin-bottom: 17px;
+        }
+
+        .company-icon {
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .company-card h4 {
+            margin: 1px 0 5px;
+            color: #111827;
+            font-size: 17px;
+        }
+
+        .company-industry {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .company-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .company-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            padding: 10px 11px;
+            border-radius: 9px;
+            background: #f8fafc;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            min-width: 65px;
+            font-weight: 700;
+            color: #4b5563;
+        }
+
+        .detail-value {
+            color: #374151;
+            word-break: break-word;
+        }
+
+        .detail-value a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        .empty-state,
+        .loading-state {
+            padding: 45px 20px;
+            text-align: center;
+            border: 1px dashed #d8dde7;
+            border-radius: 14px;
+            background: #fafbfc;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: #b91c1c;
+        }
+
+        .refresh-button {
+            padding: 9px 13px;
+            border: 1px solid #d9dee7;
+            border-radius: 9px;
+            background: white;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .refresh-button:hover {
+            background: #f8fafc;
+            border-color: #c7ccd6;
+        }
+
+        .back-button {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .companies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .dashboard-header {
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .back-button {
+                width: 100%;
+            }
+
+            .dashboard-content {
+                padding: 10px 16px 35px;
+            }
+
+            .company-hero {
+                padding: 25px 22px;
+                border-radius: 16px;
+            }
+
+            .company-hero h2 {
+                font-size: 26px;
+            }
+
+            .dashboard-card {
+                padding: 20px;
+            }
+
+            .list-header {
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <div class="dashboard-container">
+    <div class="dashboard-container companies-page">
+
         <header class="dashboard-header">
             <div>
                 <h1>CampusPulse</h1>
                 <p>Company Management</p>
             </div>
 
-            <button id="backButton" class="btn-primary">
+            <button id="backButton" class="btn-primary back-button">
                 Back to Dashboard
             </button>
         </header>
 
         <main class="dashboard-content">
 
-            <section class="welcome-card">
-                <h2>Companies</h2>
-                <p>Manage companies participating in placements.</p>
+            <section class="company-hero">
+                <p class="hero-eyebrow">Placement Management</p>
+                <h2>Company Management</h2>
+                <p>
+                    Add and manage companies participating in campus
+                    placement drives from one central workspace.
+                </p>
             </section>
 
-            <section class="dashboard-card">
-                <h3>Add Company</h3>
+            <div class="content-grid">
 
-                <div class="form-group">
-                    <label for="companyName">Company Name</label>
-                    <input
-                        type="text"
-                        id="companyName"
-                        placeholder="Enter company name"
+                <section class="dashboard-card">
+
+                    <h3>Add Company</h3>
+
+                    <p class="card-subtitle">
+                        Register a new company with its industry,
+                        website, and location details.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input
+                            type="text"
+                            id="companyName"
+                            placeholder="e.g. Tata Consultancy Services"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="industry">Industry</label>
+                        <input
+                            type="text"
+                            id="industry"
+                            placeholder="e.g. Information Technology"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website">Website</label>
+                        <input
+                            type="text"
+                            id="website"
+                            placeholder="e.g. https://company.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input
+                            type="text"
+                            id="location"
+                            placeholder="e.g. Bengaluru, India"
+                        >
+                    </div>
+
+                    <button
+                        id="addCompanyButton"
+                        class="add-company-button"
                     >
-                </div>
+                        Add Company
+                    </button>
 
-                <div class="form-group">
-                    <label for="industry">Industry</label>
-                    <input
-                        type="text"
-                        id="industry"
-                        placeholder="Enter industry"
-                    >
-                </div>
+                    <p id="addCompanyMessage" class="message"></p>
 
-                <div class="form-group">
-                    <label for="website">Website</label>
-                    <input
-                        type="text"
-                        id="website"
-                        placeholder="Enter company website"
-                    >
-                </div>
+                </section>
 
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input
-                        type="text"
-                        id="location"
-                        placeholder="Enter company location"
-                    >
-                </div>
+                <section class="dashboard-card">
 
-                <button id="addCompanyButton" class="btn-primary">
-                    Add Company
-                </button>
+                    <div class="list-header">
+                        <div>
+                            <h3>Company List</h3>
+                            <p class="card-subtitle" style="margin-bottom: 0;">
+                                Companies currently registered in CampusPulse.
+                            </p>
+                        </div>
 
-                <p id="addCompanyMessage" class="message"></p>
-            </section>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <span id="companyCount" class="company-count">
+                                0
+                            </span>
 
-            <section class="dashboard-card">
-                <h3>Company List</h3>
+                            <button
+                                id="refreshButton"
+                                class="refresh-button"
+                            >
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
 
-                <div id="companiesList">
-                    Loading companies...
-                </div>
+                    <div id="companiesList">
+                        <div class="loading-state">
+                            Loading companies...
+                        </div>
+                    </div>
 
-                <p id="companiesMessage" class="message"></p>
-            </section>
+                    <p id="companiesMessage" class="message"></p>
+
+                </section>
+
+            </div>
 
         </main>
+
     </div>
 
     <script>
@@ -103,18 +519,134 @@
             window.location.href = "login.html";
         }
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "admin-dashboard.html";
-        });
+        document
+            .getElementById("backButton")
+            .addEventListener("click", function () {
+                window.location.href = "admin-dashboard.html";
+            });
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener("click", function () {
+                loadCompanies();
+            });
+
+        function escapeHtml(value) {
+            const div = document.createElement("div");
+            div.textContent = value ?? "";
+            return div.innerHTML;
+        }
+
+        function createCompanyCard(company) {
+            const card = document.createElement("div");
+            card.className = "company-card";
+
+            const companyName =
+                escapeHtml(company.company_name || "Unnamed Company");
+
+            const industry =
+                escapeHtml(company.industry || "Industry not specified");
+
+            const website =
+                company.website
+                    ? escapeHtml(company.website)
+                    : "Not specified";
+
+            const location =
+                escapeHtml(company.location || "Not specified");
+
+            let websiteHtml = website;
+
+            if (company.website) {
+                let websiteUrl = company.website.trim();
+
+                if (
+                    !websiteUrl.startsWith("http://") &&
+                    !websiteUrl.startsWith("https://")
+                ) {
+                    websiteUrl = "https://" + websiteUrl;
+                }
+
+                websiteHtml = `
+                    <a
+                        href="${escapeHtml(websiteUrl)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        ${website}
+                    </a>
+                `;
+            }
+
+            const initial =
+                (company.company_name || "C")
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase();
+
+            card.innerHTML = `
+                <div class="company-card-top">
+                    <div class="company-icon">
+                        ${escapeHtml(initial)}
+                    </div>
+
+                    <div>
+                        <h4>${companyName}</h4>
+                        <p class="company-industry">
+                            ${industry}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="company-details">
+
+                    <div class="company-detail">
+                        <span class="detail-label">
+                            Website
+                        </span>
+
+                        <span class="detail-value">
+                            ${websiteHtml}
+                        </span>
+                    </div>
+
+                    <div class="company-detail">
+                        <span class="detail-label">
+                            Location
+                        </span>
+
+                        <span class="detail-value">
+                            ${location}
+                        </span>
+                    </div>
+
+                </div>
+            `;
+
+            return card;
+        }
 
         async function loadCompanies() {
+
             const companiesList =
                 document.getElementById("companiesList");
 
             const companiesMessage =
                 document.getElementById("companiesMessage");
 
+            const companyCount =
+                document.getElementById("companyCount");
+
+            companiesMessage.textContent = "";
+
+            companiesList.innerHTML = `
+                <div class="loading-state">
+                    Loading companies...
+                </div>
+            `;
+
             try {
+
                 const response = await fetch(
                     `${API_BASE_URL}/api/companies`,
                     {
@@ -128,129 +660,197 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    companiesList.textContent = "";
-                    companiesMessage.textContent =
-                        data.error || "Unable to load companies.";
-                    return;
-                }
 
-                if (
-                    !data.companies ||
-                    data.companies.length === 0
-                ) {
-                    companiesList.textContent =
-                        "No companies found.";
-                    return;
-                }
-
-                companiesList.innerHTML = "";
-
-                data.companies.forEach(function (company) {
-                    const companyCard =
-                        document.createElement("div");
-
-                    companyCard.style.marginBottom = "20px";
-
-                    companyCard.innerHTML = `
-                        <h3>${company.company_name}</h3>
-
-                        <p>
-                            <strong>Industry:</strong>
-                            ${company.industry || "Not specified"}
-                        </p>
-
-                        <p>
-                            <strong>Website:</strong>
-                            ${company.website || "Not specified"}
-                        </p>
-
-                        <p>
-                            <strong>Location:</strong>
-                            ${company.location || "Not specified"}
-                        </p>
+                    companiesList.innerHTML = `
+                        <div class="empty-state error-message">
+                            Unable to load companies.
+                        </div>
                     `;
 
-                    companiesList.appendChild(companyCard);
+                    companiesMessage.textContent =
+                        data.error || "Unable to load companies.";
+
+                    return;
+                }
+
+                const companies = data.companies || [];
+
+                companyCount.textContent = companies.length;
+
+                if (companies.length === 0) {
+
+                    companiesList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">??</div>
+
+                            <strong>No companies found</strong>
+
+                            <p>
+                                Add your first company using the
+                                form to get started.
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                const companiesGrid =
+                    document.createElement("div");
+
+                companiesGrid.className = "companies-grid";
+
+                companies.forEach(function (company) {
+                    companiesGrid.appendChild(
+                        createCompanyCard(company)
+                    );
                 });
 
+                companiesList.innerHTML = "";
+                companiesList.appendChild(companiesGrid);
+
             } catch (error) {
-                companiesList.textContent = "";
+
+                companiesList.innerHTML = `
+                    <div class="empty-state error-message">
+                        Unable to connect to CampusPulse backend.
+                    </div>
+                `;
+
+                companyCount.textContent = "0";
 
                 companiesMessage.textContent =
                     "Unable to connect to CampusPulse backend.";
             }
         }
 
-        document.getElementById("addCompanyButton").addEventListener(
-            "click",
-            async function () {
+        document
+            .getElementById("addCompanyButton")
+            .addEventListener(
+                "click",
+                async function () {
 
-                const companyName =
-                    document.getElementById("companyName").value.trim();
+                    const companyName =
+                        document
+                            .getElementById("companyName")
+                            .value
+                            .trim();
 
-                const industry =
-                    document.getElementById("industry").value.trim();
+                    const industry =
+                        document
+                            .getElementById("industry")
+                            .value
+                            .trim();
 
-                const website =
-                    document.getElementById("website").value.trim();
+                    const website =
+                        document
+                            .getElementById("website")
+                            .value
+                            .trim();
 
-                const location =
-                    document.getElementById("location").value.trim();
+                    const location =
+                        document
+                            .getElementById("location")
+                            .value
+                            .trim();
 
-                const addCompanyMessage =
-                    document.getElementById("addCompanyMessage");
+                    const addCompanyMessage =
+                        document.getElementById(
+                            "addCompanyMessage"
+                        );
 
-                if (!companyName) {
-                    addCompanyMessage.textContent =
-                        "Company name is required.";
-                    return;
-                }
+                    const addCompanyButton =
+                        document.getElementById(
+                            "addCompanyButton"
+                        );
 
-                addCompanyMessage.textContent =
-                    "Adding company...";
+                    if (!companyName) {
 
-                try {
-                    const response = await fetch(
-                        `${API_BASE_URL}/api/companies`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": `Bearer ${token}`
-                            },
-                            body: JSON.stringify({
-                                company_name: companyName,
-                                industry: industry || null,
-                                website: website || null,
-                                location: location || null
-                            })
-                        }
-                    );
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
                         addCompanyMessage.textContent =
-                            data.error || "Unable to add company.";
+                            "Company name is required.";
+
                         return;
                     }
 
+                    addCompanyButton.disabled = true;
+
                     addCompanyMessage.textContent =
-                        "Company added successfully.";
+                        "Adding company...";
 
-                    document.getElementById("companyName").value = "";
-                    document.getElementById("industry").value = "";
-                    document.getElementById("website").value = "";
-                    document.getElementById("location").value = "";
+                    try {
 
-                    loadCompanies();
+                        const response = await fetch(
+                            `${API_BASE_URL}/api/companies`,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type":
+                                        "application/json",
 
-                } catch (error) {
-                    addCompanyMessage.textContent =
-                        "Unable to connect to CampusPulse backend.";
+                                    "Authorization":
+                                        `Bearer ${token}`
+                                },
+
+                                body: JSON.stringify({
+                                    company_name:
+                                        companyName,
+
+                                    industry:
+                                        industry || null,
+
+                                    website:
+                                        website || null,
+
+                                    location:
+                                        location || null
+                                })
+                            }
+                        );
+
+                        const data =
+                            await response.json();
+
+                        if (!response.ok) {
+
+                            addCompanyMessage.textContent =
+                                data.error ||
+                                "Unable to add company.";
+
+                            return;
+                        }
+
+                        addCompanyMessage.textContent =
+                            "Company added successfully.";
+
+                        document
+                            .getElementById("companyName")
+                            .value = "";
+
+                        document
+                            .getElementById("industry")
+                            .value = "";
+
+                        document
+                            .getElementById("website")
+                            .value = "";
+
+                        document
+                            .getElementById("location")
+                            .value = "";
+
+                        await loadCompanies();
+
+                    } catch (error) {
+
+                        addCompanyMessage.textContent =
+                            "Unable to connect to CampusPulse backend.";
+
+                    } finally {
+
+                        addCompanyButton.disabled = false;
+                    }
                 }
-            }
-        );
+            );
 
         loadCompanies();
     </script>

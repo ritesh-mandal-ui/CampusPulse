@@ -1,113 +1,527 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Offers</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .offers-hero {
+            margin-bottom: 24px;
+        }
+
+        .offers-hero h2 {
+            margin-bottom: 8px;
+        }
+
+        .offers-hero p {
+            margin: 0;
+        }
+
+        .offer-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .offer-stat {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .offer-stat-label {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .offer-stat-value {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .create-offer-card {
+            margin-bottom: 24px;
+        }
+
+        .create-offer-header {
+            margin-bottom: 24px;
+        }
+
+        .create-offer-header h3 {
+            margin-bottom: 6px;
+        }
+
+        .create-offer-header p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .offer-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .offer-form-full {
+            grid-column: 1 / -1;
+        }
+
+        .offer-date-preview {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 13px 15px;
+            min-height: 18px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .offer-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .offer-list-header-left h3 {
+            margin-bottom: 6px;
+        }
+
+        .offer-list-header-left p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .offer-list-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .offer-count {
+            color: #64748b;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .refresh-button {
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .offer-search {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+            background: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .offer-search:focus {
+            border-color: #2563eb;
+        }
+
+        .offers-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .offer-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .offer-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .offer-card-header h3 {
+            margin: 0 0 6px;
+            color: #0f172a;
+            font-size: 20px;
+        }
+
+        .offer-id {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .offer-status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-declined {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-unspecified {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .offer-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .offer-detail {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .offer-detail-label {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .offer-detail-value {
+            display: block;
+            color: #0f172a;
+            font-size: 14px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .salary-value {
+            font-size: 17px;
+        }
+
+        .offers-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+        }
+
+        .offers-empty h3 {
+            margin: 0 0 8px;
+            color: #0f172a;
+        }
+
+        .offers-empty p {
+            margin: 0;
+        }
+
+        .offers-error {
+            color: #dc2626;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        @media (max-width: 900px) {
+            .offer-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .offer-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .offer-form-full {
+                grid-column: auto;
+            }
+
+            .offer-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .offer-card-header {
+                flex-direction: column;
+            }
+
+            .offer-details {
+                grid-template-columns: 1fr;
+            }
+
+            .offer-list-header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .offer-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .offer-card {
+                padding: 17px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
             <div>
                 <h1>CampusPulse</h1>
                 <p>Offer Management</p>
             </div>
 
-            <button id="backButton" class="btn-primary">
+            <button
+                id="backButton"
+                class="btn-primary"
+            >
                 Back to Dashboard
             </button>
         </header>
 
         <main class="dashboard-content">
 
-            <section class="welcome-card">
-                <h2>Offers</h2>
-                <p>Manage student placement offers.</p>
+            <section class="welcome-card offers-hero">
+                <h2>Offer Management</h2>
+
+                <p>
+                    Create and manage student placement offers
+                    from one central workspace.
+                </p>
+            </section>
+
+            <section class="offer-stats">
+
+                <div class="offer-stat">
+                    <div class="offer-stat-label">
+                        Total Offers
+                    </div>
+
+                    <div
+                        id="totalOffers"
+                        class="offer-stat-value"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="offer-stat">
+                    <div class="offer-stat-label">
+                        Active
+                    </div>
+
+                    <div
+                        id="activeOffers"
+                        class="offer-stat-value"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="offer-stat">
+                    <div class="offer-stat-label">
+                        Accepted
+                    </div>
+
+                    <div
+                        id="acceptedOffers"
+                        class="offer-stat-value"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="offer-stat">
+                    <div class="offer-stat-label">
+                        Declined
+                    </div>
+
+                    <div
+                        id="declinedOffers"
+                        class="offer-stat-value"
+                    >
+                        0
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="dashboard-card create-offer-card">
+
+                <div class="create-offer-header">
+                    <h3>Create Offer</h3>
+
+                    <p>
+                        Create a placement offer for a selected application.
+                    </p>
+                </div>
+
+                <div class="offer-form-grid">
+
+                    <div class="form-group offer-form-full">
+                        <label for="applicationId">
+                            Selected Application
+                        </label>
+
+                        <select id="applicationId">
+                            <option value="">
+                                Select application
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salaryLpa">
+                            Salary (LPA)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="salaryLpa"
+                            step="0.01"
+                            min="0.01"
+                            placeholder="Enter salary in LPA"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="offerDate">
+                            Offer Date
+                        </label>
+
+                        <input
+                            type="text"
+                            id="offerDate"
+                            placeholder="DD-MM-YYYY"
+                            maxlength="10"
+                        >
+                    </div>
+
+                    <div class="offer-form-full">
+                        <div
+                            id="offerDatePreview"
+                            class="offer-date-preview"
+                        >
+                            Select an offer date
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="offerStatus">
+                            Offer Status
+                        </label>
+
+                        <select id="offerStatus">
+                            <option value="ACTIVE">
+                                Active
+                            </option>
+
+                            <option value="ACCEPTED">
+                                Accepted
+                            </option>
+
+                            <option value="DECLINED">
+                                Declined
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="offer-form-full">
+
+                        <button
+                            id="createOfferButton"
+                            class="btn-primary"
+                        >
+                            Create Offer
+                        </button>
+
+                        <p
+                            id="createOfferMessage"
+                            class="message"
+                        ></p>
+
+                    </div>
+
+                </div>
+
             </section>
 
             <section class="dashboard-card">
-                <h3>Create Offer</h3>
 
-                <div class="form-group">
-                    <label for="applicationId">
-                        Selected Application
-                    </label>
+                <div class="offer-list-header">
 
-                    <select id="applicationId">
-                        <option value="">
-                            Select application
-                        </option>
-                    </select>
+                    <div class="offer-list-header-left">
+                        <h3>Offer List</h3>
+
+                        <p>
+                            View all student placement offers.
+                        </p>
+                    </div>
+
+                    <div class="offer-list-header-right">
+
+                        <span
+                            id="offerCount"
+                            class="offer-count"
+                        >
+                            0 offers
+                        </span>
+
+                        <button
+                            id="refreshButton"
+                            class="btn-primary refresh-button"
+                        >
+                            Refresh
+                        </button>
+
+                    </div>
+
                 </div>
 
-                <div class="form-group">
-                    <label for="salaryLpa">
-                        Salary (LPA)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="salaryLpa"
-                        step="0.01"
-                        min="0.01"
-                        placeholder="Enter salary in LPA"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="offerDate">
-                        Offer Date
-                    </label>
-
-                    <input
-                        type="text"
-                        id="offerDate"
-                        placeholder="DD-MM-YYYY"
-                        maxlength="10"
-                    >
-                </div>
-
-                <p id="offerDatePreview" class="message"></p>
-
-                <div class="form-group">
-                    <label for="offerStatus">
-                        Offer Status
-                    </label>
-
-                    <select id="offerStatus">
-                        <option value="ACTIVE">
-                            Active
-                        </option>
-
-                        <option value="ACCEPTED">
-                            Accepted
-                        </option>
-
-                        <option value="DECLINED">
-                            Declined
-                        </option>
-                    </select>
-                </div>
-
-                <button
-                    id="createOfferButton"
-                    class="btn-primary"
+                <input
+                    type="search"
+                    id="offerSearch"
+                    class="offer-search"
+                    placeholder="Search by application, salary, date, or status..."
                 >
-                    Create Offer
-                </button>
 
-                <p
-                    id="createOfferMessage"
-                    class="message"
-                ></p>
-            </section>
-
-            <section class="dashboard-card">
-                <h3>Offer List</h3>
-
-                <div id="offersList">
+                <div
+                    id="offersList"
+                    class="offers-list"
+                >
                     Loading offers...
                 </div>
 
@@ -115,9 +529,11 @@
                     id="offersMessage"
                     class="message"
                 ></p>
+
             </section>
 
         </main>
+
     </div>
 
     <script>
@@ -137,19 +553,44 @@
             window.location.href = "login.html";
         }
 
-        document.getElementById("backButton").addEventListener(
-            "click",
-            function () {
-                window.location.href = "admin-dashboard.html";
-            }
-        );
+        let allOffers = [];
+
+        document
+            .getElementById("backButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "admin-dashboard.html";
+                }
+            );
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener(
+                "click",
+                function () {
+                    loadApplications();
+                    loadOffers();
+                }
+            );
+
+        document
+            .getElementById("offerSearch")
+            .addEventListener(
+                "input",
+                function () {
+                    renderOffers(this.value);
+                }
+            );
 
         function convertToISODate(dateValue) {
             if (!dateValue) {
                 return null;
             }
 
-            const parts = dateValue.split("-");
+            const parts =
+                dateValue.split("-");
 
             if (parts.length !== 3) {
                 throw new Error(
@@ -157,9 +598,14 @@
                 );
             }
 
-            const day = Number(parts[0]);
-            const month = Number(parts[1]);
-            const year = Number(parts[2]);
+            const day =
+                Number(parts[0]);
+
+            const month =
+                Number(parts[1]);
+
+            const year =
+                Number(parts[2]);
 
             if (
                 !Number.isInteger(day) ||
@@ -177,11 +623,12 @@
                 );
             }
 
-            const date = new Date(
-                year,
-                month - 1,
-                day
-            );
+            const date =
+                new Date(
+                    year,
+                    month - 1,
+                    day
+                );
 
             if (
                 date.getFullYear() !== year ||
@@ -201,17 +648,21 @@
                 return "Not specified";
             }
 
-            const date = new Date(value);
+            const date =
+                new Date(value);
 
             if (isNaN(date.getTime())) {
                 return value;
             }
 
-            return date.toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-            });
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
         }
 
         function formatStatusLabel(status) {
@@ -227,6 +678,22 @@
                 });
         }
 
+        function getStatusClass(status) {
+            if (status === "ACTIVE") {
+                return "status-active";
+            }
+
+            if (status === "ACCEPTED") {
+                return "status-accepted";
+            }
+
+            if (status === "DECLINED") {
+                return "status-declined";
+            }
+
+            return "status-unspecified";
+        }
+
         function updateOfferDatePreview() {
             const offerDate =
                 document.getElementById(
@@ -239,16 +706,23 @@
                 );
 
             if (!offerDate) {
-                preview.textContent = "";
+                preview.textContent =
+                    "Select an offer date";
+
                 return;
             }
 
             try {
                 const isoDate =
-                    convertToISODate(offerDate);
+                    convertToISODate(
+                        offerDate
+                    );
 
                 preview.textContent =
-                    `Offer Date: ${formatOfferDate(isoDate)}`;
+                    `Offer Date: ${formatOfferDate(
+                        isoDate
+                    )}`;
+
             } catch (error) {
                 preview.textContent =
                     error.message;
@@ -261,6 +735,251 @@
                 "input",
                 updateOfferDatePreview
             );
+
+        function escapeHtml(value) {
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function updateOfferStats(offers) {
+            document.getElementById(
+                "totalOffers"
+            ).textContent =
+                offers.length;
+
+            document.getElementById(
+                "activeOffers"
+            ).textContent =
+                offers.filter(
+                    function (offer) {
+                        return offer.offer_status === "ACTIVE";
+                    }
+                ).length;
+
+            document.getElementById(
+                "acceptedOffers"
+            ).textContent =
+                offers.filter(
+                    function (offer) {
+                        return offer.offer_status === "ACCEPTED";
+                    }
+                ).length;
+
+            document.getElementById(
+                "declinedOffers"
+            ).textContent =
+                offers.filter(
+                    function (offer) {
+                        return offer.offer_status === "DECLINED";
+                    }
+                ).length;
+        }
+
+        function renderOffers(searchTerm) {
+            const offersList =
+                document.getElementById(
+                    "offersList"
+                );
+
+            const offerCount =
+                document.getElementById(
+                    "offerCount"
+                );
+
+            const normalizedSearch =
+                (searchTerm || "")
+                    .trim()
+                    .toLowerCase();
+
+            const filteredOffers =
+                allOffers.filter(
+                    function (offer) {
+
+                        const applicationId =
+                            String(
+                                offer.application_id ||
+                                ""
+                            ).toLowerCase();
+
+                        const salary =
+                            String(
+                                offer.salary_lpa ||
+                                ""
+                            ).toLowerCase();
+
+                        const date =
+                            String(
+                                formatOfferDate(
+                                    offer.offer_date
+                                )
+                            ).toLowerCase();
+
+                        const status =
+                            String(
+                                offer.offer_status ||
+                                ""
+                            ).toLowerCase();
+
+                        return (
+                            applicationId.includes(
+                                normalizedSearch
+                            ) ||
+                            salary.includes(
+                                normalizedSearch
+                            ) ||
+                            date.includes(
+                                normalizedSearch
+                            ) ||
+                            status.includes(
+                                normalizedSearch
+                            )
+                        );
+                    }
+                );
+
+            offerCount.textContent =
+                filteredOffers.length +
+                (
+                    filteredOffers.length === 1
+                        ? " offer"
+                        : " offers"
+                );
+
+            if (filteredOffers.length === 0) {
+                offersList.innerHTML = `
+                    <div class="offers-empty">
+                        <h3>
+                            ${
+                                normalizedSearch
+                                    ? "No Matching Offers"
+                                    : "No Offers Yet"
+                            }
+                        </h3>
+
+                        <p>
+                            ${
+                                normalizedSearch
+                                    ? "Try a different application, salary, date, or status."
+                                    : "There are currently no placement offers to display."
+                            }
+                        </p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            offersList.innerHTML = "";
+
+            filteredOffers.forEach(
+                function (offer) {
+
+                    const offerCard =
+                        document.createElement(
+                            "div"
+                        );
+
+                    offerCard.className =
+                        "offer-card";
+
+                    const status =
+                        offer.offer_status || "";
+
+                    offerCard.innerHTML = `
+                        <div class="offer-card-header">
+
+                            <div>
+                                <h3>
+                                    Offer #${escapeHtml(
+                                        offer.offer_id
+                                    )}
+                                </h3>
+
+                                <span class="offer-id">
+                                    Application #${escapeHtml(
+                                        offer.application_id
+                                    )}
+                                </span>
+                            </div>
+
+                            <span
+                                class="offer-status-badge ${getStatusClass(
+                                    status
+                                )}"
+                            >
+                                ${escapeHtml(
+                                    formatStatusLabel(
+                                        status
+                                    )
+                                )}
+                            </span>
+
+                        </div>
+
+                        <div class="offer-details">
+
+                            <div class="offer-detail">
+                                <span class="offer-detail-label">
+                                    Application ID
+                                </span>
+
+                                <span class="offer-detail-value">
+                                    #${escapeHtml(
+                                        offer.application_id
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="offer-detail">
+                                <span class="offer-detail-label">
+                                    Salary
+                                </span>
+
+                                <span class="offer-detail-value salary-value">
+                                    ${
+                                        offer.salary_lpa != null
+                                            ? escapeHtml(
+                                                offer.salary_lpa
+                                            ) + " LPA"
+                                            : "Not specified"
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="offer-detail">
+                                <span class="offer-detail-label">
+                                    Offer Date
+                                </span>
+
+                                <span class="offer-detail-value">
+                                    ${escapeHtml(
+                                        formatOfferDate(
+                                            offer.offer_date
+                                        )
+                                    )}
+                                </span>
+                            </div>
+
+                        </div>
+                    `;
+
+                    offersList.appendChild(
+                        offerCard
+                    );
+                }
+            );
+        }
 
         async function loadApplications() {
             const applicationSelect =
@@ -278,16 +997,19 @@
                         {
                             method: "GET",
                             headers: {
-                                "Authorization": `Bearer ${token}`
+                                "Authorization":
+                                    `Bearer ${token}`
                             }
                         }
                     ),
+
                     fetch(
                         `${API_BASE_URL}/api/offers`,
                         {
                             method: "GET",
                             headers: {
-                                "Authorization": `Bearer ${token}`
+                                "Authorization":
+                                    `Bearer ${token}`
                             }
                         }
                     )
@@ -314,20 +1036,25 @@
 
                 const existingOfferApplicationIds =
                     new Set(
-                        (offersData.offers || []).map(
-                            function (offer) {
-                                return Number(
-                                    offer.application_id
-                                );
-                            }
-                        )
+                        (offersData.offers || [])
+                            .map(
+                                function (offer) {
+                                    return Number(
+                                        offer.application_id
+                                    );
+                                }
+                            )
                     );
 
                 const selectedApplications =
-                    applicationsData.applications.filter(
+                    (
+                        applicationsData.applications ||
+                        []
+                    ).filter(
                         function (application) {
                             return (
-                                application.status === "SELECTED" &&
+                                application.status ===
+                                    "SELECTED" &&
                                 !existingOfferApplicationIds.has(
                                     Number(
                                         application.application_id
@@ -339,8 +1066,11 @@
 
                 selectedApplications.forEach(
                     function (application) {
+
                         const option =
-                            document.createElement("option");
+                            document.createElement(
+                                "option"
+                            );
 
                         option.value =
                             application.application_id;
@@ -361,26 +1091,38 @@
 
         async function loadOffers() {
             const offersList =
-                document.getElementById("offersList");
-
-            const offersMessage =
-                document.getElementById("offersMessage");
-
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/offers`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
+                document.getElementById(
+                    "offersList"
                 );
 
-                const data = await response.json();
+            const offersMessage =
+                document.getElementById(
+                    "offersMessage"
+                );
+
+            offersMessage.textContent = "";
+
+            offersList.innerHTML =
+                "Loading offers...";
+
+            try {
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/offers`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                const data =
+                    await response.json();
 
                 if (!response.ok) {
-                    offersList.textContent = "";
+                    offersList.innerHTML = "";
 
                     offersMessage.textContent =
                         data.error ||
@@ -389,82 +1131,27 @@
                     return;
                 }
 
-                if (
-                    !data.offers ||
-                    data.offers.length === 0
-                ) {
-                    offersList.textContent =
-                        "No offers found.";
+                allOffers =
+                    data.offers || [];
 
-                    return;
-                }
+                updateOfferStats(
+                    allOffers
+                );
 
-                offersList.innerHTML = "";
-
-                data.offers.forEach(
-                    function (offer) {
-                        const offerCard =
-                            document.createElement("div");
-
-                        offerCard.className =
-                            "dashboard-card";
-
-                        offerCard.style.marginBottom =
-                            "20px";
-
-                        offerCard.innerHTML = `
-                            <h3>
-                                Offer #${offer.offer_id}
-                            </h3>
-
-                            <p>
-                                <strong>
-                                    Application ID:
-                                </strong>
-                                ${offer.application_id}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Salary:
-                                </strong>
-                                ${
-                                    offer.salary_lpa != null
-                                        ? offer.salary_lpa + " LPA"
-                                        : "Not specified"
-                                }
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Offer Date:
-                                </strong>
-                                ${formatOfferDate(
-                                    offer.offer_date
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Status:
-                                </strong>
-                                ${formatStatusLabel(
-                                    offer.offer_status
-                                )}
-                            </p>
-                        `;
-
-                        offersList.appendChild(
-                            offerCard
-                        );
-                    }
+                renderOffers(
+                    document.getElementById(
+                        "offerSearch"
+                    ).value
                 );
 
             } catch (error) {
-                offersList.textContent = "";
+                offersList.innerHTML = `
+                    <div class="offers-error">
+                        Unable to connect to CampusPulse backend.
+                    </div>
+                `;
 
-                offersMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
+                offersMessage.textContent = "";
             }
         }
 
@@ -518,44 +1205,51 @@
 
                     let offerDate = null;
 
-                    try {
-                        offerDate =
-                            convertToISODate(
-                                offerDateValue
-                            );
-                    } catch (error) {
-                        createOfferMessage.textContent =
-                            error.message;
+                    if (offerDateValue) {
+                        try {
+                            offerDate =
+                                convertToISODate(
+                                    offerDateValue
+                                );
+                        } catch (error) {
+                            createOfferMessage.textContent =
+                                error.message;
 
-                        return;
+                            return;
+                        }
                     }
 
                     createOfferMessage.textContent =
                         "Creating offer...";
 
                     try {
-                        const response = await fetch(
-                            `${API_BASE_URL}/api/offers`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
-                                    "Authorization":
-                                        `Bearer ${token}`
-                                },
-                                body: JSON.stringify({
-                                    application_id:
-                                        Number(applicationId),
-                                    salary_lpa:
-                                        Number(salaryLpa),
-                                    offer_date:
-                                        offerDate,
-                                    offer_status:
-                                        offerStatus
-                                })
-                            }
-                        );
+                        const response =
+                            await fetch(
+                                `${API_BASE_URL}/api/offers`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+                                        "Authorization":
+                                            `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        application_id:
+                                            Number(
+                                                applicationId
+                                            ),
+                                        salary_lpa:
+                                            Number(
+                                                salaryLpa
+                                            ),
+                                        offer_date:
+                                            offerDate,
+                                        offer_status:
+                                            offerStatus
+                                    })
+                                }
+                            );
 
                         const data =
                             await response.json();
@@ -585,14 +1279,16 @@
 
                         document.getElementById(
                             "offerDatePreview"
-                        ).textContent = "";
+                        ).textContent =
+                            "Select an offer date";
 
                         document.getElementById(
                             "offerStatus"
-                        ).value = "ACTIVE";
+                        ).value =
+                            "ACTIVE";
 
-                        loadApplications();
-                        loadOffers();
+                        await loadApplications();
+                        await loadOffers();
 
                     } catch (error) {
                         createOfferMessage.textContent =

@@ -1,14 +1,333 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Interviews</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 32px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+        }
+
+        .dashboard-header p {
+            margin: 5px 0 0;
+            opacity: 0.75;
+        }
+
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 24px 50px;
+        }
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            padding: 34px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.14);
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-eyebrow {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 8px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .page-hero h2 {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .page-hero p {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0;
+            line-height: 1.6;
+            opacity: 0.82;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border: 1px solid #e7eaf0;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+        }
+
+        .stat-label {
+            margin: 0 0 8px;
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            margin: 0;
+            color: #111827;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .interviews-section {
+            padding: 26px;
+            border: 1px solid #e7eaf0;
+            border-radius: 18px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            color: #111827;
+            font-size: 20px;
+        }
+
+        .refresh-button {
+            padding: 9px 14px;
+            border: 1px solid #d9dee7;
+            border-radius: 9px;
+            background: white;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .refresh-button:hover {
+            background: #f8fafc;
+        }
+
+        .interviews-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .interview-card {
+            padding: 21px;
+            border: 1px solid #e7eaf0;
+            border-radius: 15px;
+            background: #fff;
+            transition: 0.2s ease;
+        }
+
+        .interview-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .interview-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .interview-title {
+            margin: 0 0 5px;
+            color: #111827;
+            font-size: 17px;
+        }
+
+        .interview-subtitle {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .result-badge {
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .result-scheduled {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .result-passed {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .result-rejected {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 11px;
+            border-radius: 9px;
+            background: #f8fafc;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            min-width: 95px;
+            color: #4b5563;
+            font-weight: 700;
+        }
+
+        .detail-value {
+            color: #374151;
+            word-break: break-word;
+        }
+
+        .empty-state,
+        .loading-state {
+            padding: 50px 20px;
+            text-align: center;
+            border: 1px dashed #d8dde7;
+            border-radius: 14px;
+            background: #fafbfc;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            margin-bottom: 10px;
+            font-size: 38px;
+        }
+
+        .empty-state strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-size: 16px;
+        }
+
+        .error-message {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .interviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .dashboard-header {
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #backButton {
+                width: 100%;
+            }
+
+            .dashboard-content {
+                padding: 10px 16px 35px;
+            }
+
+            .page-hero {
+                padding: 25px 22px;
+                border-radius: 16px;
+            }
+
+            .page-hero h2 {
+                font-size: 26px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .interviews-section {
+                padding: 20px;
+            }
+
+            .section-header {
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
             <div>
                 <h1>CampusPulse</h1>
@@ -22,18 +341,64 @@
 
         <main class="dashboard-content">
 
-            <section class="welcome-card">
+            <section class="page-hero">
+                <p class="hero-eyebrow">Student Placement Portal</p>
                 <h2>My Interviews</h2>
-                <p>View your scheduled placement interviews.</p>
+                <p>
+                    Track your scheduled placement interviews,
+                    interview rounds, results, and remarks.
+                </p>
             </section>
 
-            <section id="interviewsList" class="dashboard-grid">
-                Loading interviews...
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <p class="stat-label">Total Interviews</p>
+                    <p id="totalInterviews" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="stat-label">Scheduled</p>
+                    <p id="scheduledInterviews" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="stat-label">Passed</p>
+                    <p id="passedInterviews" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="stat-label">Rejected</p>
+                    <p id="rejectedInterviews" class="stat-value">0</p>
+                </div>
+
             </section>
 
-            <p id="interviewsMessage" class="message"></p>
+            <section class="interviews-section">
+
+                <div class="section-header">
+                    <h3>Interview History</h3>
+
+                    <button
+                        id="refreshButton"
+                        class="refresh-button"
+                    >
+                        Refresh
+                    </button>
+                </div>
+
+                <div id="interviewsList">
+                    <div class="loading-state">
+                        Loading interviews...
+                    </div>
+                </div>
+
+                <p id="interviewsMessage" class="message"></p>
+
+            </section>
 
         </main>
+
     </div>
 
     <script>
@@ -48,13 +413,16 @@
 
         document
             .getElementById("backButton")
-            .addEventListener(
-                "click",
-                function () {
-                    window.location.href =
-                        "student-dashboard.html";
-                }
-            );
+            .addEventListener("click", function () {
+                window.location.href =
+                    "student-dashboard.html";
+            });
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener("click", function () {
+                loadInterviews();
+            });
 
         function formatInterviewDateTime(value) {
             if (!value) {
@@ -69,40 +437,19 @@
                 return value;
             }
 
-            const year =
-                match[1];
-
-            const month =
-                Number(match[2]);
-
-            const day =
-                match[3];
-
-            const hour24 =
-                Number(match[4]);
-
-            const minute =
-                match[5];
+            const year = match[1];
+            const month = Number(match[2]);
+            const day = match[3];
+            const hour24 = Number(match[4]);
+            const minute = match[5];
 
             const monthNames = [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec"
+                "Jan", "Feb", "Mar", "Apr",
+                "May", "Jun", "Jul", "Aug",
+                "Sep", "Oct", "Nov", "Dec"
             ];
 
-            const period =
-                hour24 >= 12
-                    ? "PM"
-                    : "AM";
+            const period = hour24 >= 12 ? "PM" : "AM";
 
             const hour12 =
                 hour24 % 12 === 0
@@ -112,18 +459,137 @@
             return `${day} ${monthNames[month - 1]} ${year}, ${hour12}:${minute} ${period}`;
         }
 
+        function formatResult(result) {
+            if (!result) {
+                return "Scheduled";
+            }
+
+            return result
+                .toLowerCase()
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, function (letter) {
+                    return letter.toUpperCase();
+                });
+        }
+
+        function getResultClass(result) {
+            if (!result) {
+                return "result-scheduled";
+            }
+
+            const normalized =
+                result.toLowerCase();
+
+            if (normalized.includes("pass")) {
+                return "result-passed";
+            }
+
+            if (normalized.includes("reject")) {
+                return "result-rejected";
+            }
+
+            return "result-scheduled";
+        }
+
+        function createInterviewCard(interview) {
+            const card =
+                document.createElement("div");
+
+            card.className = "interview-card";
+
+            const result =
+                formatResult(interview.result);
+
+            const resultClass =
+                getResultClass(interview.result);
+
+            card.innerHTML = `
+                <div class="interview-top">
+
+                    <div>
+                        <h4 class="interview-title">
+                            Interview #${interview.interview_id}
+                        </h4>
+
+                        <p class="interview-subtitle">
+                            Application #${interview.application_id}
+                        </p>
+                    </div>
+
+                    <span class="result-badge ${resultClass}">
+                        ${result}
+                    </span>
+
+                </div>
+
+                <div class="detail-list">
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Round
+                        </span>
+
+                        <span class="detail-value">
+                            ${interview.round_name || "Not specified"}
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Scheduled At
+                        </span>
+
+                        <span class="detail-value">
+                            ${formatInterviewDateTime(
+                                interview.scheduled_at
+                            )}
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Mode
+                        </span>
+
+                        <span class="detail-value">
+                            ${interview.mode || "Not specified"}
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Remarks
+                        </span>
+
+                        <span class="detail-value">
+                            ${interview.remarks || "No remarks"}
+                        </span>
+                    </div>
+
+                </div>
+            `;
+
+            return card;
+        }
+
         async function loadInterviews() {
+
             const interviewsList =
-                document.getElementById(
-                    "interviewsList"
-                );
+                document.getElementById("interviewsList");
 
             const interviewsMessage =
-                document.getElementById(
-                    "interviewsMessage"
-                );
+                document.getElementById("interviewsMessage");
+
+            interviewsMessage.textContent = "";
+
+            interviewsList.innerHTML = `
+                <div class="loading-state">
+                    Loading interviews...
+                </div>
+            `;
 
             try {
+
                 const response =
                     await fetch(
                         `${API_BASE_URL}/api/interviews`,
@@ -140,8 +606,12 @@
                     await response.json();
 
                 if (!response.ok) {
-                    interviewsList.textContent =
-                        "";
+
+                    interviewsList.innerHTML = `
+                        <div class="empty-state error-message">
+                            Unable to load interviews.
+                        </div>
+                    `;
 
                     interviewsMessage.textContent =
                         data.error ||
@@ -150,95 +620,94 @@
                     return;
                 }
 
-                if (
-                    !data.interviews ||
-                    data.interviews.length === 0
-                ) {
-                    interviewsList.textContent =
-                        "No interviews scheduled.";
+                const interviews =
+                    data.interviews || [];
+
+                document.getElementById(
+                    "totalInterviews"
+                ).textContent =
+                    interviews.length;
+
+                const scheduled =
+                    interviews.filter(function (interview) {
+                        const result =
+                            (interview.result || "")
+                                .toLowerCase();
+
+                        return !result ||
+                            result.includes("scheduled");
+                    }).length;
+
+                const passed =
+                    interviews.filter(function (interview) {
+                        return (
+                            interview.result || ""
+                        )
+                            .toLowerCase()
+                            .includes("pass");
+                    }).length;
+
+                const rejected =
+                    interviews.filter(function (interview) {
+                        return (
+                            interview.result || ""
+                        )
+                            .toLowerCase()
+                            .includes("reject");
+                    }).length;
+
+                document.getElementById(
+                    "scheduledInterviews"
+                ).textContent = scheduled;
+
+                document.getElementById(
+                    "passedInterviews"
+                ).textContent = passed;
+
+                document.getElementById(
+                    "rejectedInterviews"
+                ).textContent = rejected;
+
+                if (interviews.length === 0) {
+
+                    interviewsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">??</div>
+
+                            <strong>No Interviews Yet</strong>
+
+                            <p>
+                                You currently have no scheduled
+                                placement interviews.
+                            </p>
+                        </div>
+                    `;
 
                     return;
                 }
 
-                interviewsList.innerHTML =
-                    "";
+                const grid =
+                    document.createElement("div");
 
-                data.interviews.forEach(
-                    function (interview) {
-                        const interviewCard =
-                            document.createElement(
-                                "div"
-                            );
+                grid.className =
+                    "interviews-grid";
 
-                        interviewCard.className =
-                            "dashboard-card";
+                interviews.forEach(function (interview) {
+                    grid.appendChild(
+                        createInterviewCard(interview)
+                    );
+                });
 
-                        interviewCard.style.marginBottom =
-                            "20px";
-
-                        interviewCard.innerHTML = `
-                            <h3>
-                                Interview #${interview.interview_id}
-                            </h3>
-
-                            <p>
-                                <strong>
-                                    Application ID:
-                                </strong>
-                                ${interview.application_id}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Round:
-                                </strong>
-                                ${interview.round_name ||
-                                "Not specified"}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Scheduled At:
-                                </strong>
-                                ${formatInterviewDateTime(
-                                    interview.scheduled_at
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Mode:
-                                </strong>
-                                ${interview.mode ||
-                                "Not specified"}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Result:
-                                </strong>
-                                ${interview.result ||
-                                "Not specified"}
-                            </p>
-
-                            <p>
-                                <strong>
-                                    Remarks:
-                                </strong>
-                                ${interview.remarks ||
-                                "No remarks"}
-                            </p>
-                        `;
-
-                        interviewsList.appendChild(
-                            interviewCard
-                        );
-                    }
-                );
+                interviewsList.innerHTML = "";
+                interviewsList.appendChild(grid);
 
             } catch (error) {
-                interviewsList.textContent =
-                    "";
+
+                interviewsList.innerHTML = `
+                    <div class="empty-state error-message">
+                        Unable to connect to CampusPulse backend.
+                    </div>
+                `;
 
                 interviewsMessage.textContent =
                     "Unable to connect to CampusPulse backend.";

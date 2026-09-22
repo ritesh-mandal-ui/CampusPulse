@@ -2,124 +2,558 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>CampusPulse - Student Dashboard</title>
+
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .student-dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-brand h1 {
+            margin-bottom: 4px;
+        }
+
+        .header-brand p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .welcome-hero {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 28px;
+            padding: 34px;
+            border-radius: 22px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 0%,
+                    #f8fafc 55%,
+                    #eef2ff 100%
+                );
+            border: 1px solid #e5e7eb;
+            box-shadow:
+                0 8px 30px
+                rgba(15, 23, 42, 0.06);
+        }
+
+        .welcome-hero::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            right: -70px;
+            top: -70px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-eyebrow {
+            margin: 0 0 8px;
+            color: #6366f1;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .welcome-title {
+            margin: 0 0 10px;
+            font-size: 32px;
+            line-height: 1.2;
+        }
+
+        .welcome-description {
+            max-width: 650px;
+            margin: 0;
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .section-heading {
+            margin: 0 0 16px;
+        }
+
+        .section-heading h2 {
+            margin: 0 0 5px;
+            font-size: 22px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .student-module-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .student-module-card {
+            position: relative;
+            min-height: 170px;
+            padding: 24px;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow:
+                0 5px 18px
+                rgba(15, 23, 42, 0.05);
+            cursor: pointer;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .student-module-card:hover {
+            transform: translateY(-5px);
+            border-color: #c7d2fe;
+            box-shadow:
+                0 12px 28px
+                rgba(15, 23, 42, 0.09);
+        }
+
+        .module-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            margin-bottom: 18px;
+            border-radius: 13px;
+            background: #f3f4f6;
+            font-size: 22px;
+        }
+
+        .student-module-card h3 {
+            margin: 0 0 7px;
+            font-size: 18px;
+        }
+
+        .student-module-card p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .module-arrow {
+            position: absolute;
+            right: 22px;
+            bottom: 20px;
+            color: #9ca3af;
+            font-size: 18px;
+            transition:
+                transform 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .student-module-card:hover
+        .module-arrow {
+            color: #4f46e5;
+            transform: translateX(4px);
+        }
+
+        .dashboard-footer-note {
+            margin-top: 28px;
+            padding: 18px 20px;
+            border-radius: 15px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .logout-button {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+            .student-module-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .welcome-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-header {
+                align-items: flex-start;
+            }
+
+            .dashboard-header .logout-button {
+                padding: 10px 14px;
+            }
+
+            .welcome-hero {
+                padding: 26px 22px;
+            }
+
+            .welcome-title {
+                font-size: 25px;
+            }
+
+            .welcome-description {
+                font-size: 14px;
+            }
+
+            .student-module-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .student-module-card {
+                min-height: 145px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="dashboard-container">
+
         <header class="dashboard-header">
-            <div>
+
+            <div class="header-brand">
                 <h1>CampusPulse</h1>
                 <p>Student Dashboard</p>
             </div>
 
-            <button id="logoutButton" class="btn-primary">
+            <button
+                id="logoutButton"
+                class="btn-primary logout-button"
+            >
                 Logout
             </button>
+
         </header>
 
-        <main class="dashboard-content">
-            <section class="welcome-card">
-                <h2>Welcome to CampusPulse</h2>
-                <p>Manage your placement activities from here.</p>
+        <main
+            class="dashboard-content student-dashboard"
+        >
+
+            <section class="welcome-hero">
+
+                <div class="welcome-content">
+
+                    <p class="welcome-eyebrow">
+                        Student Portal
+                    </p>
+
+                    <h2
+                        id="welcomeTitle"
+                        class="welcome-title"
+                    >
+                        Welcome to CampusPulse
+                    </h2>
+
+                    <p class="welcome-description">
+                        Manage your profile, skills,
+                        placement applications, interviews,
+                        and offers from one place.
+                    </p>
+
+                </div>
+
             </section>
 
-            <section class="dashboard-grid">
-                <div
-                    class="dashboard-card"
-                    id="profileCard"
-                    style="cursor: pointer;"
-                >
-                    <h3>Profile</h3>
-                    <p>View and manage your student profile.</p>
+            <section>
+
+                <div class="section-heading">
+                    <h2>
+                        Placement Workspace
+                    </h2>
+
+                    <p>
+                        Choose a section to manage
+                        your placement activities.
+                    </p>
                 </div>
 
-                <div
-                    class="dashboard-card"
-                    id="skillsCard"
-                    style="cursor: pointer;"
-                >
-                    <h3>Skills</h3>
-                    <p>Manage your technical and professional skills.</p>
+                <div class="student-module-grid">
+
+                    <div
+                        class="student-module-card"
+                        id="profileCard"
+                    >
+                        <div class="module-icon">
+                            👤
+                        </div>
+
+                        <h3>
+                            Profile
+                        </h3>
+
+                        <p>
+                            View and manage your
+                            student profile.
+                        </p>
+
+                        <span class="module-arrow">
+                            →
+                        </span>
+                    </div>
+
+                    <div
+                        class="student-module-card"
+                        id="skillsCard"
+                    >
+                        <div class="module-icon">
+                            🛠️
+                        </div>
+
+                        <h3>
+                            Skills
+                        </h3>
+
+                        <p>
+                            Manage your technical
+                            and professional skills.
+                        </p>
+
+                        <span class="module-arrow">
+                            →
+                        </span>
+                    </div>
+
+                    <div
+                        class="student-module-card"
+                        id="jobsCard"
+                    >
+                        <div class="module-icon">
+                            💼
+                        </div>
+
+                        <h3>
+                            Jobs
+                        </h3>
+
+                        <p>
+                            Browse available placement
+                            opportunities.
+                        </p>
+
+                        <span class="module-arrow">
+                            →
+                        </span>
+                    </div>
+
+                    <div
+                        class="student-module-card"
+                        id="applicationsCard"
+                    >
+                        <div class="module-icon">
+                            📄
+                        </div>
+
+                        <h3>
+                            Applications
+                        </h3>
+
+                        <p>
+                            Track your job applications
+                            and their status.
+                        </p>
+
+                        <span class="module-arrow">
+                            →
+                        </span>
+                    </div>
+
+                    <div
+                        class="student-module-card"
+                        id="interviewsCard"
+                    >
+                        <div class="module-icon">
+                            📅
+                        </div>
+
+                        <h3>
+                            Interviews
+                        </h3>
+
+                        <p>
+                            View your scheduled interviews
+                            and results.
+                        </p>
+
+                        <span class="module-arrow">
+                            →
+                        </span>
+                    </div>
+
+                    <div
+                        class="student-module-card"
+                        id="offersCard"
+                    >
+                        <div class="module-icon">
+                            🎓
+                        </div>
+
+                        <h3>
+                            Offers
+                        </h3>
+
+                        <p>
+                            View and track your placement
+                            offers.
+                        </p>
+
+                        <span class="module-arrow">
+                            →
+                        </span>
+                    </div>
+
                 </div>
 
-                <div
-                    class="dashboard-card"
-                    id="jobsCard"
-                    style="cursor: pointer;"
-                >
-                    <h3>Jobs</h3>
-                    <p>Browse available placement opportunities.</p>
-                </div>
-
-                <div
-                    class="dashboard-card"
-                    id="applicationsCard"
-                    style="cursor: pointer;"
-                >
-                    <h3>Applications</h3>
-                    <p>Track your job applications.</p>
-                </div>
-
-                <div
-                    class="dashboard-card"
-                    id="interviewsCard"
-                    style="cursor: pointer;"
-                >
-                    <h3>Interviews</h3>
-                    <p>View your scheduled interviews.</p>
-                </div>
-
-                <div
-                    class="dashboard-card"
-                    id="offersCard"
-                    style="cursor: pointer;"
-                >
-                    <h3>Offers</h3>
-                    <p>View your placement offers.</p>
-                </div>
             </section>
+
+            <div class="dashboard-footer-note">
+                Keep your profile and skills updated
+                to make your placement journey smoother.
+            </div>
+
         </main>
+
     </div>
 
     <script>
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+        const token =
+            localStorage.getItem("token");
+
+        const role =
+            localStorage.getItem("role");
 
         if (!token || role !== "STUDENT") {
-            window.location.href = "login.html";
+            window.location.href =
+                "login.html";
         }
 
-        document.getElementById("logoutButton").addEventListener("click", function () {
-            localStorage.clear();
-            window.location.href = "login.html";
-        });
+        const storedEmail =
+            localStorage.getItem("email");
 
-        document.getElementById("profileCard").addEventListener("click", function () {
-            window.location.href = "student-profile.html";
-        });
+        if (storedEmail) {
+            const welcomeTitle =
+                document.getElementById(
+                    "welcomeTitle"
+                );
 
-        document.getElementById("skillsCard").addEventListener("click", function () {
-            window.location.href = "student-skills.html";
-        });
+            const emailName =
+                storedEmail
+                    .split("@")[0]
+                    .replace(/[._-]+/g, " ")
+                    .replace(
+                        /\b\w/g,
+                        function (letter) {
+                            return letter.toUpperCase();
+                        }
+                    );
 
-        document.getElementById("jobsCard").addEventListener("click", function () {
-            window.location.href = "student-jobs.html";
-        });
+            welcomeTitle.textContent =
+                `Welcome back, ${emailName}`;
+        }
 
-        document.getElementById("applicationsCard").addEventListener("click", function () {
-            window.location.href = "student-application.html";
-        });
+        document
+            .getElementById("logoutButton")
+            .addEventListener(
+                "click",
+                function () {
+                    localStorage.clear();
 
-        document.getElementById("interviewsCard").addEventListener("click", function () {
-            window.location.href = "student-interviews.html";
-        });
+                    window.location.href =
+                        "login.html";
+                }
+            );
 
-        document.getElementById("offersCard").addEventListener("click", function () {
-            window.location.href = "student-offers.html";
-        });
+        document
+            .getElementById("profileCard")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-profile.html";
+                }
+            );
+
+        document
+            .getElementById("skillsCard")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-skills.html";
+                }
+            );
+
+        document
+            .getElementById("jobsCard")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-jobs.html";
+                }
+            );
+
+        document
+            .getElementById("applicationsCard")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-application.html";
+                }
+            );
+
+        document
+            .getElementById("interviewsCard")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-interviews.html";
+                }
+            );
+
+        document
+            .getElementById("offersCard")
+            .addEventListener(
+                "click",
+                function () {
+                    window.location.href =
+                        "student-offers.html";
+                }
+            );
     </script>
 
 </body>

@@ -1,291 +1,2054 @@
-ï»¿<!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Student Profile</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .profile-page {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .profile-hero {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            padding: 32px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.15);
+        }
+
+        .profile-hero::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: -100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .profile-hero::after {
+            content: "";
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            right: 100px;
+            bottom: -100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .profile-hero-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .profile-identity {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 82px;
+            height: 82px;
+            min-width: 82px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #111827;
+            font-size: 28px;
+            font-weight: 800;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-identity h2 {
+            margin: 0 0 7px;
+            font-size: 28px;
+        }
+
+        .profile-identity p {
+            margin: 0;
+            opacity: 0.78;
+        }
+
+        .profile-hero-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profile-hero-actions button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .profile-hero-actions .edit-button {
+            background: white;
+            color: #111827;
+        }
+
+        .profile-hero-actions .edit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .profile-completion {
+            position: relative;
+            z-index: 1;
+            margin-top: 25px;
+        }
+
+        .completion-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .completion-bar {
+            height: 7px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.16);
+            overflow: hidden;
+        }
+
+        .completion-progress {
+            height: 100%;
+            width: 100%;
+            border-radius: inherit;
+            background: white;
+            transition: width 0.5s ease;
+        }
+
+        .section-heading {
+            margin: 28px 0 14px;
+        }
+
+        .section-heading h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .section-heading p {
+            margin: 5px 0 0;
+            opacity: 0.65;
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .info-card {
+            padding: 22px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            background: white;
+            transition: 0.25s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        }
+
+        .info-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f1f5f9;
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 13px;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .resume-card {
+            margin-top: 24px;
+            padding: 26px;
+            border-radius: 18px;
+            background: white;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+        }
+
+        .resume-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .resume-title {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .resume-icon {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f1f5f9;
+            font-size: 21px;
+        }
+
+        .resume-title h3 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .resume-title p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .resume-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 28px;
+            text-align: center;
+            transition: 0.25s ease;
+        }
+
+        .resume-upload-area:hover {
+            border-color: #64748b;
+            background: #f8fafc;
+        }
+
+        .resume-upload-area.drag-active {
+            border-color: #111827;
+            background: #f1f5f9;
+        }
+
+        .upload-symbol {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .resume-upload-area h4 {
+            margin: 0 0 5px;
+            font-size: 16px;
+        }
+
+        .resume-upload-area p {
+            margin: 0 0 15px;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .resume-file-input {
+            display: none;
+        }
+
+        .choose-file-button {
+            display: inline-block;
+            padding: 9px 16px;
+            border-radius: 9px;
+            background: #f1f5f9;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .choose-file-button:hover {
+            background: #e2e8f0;
+        }
+
+        .resume-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .resume-actions button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 17px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        #uploadResumeButton {
+            background: #111827;
+            color: white;
+        }
+
+        #viewResumeButton {
+            background: #f1f5f9;
+            color: #111827;
+        }
+
+        .resume-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        .resume-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+        }
+
+        .status-dot.active {
+            background: #16a34a;
+        }
+
+        .edit-card {
+            margin-bottom: 24px;
+        }
+
+        .edit-header {
+            margin-bottom: 22px;
+        }
+
+        .edit-header h2 {
+            margin-bottom: 5px;
+        }
+
+        .edit-header p {
+            opacity: 0.65;
+        }
+
+        .edit-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .edit-form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .edit-actions button {
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        #cancelEditButton {
+            background: #f1f5f9;
+            color: #111827;
+            border: none;
+            border-radius: 9px;
+            padding: 10px 18px;
+            font-weight: 700;
+        }
+
+        #saveProfileButton {
+            border-radius: 9px;
+            padding: 10px 20px;
+        }
+
+        #cancelEditButton:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 800px) {
+            .profile-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .profile-hero-content {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .profile-hero {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+
+            .profile-identity {
+                align-items: flex-start;
+            }
+
+            .profile-avatar {
+                width: 64px;
+                height: 64px;
+                min-width: 64px;
+                font-size: 22px;
+            }
+
+            .profile-identity h2 {
+                font-size: 22px;
+            }
+
+            .profile-info-grid,
+            .edit-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-form-grid .full-width {
+                grid-column: auto;
+            }
+
+            .resume-card {
+                padding: 20px;
+            }
+
+            .resume-upload-area {
+                padding: 22px 15px;
+            }
+
+            .page-header {
+                gap: 12px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div>
-                <h1>CampusPulse</h1>
-                <p>Student Profile</p>
+<div class="container profile-page">
+
+    <header class="page-header">
+        <div>
+            <h1>Student Profile</h1>
+            <p>Manage your personal and academic information</p>
+        </div>
+
+        <button onclick="goToDashboard()">
+            Back to Dashboard
+        </button>
+    </header>
+
+    <div id="message"></div>
+
+    <section id="profileFormSection" class="card edit-card" style="display: none;">
+
+        <div class="edit-header">
+            <h2>Complete Your Profile</h2>
+            <p>Please enter your personal and academic information.</p>
+        </div>
+
+        <form id="profileForm">
+
+            <div class="edit-form-grid">
+
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="rollNumber">Roll Number *</label>
+
+                    <input
+                        type="text"
+                        id="rollNumber"
+                        placeholder="Enter your roll number"
+                        required
+                    >
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="department">Department *</label>
+
+                    <select id="department" required>
+                        <option value="">
+                            Loading departments...
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cgpa">CGPA</label>
+
+                    <input
+                        type="number"
+                        id="cgpa"
+                        min="0"
+                        max="10"
+                        step="0.01"
+                        placeholder="Enter your CGPA"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="graduationYear">
+                        Graduation Year
+                    </label>
+
+                    <input
+                        type="number"
+                        id="graduationYear"
+                        min="2000"
+                        max="2100"
+                        placeholder="e.g. 2027"
+                    >
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="phone">Phone Number</label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter 10-digit phone number"
+                        maxlength="10"
+                    >
+                </div>
+
             </div>
 
-            <button id="backButton" class="btn-primary">
-                Back to Dashboard
-            </button>
-        </header>
+            <div class="edit-actions">
 
-        <main class="dashboard-content">
-            <section class="welcome-card">
-                <h2>My Profile</h2>
-                <p>View your registered student information.</p>
-            </section>
+                <button
+                    type="submit"
+                    id="saveProfileButton"
+                >
+                    Save Profile
+                </button>
 
-            <section class="profile-card">
-                <div class="profile-row">
-                    <span>Full Name</span>
-                    <strong id="fullName">Loading...</strong>
-                </div>
+                <button
+                    type="button"
+                    id="cancelEditButton"
+                    style="display: none;"
+                >
+                    Cancel
+                </button>
 
-                <div class="profile-row">
-                    <span>Roll Number</span>
-                    <strong id="rollNumber">Loading...</strong>
-                </div>
+            </div>
 
-                <div class="profile-row">
-                    <span>Department ID</span>
-                    <strong id="departmentId">Loading...</strong>
-                </div>
+        </form>
 
-                <div class="profile-row">
-                    <span>CGPA</span>
-                    <strong id="cgpa">Loading...</strong>
-                </div>
+    </section>
 
-                <div class="profile-row">
-                    <span>Graduation Year</span>
-                    <strong id="graduationYear">Loading...</strong>
-                </div>
+    <section id="profileSection" style="display: none;">
 
-                <div class="profile-row">
-                    <span>Phone</span>
-                    <strong id="phone">Loading...</strong>
-                </div>
+        <div class="profile-hero">
 
-                <div class="profile-row">
-                    <span>Resume</span>
-                    <div>
-                        <strong id="resumeUrl">Loading...</strong>
-                        <button
-                            id="viewResumeButton"
-                            class="btn-primary"
-                            style="display: none; margin-top: 8px;"
-                        >
-                            View Resume
-                        </button>
+            <div class="profile-hero-content">
+
+                <div class="profile-identity">
+
+                    <div
+                        class="profile-avatar"
+                        id="profileAvatar"
+                    >
+                        RM
                     </div>
-                </div>
 
-                <div class="profile-row">
-                    <span>Upload Resume</span>
                     <div>
-                        <input
-                            type="file"
-                            id="resumeFile"
-                            accept=".pdf,application/pdf"
-                        >
-                        <button
-                            id="uploadResumeButton"
-                            class="btn-primary"
-                            style="margin-top: 8px;"
-                        >
-                            Upload Resume
-                        </button>
+                        <h2 id="heroName">
+                            Student
+                        </h2>
+
+                        <p>
+                            Roll No. <span id="heroRollNumber">-</span>
+                        </p>
                     </div>
+
                 </div>
 
-                <p id="profileMessage" class="message"></p>
-            </section>
-        </main>
-    </div>
+                <div class="profile-hero-actions">
 
-    <script>
-        const API_BASE_URL = "https://campuspulse-backend-uzum.onrender.com";
+                    <button
+                        type="button"
+                        class="edit-button"
+                        id="editProfileButton"
+                    >
+                        ?? Edit Profile
+                    </button>
 
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+                </div>
 
-        if (!token || role !== "STUDENT") {
-            window.location.href = "login.html";
+            </div>
+
+            <div class="profile-completion">
+
+                <div class="completion-header">
+                    <span>Profile completed</span>
+                    <strong id="completionPercentage">100%</strong>
+                </div>
+
+                <div class="completion-bar">
+                    <div
+                        class="completion-progress"
+                        id="completionProgress"
+                    ></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section-heading">
+            <h3>Academic Information</h3>
+            <p>Your academic details at a glance</p>
+        </div>
+
+        <div class="profile-info-grid">
+
+            <div class="info-card">
+
+                <div class="info-icon">??</div>
+
+                <span class="info-label">
+                    Department
+                </span>
+
+                <span
+                    class="info-value"
+                    id="departmentValue"
+                >
+                    -
+                </span>
+
+            </div>
+
+            <div class="info-card">
+
+                <div class="info-icon">??</div>
+
+                <span class="info-label">
+                    Current CGPA
+                </span>
+
+                <span
+                    class="info-value"
+                    id="cgpaValue"
+                >
+                    -
+                </span>
+
+            </div>
+
+            <div class="info-card">
+
+                <div class="info-icon">??</div>
+
+                <span class="info-label">
+                    Graduation Year
+                </span>
+
+                <span
+                    class="info-value"
+                    id="graduationYearValue"
+                >
+                    -
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="section-heading">
+            <h3>Personal Information</h3>
+            <p>Your registered contact details</p>
+        </div>
+
+        <div class="profile-info-grid">
+
+            <div class="info-card">
+
+                <div class="info-icon">??</div>
+
+                <span class="info-label">
+                    Full Name
+                </span>
+
+                <span
+                    class="info-value"
+                    id="fullNameValue"
+                >
+                    -
+                </span>
+
+            </div>
+
+            <div class="info-card">
+
+                <div class="info-icon">??</div>
+
+                <span class="info-label">
+                    Roll Number
+                </span>
+
+                <span
+                    class="info-value"
+                    id="rollNumberValue"
+                >
+                    -
+                </span>
+
+            </div>
+
+            <div class="info-card">
+
+                <div class="info-icon">??</div>
+
+                <span class="info-label">
+                    Phone
+                </span>
+
+                <span
+                    class="info-value"
+                    id="phoneValue"
+                >
+                    -
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="section-heading">
+            <h3>Resume</h3>
+            <p>Keep your latest resume available for placement opportunities</p>
+        </div>
+
+        <div class="resume-card">
+
+            <div class="resume-header">
+
+                <div class="resume-title">
+
+                    <div class="resume-icon">
+                        ??
+                    </div>
+
+                    <div>
+                        <h3>Resume</h3>
+
+                        <p>
+                            PDF format · Maximum 5 MB
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div
+                class="resume-upload-area"
+                id="resumeUploadArea"
+            >
+
+                <div class="upload-symbol">
+                    ??
+                </div>
+
+                <h4>
+                    Upload your resume
+                </h4>
+
+                <p>
+                    Select a PDF file from your computer
+                </p>
+
+                <label
+                    for="resumeFile"
+                    class="choose-file-button"
+                >
+                    Choose PDF
+                </label>
+
+                <input
+                    type="file"
+                    id="resumeFile"
+                    class="resume-file-input"
+                    accept=".pdf,application/pdf"
+                >
+
+            </div>
+
+            <div class="resume-status">
+
+                <span
+                    class="status-dot"
+                    id="resumeStatusDot"
+                ></span>
+
+                <span id="resumeStatus">
+                    No resume uploaded.
+                </span>
+
+            </div>
+
+            <div class="resume-actions">
+
+                <button
+                    type="button"
+                    id="uploadResumeButton"
+                >
+                    Upload Resume
+                </button>
+
+                <button
+                    type="button"
+                    id="viewResumeButton"
+                    style="display: none;"
+                >
+                    View Resume
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+
+const API_BASE_URL = "https://campuspulse-backend-uzum.onrender.com";
+
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+
+const messageElement =
+    document.getElementById("message");
+
+const profileSection =
+    document.getElementById("profileSection");
+
+const profileFormSection =
+    document.getElementById("profileFormSection");
+
+let currentProfile = null;
+let departments = [];
+let editMode = false;
+
+
+function showMessage(message, type = "error") {
+
+    messageElement.innerHTML = `
+        <div class="alert ${type}">
+            ${message}
+        </div>
+    `;
+
+}
+
+
+function clearMessage() {
+
+    messageElement.innerHTML = "";
+
+}
+
+
+function goToDashboard() {
+
+    window.location.href = "student-dashboard.html";
+
+}
+
+
+function getAuthHeaders() {
+
+    return {
+        "Authorization": `Bearer ${token}`
+    };
+
+}
+
+
+async function loadDepartments() {
+
+    const response = await fetch(
+        `${API_BASE_URL}/api/students/departments`,
+        {
+            method: "GET",
+            headers: getAuthHeaders()
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.error || "Unable to load departments."
+        );
+
+    }
+
+    departments = data.departments || [];
+
+    const departmentSelect =
+        document.getElementById("department");
+
+    departmentSelect.innerHTML = `
+        <option value="">
+            Select your department
+        </option>
+    `;
+
+    departments.forEach(department => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            department.department_id;
+
+        option.textContent =
+            `${department.department_name} (${department.department_code})`;
+
+        departmentSelect.appendChild(option);
+
+    });
+
+}
+
+
+function getDepartmentName(departmentId) {
+
+    const department =
+        departments.find(
+            item =>
+                Number(item.department_id) ===
+                Number(departmentId)
+        );
+
+    if (!department) {
+
+        return departmentId || "-";
+
+    }
+
+    return `${department.department_name} (${department.department_code})`;
+
+}
+
+
+function getInitials(name) {
+
+    if (!name) {
+
+        return "ST";
+
+    }
+
+    const words =
+        name.trim().split(/\s+/);
+
+    if (words.length === 1) {
+
+        return words[0]
+            .substring(0, 2)
+            .toUpperCase();
+
+    }
+
+    return (
+        words[0][0] +
+        words[words.length - 1][0]
+    ).toUpperCase();
+
+}
+
+
+function calculateProfileCompletion(profile) {
+
+    const fields = [
+        profile.full_name,
+        profile.roll_number,
+        profile.department_id,
+        profile.cgpa,
+        profile.graduation_year,
+        profile.phone,
+        profile.resume_url
+    ];
+
+    const completed =
+        fields.filter(
+            field =>
+                field !== null &&
+                field !== undefined &&
+                field !== ""
+        ).length;
+
+    return Math.round(
+        (completed / fields.length) * 100
+    );
+
+}
+
+
+function updateProfileCompletion(profile) {
+
+    const percentage =
+        calculateProfileCompletion(profile);
+
+    document.getElementById(
+        "completionPercentage"
+    ).textContent =
+        `${percentage}%`;
+
+    document.getElementById(
+        "completionProgress"
+    ).style.width =
+        `${percentage}%`;
+
+}
+
+
+async function loadProfile() {
+
+    clearMessage();
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE_URL}/api/students/profile`,
+            {
+                method: "GET",
+                headers: getAuthHeaders()
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 404) {
+
+            editMode = false;
+
+            await showProfileForm();
+
+            return;
+
         }
 
-        const resumeFile = document.getElementById("resumeFile");
-        const uploadResumeButton = document.getElementById("uploadResumeButton");
-        const viewResumeButton = document.getElementById("viewResumeButton");
-        const profileMessage = document.getElementById("profileMessage");
+        if (!response.ok) {
 
-        let resumeUrl = null;
+            throw new Error(
+                data.error ||
+                "Unable to load student profile."
+            );
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "student-dashboard.html";
-        });
-
-        async function loadProfile() {
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/students/profile`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
-                );
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    profileMessage.textContent =
-                        data.error || "Unable to load profile.";
-                    return;
-                }
-
-                document.getElementById("fullName").textContent =
-                    data.full_name || "Not available";
-
-                document.getElementById("rollNumber").textContent =
-                    data.roll_number || "Not available";
-
-                document.getElementById("departmentId").textContent =
-                    data.department_id || "Not available";
-
-                document.getElementById("cgpa").textContent =
-                    data.cgpa ?? "Not available";
-
-                document.getElementById("graduationYear").textContent =
-                    data.graduation_year || "Not available";
-
-                document.getElementById("phone").textContent =
-                    data.phone || "Not available";
-
-                resumeUrl = data.resume_url;
-
-                if (resumeUrl) {
-                    document.getElementById("resumeUrl").textContent =
-                        "Uploaded";
-
-                    viewResumeButton.style.display = "inline-block";
-                } else {
-                    document.getElementById("resumeUrl").textContent =
-                        "Not uploaded";
-
-                    viewResumeButton.style.display = "none";
-                }
-            } catch (error) {
-                profileMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
-            }
         }
 
-        uploadResumeButton.addEventListener("click", async function () {
-            profileMessage.textContent = "";
+        currentProfile = data;
 
-            const file = resumeFile.files[0];
+        editMode = false;
 
-            if (!file) {
-                profileMessage.textContent =
-                    "Please select a PDF resume first.";
-                return;
-            }
+        await showProfile(data);
 
-            if (file.type !== "application/pdf" &&
-                !file.name.toLowerCase().endsWith(".pdf")) {
-                profileMessage.textContent =
-                    "Only PDF files are allowed.";
-                return;
-            }
+    }
+    catch (error) {
 
-            if (file.size > 5 * 1024 * 1024) {
-                profileMessage.textContent =
-                    "Resume file must be 5 MB or smaller.";
-                return;
-            }
+        showMessage(
+            error.message ||
+            "Unable to connect to CampusPulse backend."
+        );
 
-            const formData = new FormData();
-            formData.append("resume", file);
+    }
 
-            uploadResumeButton.disabled = true;
-            uploadResumeButton.textContent = "Uploading...";
+}
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/students/resume`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        },
-                        body: formData
-                    }
-                );
 
-                const data = await response.json();
+async function showProfileForm() {
 
-                if (!response.ok) {
-                    profileMessage.textContent =
-                        data.error || "Resume upload failed.";
-                    return;
-                }
+    profileSection.style.display = "none";
 
-                profileMessage.textContent =
-                    "Resume uploaded successfully.";
+    profileFormSection.style.display = "block";
 
-                resumeFile.value = "";
+    const formTitle =
+        profileFormSection.querySelector("h2");
 
-                await loadProfile();
-            } catch (error) {
-                profileMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
-            } finally {
-                uploadResumeButton.disabled = false;
-                uploadResumeButton.textContent = "Upload Resume";
-            }
+    const formDescription =
+        profileFormSection.querySelector("p");
+
+    const saveButton =
+        document.getElementById("saveProfileButton");
+
+    const cancelButton =
+        document.getElementById("cancelEditButton");
+
+    if (editMode && currentProfile) {
+
+        formTitle.textContent =
+            "Edit Your Profile";
+
+        formDescription.textContent =
+            "Update your personal and academic information.";
+
+        saveButton.textContent =
+            "Update Profile";
+
+        cancelButton.style.display =
+            "inline-block";
+
+        document.getElementById("fullName").value =
+            currentProfile.full_name || "";
+
+        document.getElementById("rollNumber").value =
+            currentProfile.roll_number || "";
+
+        document.getElementById("cgpa").value =
+            currentProfile.cgpa !== null &&
+            currentProfile.cgpa !== undefined
+                ? currentProfile.cgpa
+                : "";
+
+        document.getElementById("graduationYear").value =
+            currentProfile.graduation_year !== null &&
+            currentProfile.graduation_year !== undefined
+                ? currentProfile.graduation_year
+                : "";
+
+        document.getElementById("phone").value =
+            currentProfile.phone || "";
+
+    }
+    else {
+
+        formTitle.textContent =
+            "Complete Your Profile";
+
+        formDescription.textContent =
+            "Please enter your personal and academic information.";
+
+        saveButton.textContent =
+            "Save Profile";
+
+        cancelButton.style.display =
+            "none";
+
+    }
+
+    try {
+
+        await loadDepartments();
+
+        if (editMode && currentProfile) {
+
+            document.getElementById("department").value =
+                currentProfile.department_id || "";
+
+        }
+
+    }
+    catch (error) {
+
+        showMessage(
+            error.message ||
+            "Unable to load departments."
+        );
+
+    }
+
+}
+
+
+async function showProfile(profile) {
+
+    profileFormSection.style.display = "none";
+
+    profileSection.style.display = "block";
+
+    if (departments.length === 0) {
+
+        try {
+
+            await loadDepartments();
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
+    document.getElementById(
+        "heroName"
+    ).textContent =
+        profile.full_name || "Student";
+
+    document.getElementById(
+        "heroRollNumber"
+    ).textContent =
+        profile.roll_number || "-";
+
+    document.getElementById(
+        "profileAvatar"
+    ).textContent =
+        getInitials(profile.full_name);
+
+    document.getElementById(
+        "fullNameValue"
+    ).textContent =
+        profile.full_name || "-";
+
+    document.getElementById(
+        "rollNumberValue"
+    ).textContent =
+        profile.roll_number || "-";
+
+    document.getElementById(
+        "departmentValue"
+    ).textContent =
+        getDepartmentName(profile.department_id);
+
+    document.getElementById(
+        "cgpaValue"
+    ).textContent =
+        profile.cgpa !== null &&
+        profile.cgpa !== undefined
+            ? profile.cgpa
+            : "-";
+
+    document.getElementById(
+        "graduationYearValue"
+    ).textContent =
+        profile.graduation_year || "-";
+
+    document.getElementById(
+        "phoneValue"
+    ).textContent =
+        profile.phone || "-";
+
+    updateProfileCompletion(profile);
+
+    updateResumeSection(
+        profile.resume_url
+    );
+
+}
+
+
+function editProfile() {
+
+    if (!currentProfile) {
+
+        showMessage(
+            "Student profile not found."
+        );
+
+        return;
+
+    }
+
+    clearMessage();
+
+    editMode = true;
+
+    showProfileForm();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+function cancelEdit() {
+
+    clearMessage();
+
+    editMode = false;
+
+    if (currentProfile) {
+
+        showProfile(currentProfile);
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
         });
 
-        viewResumeButton.addEventListener("click", async function () {
-            if (!resumeUrl) {
-                return;
-            }
-
-            viewResumeButton.disabled = true;
-            viewResumeButton.textContent = "Opening...";
-
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}${resumeUrl}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
-                );
-
-                if (!response.ok) {
-                    const data = await response.json();
-                    profileMessage.textContent =
-                        data.error || "Unable to open resume.";
-                    return;
-                }
-
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-
-                const link = document.createElement("a");
-                link.href = blobUrl;
-                link.target = "_blank";
-                link.rel = "noopener";
-                link.click();
-
-                setTimeout(function () {
-                    URL.revokeObjectURL(blobUrl);
-                }, 1000);
-            } catch (error) {
-                profileMessage.textContent =
-                    "Unable to open resume.";
-            } finally {
-                viewResumeButton.disabled = false;
-                viewResumeButton.textContent = "View Resume";
-            }
-        });
+    }
+    else {
 
         loadProfile();
-    </script>
+
+    }
+
+}
+
+
+function validateProfileFields() {
+
+    const fullName =
+        document
+            .getElementById("fullName")
+            .value
+            .trim();
+
+    const rollNumber =
+        document
+            .getElementById("rollNumber")
+            .value
+            .trim();
+
+    const departmentId =
+        document
+            .getElementById("department")
+            .value;
+
+    const cgpaValue =
+        document
+            .getElementById("cgpa")
+            .value
+            .trim();
+
+    const graduationYearValue =
+        document
+            .getElementById("graduationYear")
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById("phone")
+            .value
+            .trim();
+
+
+    if (!fullName) {
+
+        showMessage(
+            "Full name is required."
+        );
+
+        return null;
+
+    }
+
+
+    if (!rollNumber) {
+
+        showMessage(
+            "Roll number is required."
+        );
+
+        return null;
+
+    }
+
+
+    if (!departmentId) {
+
+        showMessage(
+            "Please select your department."
+        );
+
+        return null;
+
+    }
+
+
+    if (cgpaValue !== "") {
+
+        const cgpa =
+            Number(cgpaValue);
+
+        if (
+            Number.isNaN(cgpa) ||
+            cgpa < 0 ||
+            cgpa > 10
+        ) {
+
+            showMessage(
+                "CGPA must be between 0 and 10."
+            );
+
+            return null;
+
+        }
+
+    }
+
+
+    if (graduationYearValue !== "") {
+
+        const graduationYear =
+            Number(graduationYearValue);
+
+        if (
+            Number.isNaN(graduationYear) ||
+            graduationYear < 2000 ||
+            graduationYear > 2100
+        ) {
+
+            showMessage(
+                "Please enter a valid graduation year."
+            );
+
+            return null;
+
+        }
+
+    }
+
+
+    if (phone !== "") {
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+
+            showMessage(
+                "Phone number must contain exactly 10 digits."
+            );
+
+            return null;
+
+        }
+
+    }
+
+
+    const payload = {
+
+        full_name: fullName,
+
+        roll_number: rollNumber,
+
+        department_id: Number(
+            departmentId
+        )
+
+    };
+
+
+    payload.cgpa =
+        cgpaValue !== ""
+            ? Number(cgpaValue)
+            : null;
+
+    payload.graduation_year =
+        graduationYearValue !== ""
+            ? Number(graduationYearValue)
+            : null;
+
+    payload.phone =
+        phone !== ""
+            ? phone
+            : null;
+
+
+    return payload;
+
+}
+
+
+async function saveProfile(event) {
+
+    event.preventDefault();
+
+    clearMessage();
+
+    const payload =
+        validateProfileFields();
+
+    if (!payload) {
+
+        return;
+
+    }
+
+
+    const saveButton =
+        document.getElementById(
+            "saveProfileButton"
+        );
+
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+        editMode
+            ? "Updating..."
+            : "Saving...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/students/profile`,
+                {
+                    method: editMode
+                        ? "PUT"
+                        : "POST",
+
+                    headers: {
+                        ...getAuthHeaders(),
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(payload)
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                (
+                    editMode
+                        ? "Unable to update student profile."
+                        : "Unable to create student profile."
+                )
+            );
+
+        }
+
+
+        editMode = false;
+
+        await loadProfile();
+
+        showMessage(
+            data.message ||
+            (
+                editMode
+                    ? "Profile updated successfully."
+                    : "Profile created successfully."
+            ),
+            "success"
+        );
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+    catch (error) {
+
+        showMessage(
+            error.message ||
+            (
+                editMode
+                    ? "Unable to update student profile."
+                    : "Unable to create student profile."
+            )
+        );
+
+    }
+    finally {
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+            editMode
+                ? "Update Profile"
+                : "Save Profile";
+
+    }
+
+}
+
+
+function updateResumeSection(resumeUrl) {
+
+    const resumeStatus =
+        document.getElementById(
+            "resumeStatus"
+        );
+
+    const viewButton =
+        document.getElementById(
+            "viewResumeButton"
+        );
+
+    const statusDot =
+        document.getElementById(
+            "resumeStatusDot"
+        );
+
+
+    if (resumeUrl) {
+
+        resumeStatus.textContent =
+            "Resume uploaded successfully.";
+
+        statusDot.classList.add(
+            "active"
+        );
+
+        viewButton.style.display =
+            "inline-block";
+
+    }
+    else {
+
+        resumeStatus.textContent =
+            "No resume uploaded.";
+
+        statusDot.classList.remove(
+            "active"
+        );
+
+        viewButton.style.display =
+            "none";
+
+    }
+
+}
+
+
+async function uploadResume() {
+
+    clearMessage();
+
+    const fileInput =
+        document.getElementById(
+            "resumeFile"
+        );
+
+    const file =
+        fileInput.files[0];
+
+
+    if (!file) {
+
+        showMessage(
+            "Please select a PDF resume."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        file.type !== "application/pdf" &&
+        !file.name
+            .toLowerCase()
+            .endsWith(".pdf")
+    ) {
+
+        showMessage(
+            "Only PDF files are allowed."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
+
+        showMessage(
+            "Resume file must be 5 MB or smaller."
+        );
+
+        return;
+
+    }
+
+
+    const uploadButton =
+        document.getElementById(
+            "uploadResumeButton"
+        );
+
+    uploadButton.disabled = true;
+
+    uploadButton.textContent =
+        "Uploading...";
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "resume",
+        file
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/students/resume`,
+                {
+                    method: "POST",
+
+                    headers:
+                        getAuthHeaders(),
+
+                    body:
+                        formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Unable to upload resume."
+            );
+
+        }
+
+
+        showMessage(
+            "Resume uploaded successfully.",
+            "success"
+        );
+
+
+        fileInput.value = "";
+
+
+        if (!currentProfile) {
+
+            currentProfile = {};
+
+        }
+
+
+        currentProfile.resume_url =
+            data.resume_url;
+
+
+        updateResumeSection(
+            data.resume_url
+        );
+
+        updateProfileCompletion(
+            currentProfile
+        );
+
+    }
+    catch (error) {
+
+        showMessage(
+            error.message ||
+            "Unable to upload resume."
+        );
+
+    }
+    finally {
+
+        uploadButton.disabled = false;
+
+        uploadButton.textContent =
+            "Upload Resume";
+
+    }
+
+}
+
+
+async function viewResume() {
+
+    if (
+        !currentProfile ||
+        !currentProfile.resume_url
+    ) {
+
+        showMessage(
+            "No resume uploaded."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}${currentProfile.resume_url}`,
+                {
+                    method: "GET",
+
+                    headers:
+                        getAuthHeaders()
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const data =
+                await response.json();
+
+            throw new Error(
+                data.error ||
+                "Unable to open resume."
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        window.open(
+            url,
+            "_blank"
+        );
+
+
+        setTimeout(
+            () => {
+                URL.revokeObjectURL(url);
+            },
+            60000
+        );
+
+    }
+    catch (error) {
+
+        showMessage(
+            error.message ||
+            "Unable to open resume."
+        );
+
+    }
+
+}
+
+
+function setupResumeInteractions() {
+
+    const uploadArea =
+        document.getElementById(
+            "resumeUploadArea"
+        );
+
+    const fileInput =
+        document.getElementById(
+            "resumeFile"
+        );
+
+
+    fileInput.addEventListener(
+        "change",
+        function () {
+
+            if (this.files.length > 0) {
+
+                uploadArea.classList.add(
+                    "drag-active"
+                );
+
+            }
+
+        }
+    );
+
+
+    ["dragenter", "dragover"].forEach(
+        eventName => {
+
+            uploadArea.addEventListener(
+                eventName,
+                function (event) {
+
+                    event.preventDefault();
+
+                    uploadArea.classList.add(
+                        "drag-active"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    ["dragleave", "drop"].forEach(
+        eventName => {
+
+            uploadArea.addEventListener(
+                eventName,
+                function (event) {
+
+                    event.preventDefault();
+
+                    uploadArea.classList.remove(
+                        "drag-active"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    uploadArea.addEventListener(
+        "drop",
+        function (event) {
+
+            const files =
+                event.dataTransfer.files;
+
+            if (
+                files &&
+                files.length > 0
+            ) {
+
+                fileInput.files =
+                    files;
+
+                uploadArea.classList.add(
+                    "drag-active"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+async function initializePage() {
+
+    if (
+        !token ||
+        role !== "STUDENT"
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("profileForm")
+        .addEventListener(
+            "submit",
+            saveProfile
+        );
+
+
+    document
+        .getElementById("cancelEditButton")
+        .addEventListener(
+            "click",
+            cancelEdit
+        );
+
+
+    document
+        .getElementById("editProfileButton")
+        .addEventListener(
+            "click",
+            editProfile
+        );
+
+
+    document
+        .getElementById("uploadResumeButton")
+        .addEventListener(
+            "click",
+            uploadResume
+        );
+
+
+    document
+        .getElementById("viewResumeButton")
+        .addEventListener(
+            "click",
+            viewResume
+        );
+
+
+    setupResumeInteractions();
+
+    await loadProfile();
+
+}
+
+
+initializePage();
+
+</script>
 
 </body>
 </html>
+
+

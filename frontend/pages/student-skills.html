@@ -1,251 +1,823 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusPulse - Student Skills</title>
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .skills-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .skills-hero-content h2 {
+            margin-bottom: 8px;
+        }
+
+        .skills-hero-content p {
+            margin: 0;
+        }
+
+        .skills-count {
+            min-width: 90px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .skills-count strong {
+            display: block;
+            font-size: 28px;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .skills-count span {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .add-skill-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .add-skill-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        .add-skill-action button {
+            width: 100%;
+            white-space: nowrap;
+        }
+
+        .skills-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .skill-card {
+            padding: 18px;
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 14px;
+            background: rgba(128, 128, 128, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .skill-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .skill-name {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .proficiency-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .proficiency-track {
+            width: 100%;
+            height: 7px;
+            border-radius: 10px;
+            background: rgba(128, 128, 128, 0.18);
+            overflow: hidden;
+        }
+
+        .proficiency-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: currentColor;
+        }
+
+        .proficiency-fill.beginner {
+            width: 33%;
+        }
+
+        .proficiency-fill.intermediate {
+            width: 66%;
+        }
+
+        .proficiency-fill.advanced {
+            width: 100%;
+        }
+
+        .empty-skills {
+            padding: 35px 20px;
+            text-align: center;
+            border: 1px dashed rgba(128, 128, 128, 0.35);
+            border-radius: 14px;
+            margin-top: 20px;
+        }
+
+        .empty-skills-icon {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .empty-skills strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .empty-skills p {
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .skills-status {
+            margin-top: 15px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 30px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 700px) {
+            .add-skill-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .add-skill-action button {
+                width: 100%;
+            }
+
+            .skills-hero {
+                align-items: flex-start;
+            }
+
+            .skills-count {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <div class="dashboard-container">
-        <header class="dashboard-header">
-            <div>
-                <h1>CampusPulse</h1>
-                <p>Student Skills</p>
+<div class="dashboard-container">
+
+    <header class="dashboard-header">
+        <div>
+            <h1>CampusPulse</h1>
+            <p>Student Skills</p>
+        </div>
+
+        <button id="backButton" class="btn-primary">
+            Back to Dashboard
+        </button>
+    </header>
+
+    <main class="dashboard-content">
+
+        <section class="welcome-card">
+
+            <div class="skills-hero">
+
+                <div class="skills-hero-content">
+                    <h2>My Skills</h2>
+                    <p>
+                        Build your professional profile by adding the skills you have learned.
+                    </p>
+                </div>
+
+                <div class="skills-count">
+                    <strong id="skillsCount">0</strong>
+                    <span>Skills Added</span>
+                </div>
+
             </div>
 
-            <button id="backButton" class="btn-primary">
-                Back to Dashboard
-            </button>
-        </header>
+        </section>
 
-        <main class="dashboard-content">
-            <section class="welcome-card">
-                <h2>My Skills</h2>
-                <p>View and manage your technical and professional skills.</p>
-            </section>
+        <section class="dashboard-card">
 
-            <section class="dashboard-card">
-                <h3>Add Skill</h3>
+            <h3>Add a Skill</h3>
+
+            <p>
+                Select a skill and tell us your current proficiency level.
+            </p>
+
+            <div class="add-skill-grid">
 
                 <div class="form-group">
-                    <label for="skillId">Skill</label>
+
+                    <label for="skillId">
+                        Skill
+                    </label>
+
                     <select id="skillId">
-                        <option value="">Loading skills...</option>
+                        <option value="">
+                            Loading skills...
+                        </option>
                     </select>
+
                 </div>
 
                 <div class="form-group">
-                    <label for="proficiency">Proficiency</label>
+
+                    <label for="proficiency">
+                        Proficiency
+                    </label>
+
                     <select id="proficiency">
-                        <option value="">Select proficiency</option>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Advanced">Advanced</option>
+
+                        <option value="">
+                            Select proficiency
+                        </option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
                     </select>
+
                 </div>
 
-                <button id="addSkillButton" class="btn-primary">
-                    Add Skill
+                <div class="add-skill-action">
+
+                    <button
+                        id="addSkillButton"
+                        class="btn-primary"
+                    >
+                        Add Skill
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div
+                id="addSkillMessage"
+                class="message skills-status"
+            ></div>
+
+        </section>
+
+        <section class="dashboard-card">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+
+                <div>
+                    <h3>Skills Overview</h3>
+
+                    <p>
+                        Your current technical and professional skills.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="refreshSkillsButton"
+                    class="btn-primary"
+                >
+                    Refresh
                 </button>
 
-                <p id="addSkillMessage" class="message"></p>
-            </section>
+            </div>
 
-            <section class="dashboard-card">
-                <h3>My Skills</h3>
-
-                <div id="skillsList">
-                    Loading skills...
+            <div id="skillsList">
+                <div class="loading-state">
+                    Loading your skills...
                 </div>
+            </div>
 
-                <p id="skillsMessage" class="message"></p>
-            </section>
-        </main>
-    </div>
+            <p
+                id="skillsMessage"
+                class="message skills-status"
+            ></p>
 
-    <script>
-        const API_BASE_URL = "https://campuspulse-backend-uzum.onrender.com";
+        </section>
 
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
+    </main>
 
-        if (!token || role !== "STUDENT") {
-            window.location.href = "login.html";
-        }
+</div>
 
-        document.getElementById("backButton").addEventListener("click", function () {
-            window.location.href = "student-dashboard.html";
-        });
+<script>
 
-        async function loadAvailableSkills() {
-            const skillSelect = document.getElementById("skillId");
-            const addSkillMessage =
-                document.getElementById("addSkillMessage");
+const API_BASE_URL =
+    "https://campuspulse-backend-uzum.onrender.com";
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/students/available-skills`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
+const token =
+    localStorage.getItem("token");
+
+const role =
+    localStorage.getItem("role");
+
+
+if (!token || role !== "STUDENT") {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+const backButton =
+    document.getElementById(
+        "backButton"
+    );
+
+const skillSelect =
+    document.getElementById(
+        "skillId"
+    );
+
+const proficiencySelect =
+    document.getElementById(
+        "proficiency"
+    );
+
+const addSkillButton =
+    document.getElementById(
+        "addSkillButton"
+    );
+
+const addSkillMessage =
+    document.getElementById(
+        "addSkillMessage"
+    );
+
+const skillsList =
+    document.getElementById(
+        "skillsList"
+    );
+
+const skillsMessage =
+    document.getElementById(
+        "skillsMessage"
+    );
+
+const skillsCount =
+    document.getElementById(
+        "skillsCount"
+    );
+
+const refreshSkillsButton =
+    document.getElementById(
+        "refreshSkillsButton"
+    );
+
+
+function clearMessages() {
+
+    addSkillMessage.textContent = "";
+    skillsMessage.textContent = "";
+
+}
+
+
+backButton.addEventListener(
+    "click",
+    function () {
+
+        window.location.href =
+            "student-dashboard.html";
+
+    }
+);
+
+
+async function loadAvailableSkills() {
+
+    skillSelect.innerHTML =
+        "<option value=''>Loading skills...</option>";
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/students/available-skills`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
                     }
-                );
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    skillSelect.innerHTML =
-                        '<option value="">Unable to load skills</option>';
-
-                    addSkillMessage.textContent =
-                        data.error || "Unable to load available skills.";
-
-                    return;
                 }
+            );
 
-                skillSelect.innerHTML =
-                    '<option value="">Select a skill</option>';
+        const data =
+            await response.json();
 
-                if (!data.skills || data.skills.length === 0) {
-                    skillSelect.innerHTML =
-                        '<option value="">No skills available</option>';
+        if (!response.ok) {
 
-                    return;
-                }
+            skillSelect.innerHTML =
+                "<option value=''>Unable to load skills</option>";
 
-                data.skills.forEach(function (skill) {
-                    const option = document.createElement("option");
+            addSkillMessage.textContent =
+                data.error ||
+                "Unable to load available skills.";
 
-                    option.value = skill.skill_id;
-                    option.textContent = skill.skill_name;
+            return;
 
-                    skillSelect.appendChild(option);
-                });
-
-            } catch (error) {
-                skillSelect.innerHTML =
-                    '<option value="">Unable to load skills</option>';
-
-                addSkillMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
-            }
         }
 
-        async function loadSkills() {
-            const skillsList = document.getElementById("skillsList");
-            const skillsMessage = document.getElementById("skillsMessage");
+        skillSelect.innerHTML =
+            "<option value=''>Select a skill</option>";
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/students/skills`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    }
-                );
+        if (
+            !data.skills ||
+            data.skills.length === 0
+        ) {
 
-                const data = await response.json();
+            skillSelect.innerHTML =
+                "<option value=''>No skills available</option>";
 
-                if (!response.ok) {
-                    skillsMessage.textContent =
-                        data.error || "Unable to load skills.";
-                    return;
-                }
+            return;
 
-                if (!data.skills || data.skills.length === 0) {
-                    skillsList.textContent = "No skills added yet.";
-                    return;
-                }
-
-                skillsList.innerHTML = "";
-
-                data.skills.forEach(function (skill) {
-                    const skillItem = document.createElement("div");
-
-                    skillItem.style.marginBottom = "15px";
-
-                    skillItem.innerHTML = `
-                        <strong>${skill.skill_name}</strong>
-                        <span> - ${skill.proficiency || "Not specified"}</span>
-                    `;
-
-                    skillsList.appendChild(skillItem);
-                });
-
-            } catch (error) {
-                skillsMessage.textContent =
-                    "Unable to connect to CampusPulse backend.";
-            }
         }
 
-        document.getElementById("addSkillButton").addEventListener(
-            "click",
-            async function () {
-                const skillId =
-                    document.getElementById("skillId").value;
+        data.skills.forEach(
+            function (skill) {
 
-                const proficiency =
-                    document.getElementById("proficiency").value;
-
-                const addSkillMessage =
-                    document.getElementById("addSkillMessage");
-
-                if (!skillId || !proficiency) {
-                    addSkillMessage.textContent =
-                        "Please select a skill and proficiency.";
-                    return;
-                }
-
-                addSkillMessage.textContent = "Adding skill...";
-
-                try {
-                    const response = await fetch(
-                        `${API_BASE_URL}/api/students/skills`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": `Bearer ${token}`
-                            },
-                            body: JSON.stringify({
-                                skill_id: Number(skillId),
-                                proficiency: proficiency
-                            })
-                        }
+                const option =
+                    document.createElement(
+                        "option"
                     );
 
-                    const data = await response.json();
+                option.value =
+                    skill.skill_id;
 
-                    if (!response.ok) {
-                        addSkillMessage.textContent =
-                            data.error || "Unable to add skill.";
-                        return;
-                    }
+                option.textContent =
+                    skill.skill_name;
 
-                    addSkillMessage.textContent =
-                        "Skill added successfully.";
+                skillSelect.appendChild(
+                    option
+                );
 
-                    document.getElementById("skillId").value = "";
-                    document.getElementById("proficiency").value = "";
-
-                    loadSkills();
-
-                } catch (error) {
-                    addSkillMessage.textContent =
-                        "Unable to connect to CampusPulse backend.";
-                }
             }
         );
 
-        loadAvailableSkills();
-        loadSkills();
-    </script>
+    }
+    catch (error) {
+
+        skillSelect.innerHTML =
+            "<option value=''>Unable to load skills</option>";
+
+        addSkillMessage.textContent =
+            "Unable to connect to CampusPulse backend.";
+
+    }
+
+}
+
+
+function getProficiencyClass(
+    proficiency
+) {
+
+    if (!proficiency) {
+        return "";
+    }
+
+    return proficiency
+        .toLowerCase()
+        .replace(
+            " ",
+            "-"
+        );
+
+}
+
+
+function createSkillCard(skill) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+    card.className =
+        "skill-card";
+
+    const proficiency =
+        skill.proficiency ||
+        "Not specified";
+
+    const proficiencyClass =
+        getProficiencyClass(
+            skill.proficiency
+        );
+
+    card.innerHTML = `
+
+        <div class="skill-card-header">
+
+            <span class="skill-name">
+                ${skill.skill_name}
+            </span>
+
+            <span class="proficiency-badge">
+                ${proficiency}
+            </span>
+
+        </div>
+
+        ${
+            proficiencyClass
+                ? `
+                    <div class="proficiency-track">
+                        <div class="proficiency-fill ${proficiencyClass}"></div>
+                    </div>
+                `
+                : ""
+        }
+
+    `;
+
+    return card;
+
+}
+
+
+async function loadSkills() {
+
+    skillsMessage.textContent = "";
+
+    skillsList.innerHTML = `
+        <div class="loading-state">
+            Loading your skills...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/students/skills`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            skillsList.innerHTML = "";
+
+            skillsMessage.textContent =
+                data.error ||
+                "Unable to load skills.";
+
+            skillsCount.textContent =
+                "0";
+
+            return;
+
+        }
+
+        const skills =
+            data.skills || [];
+
+        skillsCount.textContent =
+            skills.length;
+
+        if (skills.length === 0) {
+
+            skillsList.innerHTML = `
+
+                <div class="empty-skills">
+
+                    <div class="empty-skills-icon">
+                        ???
+                    </div>
+
+                    <strong>
+                        No skills added yet
+                    </strong>
+
+                    <p>
+                        Add your first skill above to build your profile.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+        const grid =
+            document.createElement(
+                "div"
+            );
+
+        grid.className =
+            "skills-list";
+
+        skills.forEach(
+            function (skill) {
+
+                grid.appendChild(
+                    createSkillCard(skill)
+                );
+
+            }
+        );
+
+        skillsList.innerHTML = "";
+
+        skillsList.appendChild(
+            grid
+        );
+
+    }
+    catch (error) {
+
+        skillsList.innerHTML = "";
+
+        skillsMessage.textContent =
+            "Unable to connect to CampusPulse backend.";
+
+        skillsCount.textContent =
+            "0";
+
+    }
+
+}
+
+
+addSkillButton.addEventListener(
+    "click",
+    async function () {
+
+        clearMessages();
+
+        const skillId =
+            skillSelect.value;
+
+        const proficiency =
+            proficiencySelect.value;
+
+        if (!skillId) {
+
+            addSkillMessage.textContent =
+                "Please select a skill.";
+
+            return;
+
+        }
+
+        if (!proficiency) {
+
+            addSkillMessage.textContent =
+                "Please select your proficiency level.";
+
+            return;
+
+        }
+
+        addSkillButton.disabled =
+            true;
+
+        addSkillButton.textContent =
+            "Adding...";
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/api/students/skills`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${token}`
+                        },
+
+                        body:
+                            JSON.stringify({
+                                skill_id:
+                                    Number(skillId),
+
+                                proficiency:
+                                    proficiency
+                            })
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+
+                addSkillMessage.textContent =
+                    data.error ||
+                    "Unable to add skill.";
+
+                return;
+
+            }
+
+            addSkillMessage.textContent =
+                "Skill added successfully.";
+
+            skillSelect.value =
+                "";
+
+            proficiencySelect.value =
+                "";
+
+            await loadSkills();
+
+        }
+        catch (error) {
+
+            addSkillMessage.textContent =
+                "Unable to connect to CampusPulse backend.";
+
+        }
+        finally {
+
+            addSkillButton.disabled =
+                false;
+
+            addSkillButton.textContent =
+                "Add Skill";
+
+        }
+
+    }
+);
+
+
+refreshSkillsButton.addEventListener(
+    "click",
+    async function () {
+
+        clearMessages();
+
+        refreshSkillsButton.disabled =
+            true;
+
+        refreshSkillsButton.textContent =
+            "Refreshing...";
+
+        await loadSkills();
+
+        refreshSkillsButton.disabled =
+            false;
+
+        refreshSkillsButton.textContent =
+            "Refresh";
+
+    }
+);
+
+
+loadAvailableSkills();
+loadSkills();
+
+</script>
 
 </body>
 </html>
